@@ -1,0 +1,2031 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &253623149546184855
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7665164346193863684}
+  m_Layer: 0
+  m_Name: vr_asmr_right
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7665164346193863684
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253623149546184855}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 1720245923411310067}
+  - {fileID: 7180308198801700713}
+  - {fileID: 8971409298365493161}
+  - {fileID: 8982017005029824956}
+  m_Father: {fileID: 3225740628289358845}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &818162980823480621
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7180308198801700713}
+  - component: {fileID: 62248277758186226}
+  - component: {fileID: 5905681438271498296}
+  - component: {fileID: 3711789002511288392}
+  m_Layer: 0
+  m_Name: petting_alt_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &7180308198801700713
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818162980823480621}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 7665164346193863684}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &62248277758186226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818162980823480621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 738565338370670640
+  references:
+    version: 2
+    RefIds:
+    - rid: 738565338370670640
+      type: {class: Toggle, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 3
+        name: sounds/pets/alt
+        state:
+          actions:
+          - rid: 738565338370670641
+          - rid: 738565338370670642
+        saved: 0
+        slider: 0
+        sliderInactiveAtZero: 0
+        securityEnabled: 0
+        defaultOn: 0
+        includeInRest: 0
+        exclusiveOffState: 0
+        enableExclusiveTag: 1
+        exclusiveTag: pettingvariant
+        resetPhysbones: []
+        hasExitTime: 0
+        enableIcon: 1
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: d59fa809f4756b04fa6f729aab97ba5e|Assets/vr_asmr_petting/Misc/E0B4_color.png
+          objRef: {fileID: 2800000, guid: d59fa809f4756b04fa6f729aab97ba5e, type: 3}
+        enableDriveGlobalParam: 0
+        driveGlobalParam: 
+        separateLocal: 0
+        localState:
+          actions: []
+        hasTransition: 0
+        transitionStateIn:
+          actions: []
+        transitionStateOut:
+          actions: []
+        transitionTimeIn: 0
+        transitionTimeOut: 0
+        localTransitionStateIn:
+          actions: []
+        localTransitionStateOut:
+          actions: []
+        localTransitionTimeIn: 0
+        localTransitionTimeOut: 0
+        simpleOutTransition: 1
+        defaultSliderValue: 0
+        useGlobalParam: 1
+        globalParam: sounds/pets/altt
+        holdButton: 0
+        invertRestLogic: 0
+        expandIntoTransition: 1
+    - rid: 738565338370670641
+      type: {class: ObjectToggleAction, ns: VF.Model.StateAction, asm: VRCFury}
+      data:
+        version: 1
+        desktopActive: 0
+        androidActive: 0
+        localOnly: 0
+        remoteOnly: 0
+        obj: {fileID: 1141137164635939320}
+        mode: 0
+    - rid: 738565338370670642
+      type: {class: ObjectToggleAction, ns: VF.Model.StateAction, asm: VRCFury}
+      data:
+        version: 1
+        desktopActive: 0
+        androidActive: 0
+        localOnly: 0
+        remoteOnly: 0
+        obj: {fileID: 818162980823480621}
+        mode: 0
+--- !u!82 &5905681438271498296
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818162980823480621}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 7c545c1a27b2511428f599402c7beb68, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 79
+  DopplerLevel: 3.93
+  MinDistance: 0.7
+  MaxDistance: 1.4
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.99175644
+      inSlope: 0.04104883
+      outSlope: 0.04104883
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09022363
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &3711789002511288392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818162980823480621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1610797297, guid: 67cc4cb7839cd3741b63733d5adf0442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gain: 10
+  Far: 1.3
+  Near: 0.5
+  VolumetricRadius: 0
+  EnableSpatialization: 1
+  UseAudioSourceVolumeCurve: 1
+--- !u!1 &983895293344760085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1720245923411310067}
+  - component: {fileID: 3667802025748759159}
+  - component: {fileID: 2401530848604649539}
+  - component: {fileID: 6293946143481737374}
+  m_Layer: 0
+  m_Name: petting_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1720245923411310067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983895293344760085}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 7665164346193863684}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3667802025748759159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983895293344760085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 738565338370670640
+  references:
+    version: 2
+    RefIds:
+    - rid: 738565338370670640
+      type: {class: Toggle, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 3
+        name: sounds/pets/normal
+        state:
+          actions:
+          - rid: 738565338370670641
+          - rid: 738565338370670642
+        saved: 0
+        slider: 0
+        sliderInactiveAtZero: 0
+        securityEnabled: 0
+        defaultOn: 0
+        includeInRest: 0
+        exclusiveOffState: 0
+        enableExclusiveTag: 1
+        exclusiveTag: pettingvariant
+        resetPhysbones: []
+        hasExitTime: 0
+        enableIcon: 1
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: a380827e277ec3048a01f2302c4ca815|Assets/vr_asmr_petting/Misc/1F590_color.png
+          objRef: {fileID: 2800000, guid: a380827e277ec3048a01f2302c4ca815, type: 3}
+        enableDriveGlobalParam: 0
+        driveGlobalParam: 
+        separateLocal: 0
+        localState:
+          actions: []
+        hasTransition: 0
+        transitionStateIn:
+          actions: []
+        transitionStateOut:
+          actions: []
+        transitionTimeIn: 0
+        transitionTimeOut: 0
+        localTransitionStateIn:
+          actions: []
+        localTransitionStateOut:
+          actions: []
+        localTransitionTimeIn: 0
+        localTransitionTimeOut: 0
+        simpleOutTransition: 1
+        defaultSliderValue: 0
+        useGlobalParam: 1
+        globalParam: sounds/pets/normal
+        holdButton: 0
+        invertRestLogic: 0
+        expandIntoTransition: 1
+    - rid: 738565338370670641
+      type: {class: ObjectToggleAction, ns: VF.Model.StateAction, asm: VRCFury}
+      data:
+        version: 1
+        desktopActive: 0
+        androidActive: 0
+        localOnly: 0
+        remoteOnly: 0
+        obj: {fileID: 983895293344760085}
+        mode: 0
+    - rid: 738565338370670642
+      type: {class: ObjectToggleAction, ns: VF.Model.StateAction, asm: VRCFury}
+      data:
+        version: 1
+        desktopActive: 0
+        androidActive: 0
+        localOnly: 0
+        remoteOnly: 0
+        obj: {fileID: 7030478326031969585}
+        mode: 0
+--- !u!82 &2401530848604649539
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983895293344760085}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 2a355bbd0ec44ff4a8c698de282f2f1f, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 79
+  DopplerLevel: 3.93
+  MinDistance: 0.7
+  MaxDistance: 1.4
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.99175644
+      inSlope: 0.04104883
+      outSlope: 0.04104883
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09022363
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &6293946143481737374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983895293344760085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1610797297, guid: 67cc4cb7839cd3741b63733d5adf0442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gain: 10
+  Far: 1.3
+  Near: 0.5
+  VolumetricRadius: 0
+  EnableSpatialization: 1
+  UseAudioSourceVolumeCurve: 1
+--- !u!1 &1141137164635939320
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8608670290294997781}
+  - component: {fileID: 1082922799718506613}
+  - component: {fileID: 5335344959533692678}
+  m_Layer: 0
+  m_Name: petting_alt_L
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &8608670290294997781
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141137164635939320}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 4397127063648988779}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1082922799718506613
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141137164635939320}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 158018493853b82459e8ef0741e18053, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 79
+  DopplerLevel: 3.93
+  MinDistance: 0.7
+  MaxDistance: 1.4
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.99175644
+      inSlope: 0.04104883
+      outSlope: 0.04104883
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09022363
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &5335344959533692678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141137164635939320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1610797297, guid: 67cc4cb7839cd3741b63733d5adf0442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gain: 10
+  Far: 1.4
+  Near: 0.5
+  VolumetricRadius: 0
+  EnableSpatialization: 1
+  UseAudioSourceVolumeCurve: 1
+--- !u!1 &2076546549741873564
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8982017005029824956}
+  - component: {fileID: 3466784668375096222}
+  - component: {fileID: 5649890614852252}
+  - component: {fileID: 7185289348675222692}
+  m_Layer: 0
+  m_Name: cling1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &8982017005029824956
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076546549741873564}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 7665164346193863684}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3466784668375096222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076546549741873564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 738565338370670637
+  references:
+    version: 2
+    RefIds:
+    - rid: 738565338370670637
+      type: {class: Toggle, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 3
+        name: sounds/cling
+        state:
+          actions:
+          - rid: 738565338370670639
+        saved: 0
+        slider: 0
+        sliderInactiveAtZero: 0
+        securityEnabled: 0
+        defaultOn: 0
+        includeInRest: 0
+        exclusiveOffState: 0
+        enableExclusiveTag: 0
+        exclusiveTag: 
+        resetPhysbones: []
+        hasExitTime: 0
+        enableIcon: 1
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: 4b0725b1ff280c046b3bdf3b33eb846b|Assets/vr_asmr_petting/Misc/1F6CE_color.png
+          objRef: {fileID: 2800000, guid: 4b0725b1ff280c046b3bdf3b33eb846b, type: 3}
+        enableDriveGlobalParam: 0
+        driveGlobalParam: 
+        separateLocal: 0
+        localState:
+          actions: []
+        hasTransition: 0
+        transitionStateIn:
+          actions: []
+        transitionStateOut:
+          actions: []
+        transitionTimeIn: 0
+        transitionTimeOut: 0
+        localTransitionStateIn:
+          actions: []
+        localTransitionStateOut:
+          actions: []
+        localTransitionTimeIn: 0
+        localTransitionTimeOut: 0
+        simpleOutTransition: 1
+        defaultSliderValue: 0
+        useGlobalParam: 1
+        globalParam: sounds/cling
+        holdButton: 1
+        invertRestLogic: 0
+        expandIntoTransition: 1
+    - rid: 738565338370670639
+      type: {class: ObjectToggleAction, ns: VF.Model.StateAction, asm: VRCFury}
+      data:
+        version: 1
+        desktopActive: 0
+        androidActive: 0
+        localOnly: 0
+        remoteOnly: 0
+        obj: {fileID: 2076546549741873564}
+        mode: 0
+--- !u!82 &5649890614852252
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076546549741873564}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: ed503b4a1a46f1a479081163c92c6c9e, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 79
+  DopplerLevel: 4.6
+  MinDistance: 0.7
+  MaxDistance: 1.4
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.99175644
+      inSlope: 0.04104883
+      outSlope: 0.04104883
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09022363
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &7185289348675222692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076546549741873564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1610797297, guid: 67cc4cb7839cd3741b63733d5adf0442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gain: 10
+  Far: 1.3
+  Near: 0.5
+  VolumetricRadius: 0
+  EnableSpatialization: 1
+  UseAudioSourceVolumeCurve: 1
+--- !u!1 &4778869407128609558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3716535803421042107}
+  - component: {fileID: 4729158843262376893}
+  - component: {fileID: 599422600822143202}
+  - component: {fileID: 6136938750734335268}
+  m_Layer: 0
+  m_Name: tap_l
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &3716535803421042107
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4778869407128609558}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 4397127063648988779}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4729158843262376893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4778869407128609558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 738565338370670640
+  references:
+    version: 2
+    RefIds:
+    - rid: 738565338370670640
+      type: {class: Toggle, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 3
+        name: sounds/tap/left
+        state:
+          actions:
+          - rid: 738565338370670641
+        saved: 0
+        slider: 0
+        sliderInactiveAtZero: 0
+        securityEnabled: 0
+        defaultOn: 0
+        includeInRest: 0
+        exclusiveOffState: 0
+        enableExclusiveTag: 1
+        exclusiveTag: 
+        resetPhysbones: []
+        hasExitTime: 0
+        enableIcon: 1
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: 5282456be9507ab4298aec49a5716c17|Assets/vr_asmr_petting/Misc/1FAF7_color.png
+          objRef: {fileID: 2800000, guid: 5282456be9507ab4298aec49a5716c17, type: 3}
+        enableDriveGlobalParam: 0
+        driveGlobalParam: 
+        separateLocal: 0
+        localState:
+          actions: []
+        hasTransition: 0
+        transitionStateIn:
+          actions: []
+        transitionStateOut:
+          actions: []
+        transitionTimeIn: 0
+        transitionTimeOut: 0
+        localTransitionStateIn:
+          actions: []
+        localTransitionStateOut:
+          actions: []
+        localTransitionTimeIn: 0
+        localTransitionTimeOut: 0
+        simpleOutTransition: 1
+        defaultSliderValue: 0
+        useGlobalParam: 1
+        globalParam: sound_taps_left
+        holdButton: 1
+        invertRestLogic: 0
+        expandIntoTransition: 1
+    - rid: 738565338370670641
+      type: {class: ObjectToggleAction, ns: VF.Model.StateAction, asm: VRCFury}
+      data:
+        version: 1
+        desktopActive: 0
+        androidActive: 0
+        localOnly: 0
+        remoteOnly: 0
+        obj: {fileID: 4778869407128609558}
+        mode: 0
+--- !u!82 &599422600822143202
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4778869407128609558}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: d4e4c1335cfbc0f4a8c08cb512a445ca, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 79
+  DopplerLevel: 4.6
+  MinDistance: 0.7
+  MaxDistance: 1.4
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.99175644
+      inSlope: 0.04104883
+      outSlope: 0.04104883
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09022363
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &6136938750734335268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4778869407128609558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1610797297, guid: 67cc4cb7839cd3741b63733d5adf0442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gain: 10
+  Far: 1.3
+  Near: 0.5
+  VolumetricRadius: 0
+  EnableSpatialization: 1
+  UseAudioSourceVolumeCurve: 1
+--- !u!1 &7030478326031969585
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6580998761219756434}
+  - component: {fileID: 2163617797760847480}
+  - component: {fileID: 85435013319639431}
+  m_Layer: 0
+  m_Name: petting_L
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &6580998761219756434
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7030478326031969585}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 4397127063648988779}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &2163617797760847480
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7030478326031969585}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: bf0abef34c2227d42a9354ece4ed7f4f, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 79
+  DopplerLevel: 3.93
+  MinDistance: 0.7
+  MaxDistance: 1.4
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.99175644
+      inSlope: 0.04104883
+      outSlope: 0.04104883
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09022363
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &85435013319639431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7030478326031969585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1610797297, guid: 67cc4cb7839cd3741b63733d5adf0442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gain: 10
+  Far: 1.4
+  Near: 0.5
+  VolumetricRadius: 0
+  EnableSpatialization: 1
+  UseAudioSourceVolumeCurve: 1
+--- !u!1 &7707911138549445845
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4397127063648988779}
+  m_Layer: 0
+  m_Name: vr_asmr_left
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4397127063648988779
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7707911138549445845}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 3716535803421042107}
+  - {fileID: 6580998761219756434}
+  - {fileID: 8608670290294997781}
+  m_Father: {fileID: 3225740628289358845}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7935062285932265621
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3225740628289358845}
+  - component: {fileID: 4446218503576232518}
+  - component: {fileID: 3349391367561848939}
+  - component: {fileID: 1157049501190106915}
+  - component: {fileID: 3964265713157792289}
+  - component: {fileID: 8431374001783101303}
+  - component: {fileID: 252512526364585367}
+  - component: {fileID: 1749095041285615449}
+  m_Layer: 0
+  m_Name: vr_asmr_petting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3225740628289358845
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935062285932265621}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 7665164346193863684}
+  - {fileID: 4397127063648988779}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4446218503576232518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935062285932265621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 1848836094688493653
+  references:
+    version: 2
+    RefIds:
+    - rid: 1848836094688493653
+      type: {class: ArmatureLink, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 7
+        propBone: {fileID: 7707911138549445845}
+        linkTo:
+        - useBone: 1
+          bone: 28
+          useObj: 0
+          obj: {fileID: 0}
+          offset: 
+        removeBoneSuffix: 
+        removeParentConstraints: 1
+        forceMergedName: 
+        forceOneWorldScale: 0
+        recursive: 0
+        alignPosition: 1
+        alignRotation: 1
+        alignScale: 1
+        autoScaleFactor: 0
+        scalingFactorPowersOf10Only: 1
+        skinRewriteScalingFactor: 1
+        useOptimizedUpload: 0
+        useBoneMerging: 0
+        keepBoneOffsets: 0
+        physbonesOnAvatarBones: 0
+        boneOnAvatar: 0
+        bonePathOnAvatar: 
+        fallbackBones: 
+        keepBoneOffsets2: 2
+        linkMode: 3
+--- !u!114 &3349391367561848939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935062285932265621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 1848836094688493654
+  references:
+    version: 2
+    RefIds:
+    - rid: 1848836094688493654
+      type: {class: ArmatureLink, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 7
+        propBone: {fileID: 253623149546184855}
+        linkTo:
+        - useBone: 1
+          bone: 43
+          useObj: 0
+          obj: {fileID: 0}
+          offset: 
+        removeBoneSuffix: 
+        removeParentConstraints: 1
+        forceMergedName: 
+        forceOneWorldScale: 0
+        recursive: 0
+        alignPosition: 1
+        alignRotation: 1
+        alignScale: 1
+        autoScaleFactor: 0
+        scalingFactorPowersOf10Only: 1
+        skinRewriteScalingFactor: 1
+        useOptimizedUpload: 0
+        useBoneMerging: 0
+        keepBoneOffsets: 0
+        physbonesOnAvatarBones: 0
+        boneOnAvatar: 0
+        bonePathOnAvatar: 
+        fallbackBones: 
+        keepBoneOffsets2: 2
+        linkMode: 3
+--- !u!114 &1157049501190106915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935062285932265621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 8465936107980718080
+  references:
+    version: 2
+    RefIds:
+    - rid: 8465936107980718080
+      type: {class: FullController, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 4
+        controllers:
+        - controller:
+            version: 1
+            fileID: 0
+            guid: 
+            id: d7defde0a04029f4ba2514c75a624338|Assets/vr_asmr_petting/Animations/vr_asmr_controller_merge.controller
+            objRef: {fileID: 9100000, guid: d7defde0a04029f4ba2514c75a624338, type: 2}
+          type: 5
+        menus: []
+        prms:
+        - parameters:
+            version: 1
+            fileID: 0
+            guid: 
+            id: 05bef3b2099cdd549a29e6682db6c781|Assets/vr_asmr_petting/Misc/vr_asmr_petting_params.asset
+            objRef: {fileID: 11400000, guid: 05bef3b2099cdd549a29e6682db6c781, type: 2}
+        smoothedPrms: []
+        globalParams:
+        - petting_volume
+        - petting_volume_r
+        - sounds/cling
+        - sounds/pets/normal
+        - sounds/pets/alt
+        allNonsyncedAreGlobal: 0
+        ignoreSaved: 1
+        toggleParam: 
+        rootObjOverride: {fileID: 0}
+        rootBindingsApplyToAvatar: 0
+        rewriteBindings:
+        - from: 
+          to: 
+          delete: 0
+        - from: vr_asmr_petting
+          to: 
+          delete: 0
+        allowMissingAssets: 0
+        injectSpsDepthParam: 
+        injectSpsVelocityParam: 
+        controller:
+          version: 1
+          fileID: 0
+          guid: 
+          id: 
+          objRef: {fileID: 0}
+        menu:
+          version: 1
+          fileID: 0
+          guid: 
+          id: 
+          objRef: {fileID: 0}
+        parameters:
+          version: 1
+          fileID: 0
+          guid: 
+          id: 
+          objRef: {fileID: 0}
+        submenu: 
+        removePrefixes: []
+        addPrefix: 
+        useSecurityForToggle: 0
+--- !u!114 &3964265713157792289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935062285932265621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 1848836094688493588
+  references:
+    version: 2
+    RefIds:
+    - rid: 1848836094688493588
+      type: {class: Toggle, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 3
+        name: sounds/pets/vol_l
+        state:
+          actions: []
+        saved: 0
+        slider: 1
+        sliderInactiveAtZero: 1
+        securityEnabled: 0
+        defaultOn: 0
+        includeInRest: 0
+        exclusiveOffState: 0
+        enableExclusiveTag: 0
+        exclusiveTag: 
+        resetPhysbones: []
+        hasExitTime: 0
+        enableIcon: 1
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: 5282456be9507ab4298aec49a5716c17|Assets/vr_asmr_petting/Misc/1FAF7_color.png
+          objRef: {fileID: 2800000, guid: 5282456be9507ab4298aec49a5716c17, type: 3}
+        enableDriveGlobalParam: 0
+        driveGlobalParam: 
+        separateLocal: 0
+        localState:
+          actions: []
+        hasTransition: 0
+        transitionStateIn:
+          actions: []
+        transitionStateOut:
+          actions: []
+        transitionTimeIn: 0
+        transitionTimeOut: 0
+        localTransitionStateIn:
+          actions: []
+        localTransitionStateOut:
+          actions: []
+        localTransitionTimeIn: 0
+        localTransitionTimeOut: 0
+        simpleOutTransition: 1
+        defaultSliderValue: 0
+        useGlobalParam: 1
+        globalParam: petting_volume
+        holdButton: 0
+        invertRestLogic: 0
+        expandIntoTransition: 1
+--- !u!114 &8431374001783101303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935062285932265621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 1848836094688493588
+  references:
+    version: 2
+    RefIds:
+    - rid: 1848836094688493588
+      type: {class: Toggle, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 3
+        name: sounds/pets/vol_r
+        state:
+          actions: []
+        saved: 0
+        slider: 1
+        sliderInactiveAtZero: 1
+        securityEnabled: 0
+        defaultOn: 0
+        includeInRest: 0
+        exclusiveOffState: 0
+        enableExclusiveTag: 0
+        exclusiveTag: 
+        resetPhysbones: []
+        hasExitTime: 0
+        enableIcon: 1
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: 4854f125397de914ba0e478c542df67b|Assets/vr_asmr_petting/Misc/1FAF8_color.png
+          objRef: {fileID: 2800000, guid: 4854f125397de914ba0e478c542df67b, type: 3}
+        enableDriveGlobalParam: 0
+        driveGlobalParam: 
+        separateLocal: 0
+        localState:
+          actions: []
+        hasTransition: 0
+        transitionStateIn:
+          actions: []
+        transitionStateOut:
+          actions: []
+        transitionTimeIn: 0
+        transitionTimeOut: 0
+        localTransitionStateIn:
+          actions: []
+        localTransitionStateOut:
+          actions: []
+        localTransitionTimeIn: 0
+        localTransitionTimeOut: 0
+        simpleOutTransition: 1
+        defaultSliderValue: 0
+        useGlobalParam: 1
+        globalParam: petting_volume_r
+        holdButton: 0
+        invertRestLogic: 0
+        expandIntoTransition: 1
+--- !u!114 &252512526364585367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935062285932265621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 3960661254326190107
+  references:
+    version: 2
+    RefIds:
+    - rid: 3960661254326190107
+      type: {class: SetIcon, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 1
+        path: sounds/pets
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: a380827e277ec3048a01f2302c4ca815|Assets/vr_asmr_petting/Misc/1F590_color.png
+          objRef: {fileID: 2800000, guid: a380827e277ec3048a01f2302c4ca815, type: 3}
+--- !u!114 &1749095041285615449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935062285932265621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 3960661254326190107
+  references:
+    version: 2
+    RefIds:
+    - rid: 3960661254326190107
+      type: {class: SetIcon, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 1
+        path: sounds
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: 267fb74c4f1be9b448585074343dfe1a|Assets/vr_asmr_petting/Misc/1F4E2_color.png
+          objRef: {fileID: 2800000, guid: 267fb74c4f1be9b448585074343dfe1a, type: 3}
+--- !u!1 &8638329252032659395
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8971409298365493161}
+  - component: {fileID: 3048071644115882369}
+  - component: {fileID: 1205043348226122489}
+  - component: {fileID: 2253055933868788041}
+  - component: {fileID: 5246832515613332283}
+  m_Layer: 0
+  m_Name: tap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &8971409298365493161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638329252032659395}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 7665164346193863684}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3048071644115882369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638329252032659395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 738565338370670640
+  references:
+    version: 2
+    RefIds:
+    - rid: 738565338370670640
+      type: {class: Toggle, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 3
+        name: sounds/tap/right
+        state:
+          actions:
+          - rid: 738565338370670641
+        saved: 0
+        slider: 0
+        sliderInactiveAtZero: 0
+        securityEnabled: 0
+        defaultOn: 0
+        includeInRest: 0
+        exclusiveOffState: 0
+        enableExclusiveTag: 1
+        exclusiveTag: 
+        resetPhysbones: []
+        hasExitTime: 0
+        enableIcon: 1
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: e4312be692b3e4d4eb2bf738cb9912c3|Assets/vr_asmr_petting/Misc/1F94E_color.png
+          objRef: {fileID: 2800000, guid: e4312be692b3e4d4eb2bf738cb9912c3, type: 3}
+        enableDriveGlobalParam: 0
+        driveGlobalParam: 
+        separateLocal: 0
+        localState:
+          actions: []
+        hasTransition: 0
+        transitionStateIn:
+          actions: []
+        transitionStateOut:
+          actions: []
+        transitionTimeIn: 0
+        transitionTimeOut: 0
+        localTransitionStateIn:
+          actions: []
+        localTransitionStateOut:
+          actions: []
+        localTransitionTimeIn: 0
+        localTransitionTimeOut: 0
+        simpleOutTransition: 1
+        defaultSliderValue: 0
+        useGlobalParam: 1
+        globalParam: sound_taps_right
+        holdButton: 1
+        invertRestLogic: 0
+        expandIntoTransition: 1
+    - rid: 738565338370670641
+      type: {class: ObjectToggleAction, ns: VF.Model.StateAction, asm: VRCFury}
+      data:
+        version: 1
+        desktopActive: 0
+        androidActive: 0
+        localOnly: 0
+        remoteOnly: 0
+        obj: {fileID: 8638329252032659395}
+        mode: 0
+--- !u!82 &1205043348226122489
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638329252032659395}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: d4e4c1335cfbc0f4a8c08cb512a445ca, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 79
+  DopplerLevel: 4.6
+  MinDistance: 0.7
+  MaxDistance: 1.4
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.99175644
+      inSlope: 0.04104883
+      outSlope: 0.04104883
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09022363
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &2253055933868788041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638329252032659395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1610797297, guid: 67cc4cb7839cd3741b63733d5adf0442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gain: 10
+  Far: 1.3
+  Near: 0.5
+  VolumetricRadius: 0
+  EnableSpatialization: 1
+  UseAudioSourceVolumeCurve: 1
+--- !u!114 &5246832515613332283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638329252032659395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 3
+  unityVersion: 2022.3.22f1
+  vrcfuryVersion: 1.1174.0
+  somethingIsBroken: 0
+  config:
+    features: []
+  content:
+    rid: 3960661254326190107
+  references:
+    version: 2
+    RefIds:
+    - rid: 3960661254326190107
+      type: {class: SetIcon, ns: VF.Model.Feature, asm: VRCFury}
+      data:
+        version: 1
+        path: sounds/tap
+        icon:
+          version: 1
+          fileID: 0
+          guid: 
+          id: e4312be692b3e4d4eb2bf738cb9912c3|Assets/vr_asmr_petting/Misc/1F94E_color.png
+          objRef: {fileID: 2800000, guid: e4312be692b3e4d4eb2bf738cb9912c3, type: 3}
