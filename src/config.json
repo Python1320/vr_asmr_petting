@@ -1,0 +1,32 @@
+{
+	"debug": true,
+	"install_to_steamvr": true,
+	"osc_detectors": {
+		"enabled": "/avatar/parameters/petting_enabled"
+	},
+	"senders": {
+		"volume_left": 	"/avatar/parameters/petting_volume",
+		"volume_right": "/avatar/parameters/petting_volume_r",
+		"sound_taps_right": "/avatar/parameters/sound_taps_right",
+		"sound_taps_left": "/avatar/parameters/sound_taps_left"
+	},
+	"plugins": {
+		"byewave": {
+			"enabled": false,
+			"description": "WIP: sink to ground if your hand is above your head and other one is below your head"
+		},
+		"bullet": {
+			"enabled": false,
+			"description": "WIP: If someone hits you with 'bullet' contact sender, sink to ground, or catch on fire if you have vr_audience_fire",
+			"sink": true,
+			"fire": true
+		},
+		"static": {
+			"enabled": false,
+			"description": "WIP: Static electricity buildup makes you catch on fire if you have vr_audience_fire"
+		}
+	},
+	"vrc_osc_ip": "127.0.0.1",
+	"vrc_osc_port": 9000,
+	"zeroconf": true
+}

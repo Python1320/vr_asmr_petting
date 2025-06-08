@@ -1,0 +1,83 @@
+[project]
+name = "vr-asmr-petting"
+version = "0.1.0"
+description = "ASMR Petting Sounds System"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp>=3.11.18",
+    "coloredlogs>=15.0.1",
+    "cx-freeze>=8.3.0",
+    "openvr>=2.5.102",
+    "psutil>=7.0.0",
+    "pydantic>=2.11.3",
+    "pydantic-settings>=2.9.1",
+    "python-osc>=1.9.3",
+    "requests>=2.32.3",
+    "toml>=0.10.2",
+    "zeroconf>=0.146.5",
+]
+
+
+
+# https://docs.astral.sh/ruff/tutorial/
+[tool.ruff.lint]
+#select = ["ALL"]
+ignore = ["W191","E101"]
+per-file-ignores = { }
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+src = ["src", "tests"]
+
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true
+
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+
+[tool.mypy]
+strict = false
+exclude = ["venv", ".venv"]
+ignore_missing_imports = true
+allow_untyped_decorators = true
+plugins = ["pydantic.mypy"]
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+no_implicit_reexport = true
+disallow_untyped_defs = false
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
