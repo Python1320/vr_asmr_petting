@@ -18,12 +18,26 @@ from pythonosc.dispatcher import Dispatcher
 from vrchat_oscquery.common import _unused_port, _oscjson_response, _create_service_info, _get_app_host
 
 
-HELP_URL = 'https://github.com/Python1320/vr_audience_fire?tab=readme-ov-file#help'
+import tkinter as tk
+import tkinter.ttk as ttk
+import webbrowser
+
+import sys, math, time
+import openvr
+import wave
+import sys
+# import audio_visualization
+# audio_visualization.init()
+
+
+HELP_URL = 'https://github.com/Python1320/vr_asmr_petting?tab=readme-ov-file#help'
 
 FROZEN = getattr(sys, 'frozen', False)
 DEBUGGER = 'debugpy' in sys.modules
 EXEDIR = Path(sys.prefix) if FROZEN else Path(__file__).parent
 # print(Path(__file__).parent, Path(sys.prefix), EXEDIR)
+
+from pythonosc.udp_client import SimpleUDPClient
 
 
 def show_console():
@@ -42,7 +56,7 @@ def fatal(msg, detail=None, nodecor=False):
 		raise Exception(str(msg))
 
 	# if os.name == 'nt':
-	# ctypes.windll.user32.MessageBoxW(0, traceback.format_exc(), 'vr_audience_fire - ERROR', 0)
+	# ctypes.windll.user32.MessageBoxW(0, traceback.format_exc(), 'vr_asmr_petting - ERROR', 0)
 	# else:
 	# print(msg)
 
@@ -86,11 +100,6 @@ def exit(n=1):
 	else:
 		logging.info('Exiting gracefully...')
 	os._exit(n)
-
-
-import tkinter as tk
-import tkinter.ttk as ttk
-import webbrowser
 
 
 class TopErrorWindow(tk.Tk):
@@ -188,6 +197,101 @@ async def vrc_osc(name: str, dispatcher: Dispatcher, foreground=False, zeroconf=
 
 	client = VRCOSCClient(osc_port=osc_port, osc_host=host, http_port=http_port)
 	return client
+
+
+def get_controller_ids(vrsys=None):
+	if vrsys is None:
+		vrsys = openvr.VRSystem()
+	else:
+		vrsys = vrsys
+	left = None
+	right = None
+	for i in range(openvr.k_unMaxTrackedDeviceCount):
+		device_class = vrsys.getTrackedDeviceClass(i)
+		if device_class == openvr.TrackedDeviceClass_Controller:
+			role = vrsys.getControllerRoleForTrackedDeviceIndex(i)
+			if role == openvr.TrackedControllerRole_RightHand:
+				right = i
+			if role == openvr.TrackedControllerRole_LeftHand:
+				left = i
+	return left, right
+
+
+def getDeviceIDbySerial(serial_want, vr_system):
+	if type(serial_want) == int:
+		return serial_want
+
+	try:
+		for i in range(openvr.k_unMaxTrackedDeviceCount):
+			serial = vr_system.getStringTrackedDeviceProperty(
+				i,
+				openvr.Prop_SerialNumber_String,
+			)
+			if serial == serial_want:
+				return i
+	except openvr.error_code.TrackedProp_InvalidDevice as e:
+		print('ERROR FINDING', serial_want, ': TrackedProp_InvalidDevice')
+		return False
+
+
+def dump_devices(vr_system):
+	print('Devices:')
+	for i in range(openvr.k_unMaxTrackedDeviceCount):
+		try:
+			serial = vr_system.getStringTrackedDeviceProperty(i, openvr.Prop_SerialNumber_String)
+		except openvr.error_code.TrackedProp_InvalidDevice:
+			continue
+
+		dclass = vr_system.getInt32TrackedDeviceProperty(i, openvr.Prop_DeviceClass_Int32)
+		if dclass != openvr.k_unTrackedDeviceIndexInvalid:
+			print(' - ', serial, dclass)
+
+
+class TrackConfig:
+	name = None
+	osc_message = None
+	osc_tap_message = None
+	serial = None
+	device_id = None
+	delta = None
+	tapped = None
+	send_untap = None
+
+	def __init__(self, name=None, osc_message=None, osc_tap_message=None, serial=None, oscClient=None):
+		self.name = name
+		self.osc_message = osc_message
+		self.osc_tap_message = osc_tap_message
+		self.serial = serial
+		self.device_id = None
+		self.delta = [0, 0]
+		self.tapped = None
+		self.send_untap = False
+		self.oscClient = oscClient
+
+	def attempt_tracking(self):
+		todo()
+		pass
+
+	def set_tap_telemetry(self, f):
+		self.oscClient.send_message(self.osc_tap_message, f)
+
+	def set_telemetry(self, f):
+		self.oscClient.send_message(self.osc_message, f)
+
+
+def wait_controllers(vrsystem):
+	left_id, right_id = None, None
+	printed = False
+	try:
+		while left_id is None or right_id is None:
+			left_id, right_id = get_controller_ids(vrsystem)
+			if left_id and right_id:
+				print('GOT:', (left_id, right_id))
+				return (left_id, right_id)
+			printed = printed or print('Waiting for controllers (Press ctrl+c to quit)...') or True
+			time.sleep(1.1)
+	except KeyboardInterrupt:
+		openvr.shutdown()
 
 
 if __name__ == '__main__':

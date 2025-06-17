@@ -17,13 +17,13 @@
 		},
 		"bullet": {
 			"enabled": false,
-			"description": "WIP: If someone hits you with 'bullet' contact sender, sink to ground, or catch on fire if you have vr_audience_fire",
+			"description": "WIP: If someone hits you with 'bullet' contact sender, sink to ground, or catch on fire if you have vr_asmr_petting",
 			"sink": true,
 			"fire": true
 		},
 		"static": {
 			"enabled": false,
-			"description": "WIP: Static electricity buildup makes you catch on fire if you have vr_audience_fire"
+			"description": "WIP: Static electricity buildup makes you catch on fire if you have vr_asmr_petting"
 		}
 	},
 	"vrc_osc_ip": "127.0.0.1",

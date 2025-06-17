@@ -1,9 +1,26 @@
 {
-    "[python]": {
+    "python.autoComplete.extraPaths": [
+
+    ],
+    "python.analysis.typeCheckingMode": "basic",
+      "[python]": {
+        "editor.formatOnSaveMode": "file",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnType": false,
         "editor.insertSpaces": false,
-        "editor.detectIndentation" : false,
-        "editor.defaultFormatter": "eeyore.yapf",
-        "editor.tabSize": 4
-    },
-    "yapf.args": ["--style", "{based_on_style: google, indent_width: 4,use_tabs: True}"]
+        "editor.tabSize": 4,
+        "editor.detectIndentation" : false
+      },
+      "python.analysis.extraPaths": [],
+      "editor.defaultFormatter": "charliermarsh.ruff",
+      "notebook.defaultFormatter": "charliermarsh.ruff",
+      "editor.defaultFoldingRangeProvider": "charliermarsh.ruff",
+     
+      "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+      },
+      "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+      }
 }

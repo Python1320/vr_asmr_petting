@@ -20,10 +20,10 @@ from datetime import datetime
 import config_reader
 from utils import fatal, exit as _exit, spawn_task, FROZEN, EXEDIR, DEBUGGER, show_console, vrc_osc
 
-print('VR Audience Fire starting...')
+print('VR ASMR Petting starting...')
 
 
-NAME = 'vr_audience_fire'
+NAME = 'vr_asmr_petting'
 LOGFILE = EXEDIR / 'debug.log'
 HAS_TTY = sys.stdout and sys.stdout.isatty()
 if HAS_TTY:
@@ -43,89 +43,6 @@ conf = config_reader.get_config()
 if conf.debug and os.name == 'nt' and not HAS_TTY:
 	show_console()
 	logging.basicConfig(level=logging.DEBUG)
-
-
-class AudienceFire:
-	def __init__(self):
-		self.fire = False
-		self.water = False
-		self.water_last_changed = None
-		self.fire_last_changed = None
-		self._water_task = None
-
-	async def on_fire(self, on=True):
-		if not on:
-			return
-		log.debug(f'on_fire={on}')
-		await self.set_fire(on)
-
-	async def on_water(self, on=True):
-		if not on:
-			return
-		log.debug(f'on_water={on}')
-		await self.set_water(on)
-
-	async def on_water_effect(self, on):
-		log.debug(f'on_water_effect={on}')
-		self.water = on
-
-	async def on_fire_effect(self, on):
-		log.debug(f'on_fire_effect={on}')
-		self.fire = on
-
-	async def set_fire(self, on=True):
-		log.debug(f'set_fire={on}')
-		if on and self.water:
-			await self.set_water(False)
-		self.fire = on
-		self.fire_last_changed = datetime.now()
-		await self.send_fire(on)
-
-	async def set_water(self, on=True):
-		log.debug(f'set_water={on}')
-		if on and self.fire:
-			await self.set_fire(False)
-		self.water = on
-		self.water_last_changed = datetime.now()
-		await self.send_water(on)
-
-		if on:
-			if self._water_task:
-				self._water_task.cancel()
-			self._water_task = asyncio.create_task(self._auto_stop_water())
-
-	async def _auto_stop_water(self):
-		try:
-			await asyncio.sleep(5)
-			await self.set_water(False)
-		except asyncio.CancelledError:
-			pass
-
-	async def send_water(self, on=True):
-		senders = conf.senders
-		log.info(f'send_water on={on} at {self.water_last_changed}')
-		for msg, payload in ((senders.water if on else senders.water_off) or {}).items():
-			log.debug(f'send_water {msg} {payload}')
-			if vrc:
-				vrc.send_message(msg, payload)
-
-	async def send_fire(self, on=True):
-		log.info(f'send_fire on={on}')
-		senders = conf.senders
-		for msg, payload in ((senders.fire if on else senders.fire_off) or {}).items():
-			log.debug(f'send_fire {msg} {payload}')
-			if vrc:
-				vrc.send_message(msg, payload)
-
-	async def on_reset(self):
-		log.info('reset')
-		if self._water_task:
-			self._water_task.cancel()
-
-	async def on_bullet(self, on=True):
-		log.info(f'on_bullet {on}')
-		if on:
-			await self.set_fire(True)
 
 
 def exit(n=0):
@@ -160,9 +77,7 @@ def reg_openvr():
 
 
 async def init_main():
-	global disp, vrc, osc_receiver, osc_server, qclient, audience_fire, transport, protocol, main_loop
-
-	audience_fire = AudienceFire()
+	global disp, vrc, osc_receiver, osc_server, qclient, transport, protocol, main_loop
 
 	def avatar_change(addr, value):
 		log.info(f'Avatar changed/reset {addr} {value}...')
@@ -182,7 +97,7 @@ async def init_main():
 			return _wrapper
 
 		detection_map = {
-			'water': audience_fire.on_water,
+			'bullet': audience_fire.on_water,
 			'fire': audience_fire.on_fire,
 			'water_effect': audience_fire.on_water_effect,
 			'fire_effect': audience_fire.on_fire_effect,
