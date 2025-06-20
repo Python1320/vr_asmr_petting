@@ -1,24 +1,18 @@
 import logging
 import asyncio
-import json
 import os
 import sys
-import time
-import traceback
-import ctypes
-from typing import Any, List
 
 # vrchat_oscquery provides zeroconf
 import coloredlogs
 from pythonosc.dispatcher import Dispatcher
-from pythonosc.udp_client import SimpleUDPClient
+import asmr_worker
 from vrchat_oscquery.common import vrc_client
 
 import openvr
-from pathlib import Path
-from datetime import datetime
+import openvr.error_code
 import config_reader
-from utils import fatal, exit as _exit, spawn_task, FROZEN, EXEDIR, DEBUGGER, show_console, vrc_osc
+from utils import fatal, exit as _exit, spawn_task, FROZEN, EXEDIR, DEBUGGER, show_console, vrc_osc, get_vr_system
 
 print('VR ASMR Petting starting...')
 
@@ -62,26 +56,51 @@ vrc = vrc_client()
 AVATAR_CHANGE_PARAMETER = '/avatar/change'
 
 
-def reg_openvr():
-	global application
+async def reg_openvr():
+	log.info('Registering OpenVR autostart...')
+	global overlay
 	try:
-		application = openvr.init(openvr.VRApplication_Utility)
+		_vr_system = await get_vr_system(openvr.VRApplication_Overlay, loop=main_loop)
+
+		log.debug('notification test')
+		overlay = openvr.IVROverlay()
+		notification = openvr.IVRNotifications()
 		log.info(
 			'Installing to SteamVR: %s %s',
 			EXEDIR / 'app.vrmanifest',
 			openvr.VRApplications().addApplicationManifest(str((EXEDIR / 'app.vrmanifest').resolve())),
 		)
 
+		try:
+			openvr.IVRNotifications.createNotification(
+				notification,
+				overlay.createOverlay(overlayKey='vraf', overlayName=''),
+				0,
+				openvr.EVRNotificationType_Transient,
+				'VR Audience Fire Starting',
+				openvr.EVRNotificationStyle_Application,
+				None,
+			)
+		except openvr.error_code.NotificationError_OK:  # why would this throw an error
+			pass
+		except openvr.error_code.NotificationError as e:
+			log.error(f'NotificationError: {e}')
+			if DEBUGGER:
+				raise
+
 	except Exception as e:
 		fatal(str(e))
 
 
+asmr_worker_routine = None
+
+
 async def init_main():
-	global disp, vrc, osc_receiver, osc_server, qclient, transport, protocol, main_loop
+	global disp, vrc, osc_receiver, osc_server, qclient, transport, protocol, main_loop, asmr_worker_routine
 
 	def avatar_change(addr, value):
 		log.info(f'Avatar changed/reset {addr} {value}...')
-		spawn_task(audience_fire.on_reset())
+		# spawn_task(audience_fire.on_reset())
 
 	try:
 		disp = Dispatcher()
@@ -97,10 +116,7 @@ async def init_main():
 			return _wrapper
 
 		detection_map = {
-			'bullet': audience_fire.on_water,
-			'fire': audience_fire.on_fire,
-			'water_effect': audience_fire.on_water_effect,
-			'fire_effect': audience_fire.on_fire_effect,
+			#'bullet': audience_fire.on_water,
 		}
 		osc_detectors = conf.osc_detectors or {}
 		for key, cb in detection_map.items():
@@ -116,8 +132,11 @@ async def init_main():
 			f'Server started: http://{server_details.osc_host}:{server_details.http_port} osc_port={server_details.osc_port}'
 		)
 		log.info(
-			f'Example: sendosc {server_details.osc_host} {server_details.osc_port} {osc_detectors.get("fire", "/avatar/parameters/???")} b true'
+			f'Example: sendosc {server_details.osc_host} {server_details.osc_port} {osc_detectors.get("bullet", "/avatar/parameters/???")} b true'
 		)
+
+		asmr_worker_routine = spawn_task(asmr_worker.start(vrc, await get_vr_system(openvr.VRApplication_Overlay)))
+
 		try:
 			while True:
 				sys.stdout.write('.')
@@ -143,5 +162,6 @@ async def init_main():
 
 if __name__ == '__main__':
 	if conf.install_to_steamvr:
-		reg_openvr()
+		main_loop.run_until_complete(reg_openvr())
+	print('finished registration, starting main loop...')
 	main_loop.run_until_complete(init_main())

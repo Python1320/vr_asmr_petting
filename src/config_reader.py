@@ -34,11 +34,17 @@ except json.JSONDecodeError as e:
 
 
 class Senders(BaseModel):
-	water: dict[str, Any] | None = None
-	fire: dict[str, Any] | None = None
-	water_off: dict[str, Any] | None = None
-	fire_off: dict[str, Any] | None = None
+	volume_left: str | None = None
+	volume_right: str | None = None
+	sound_taps_right: str | None = None
+	sound_taps_left: str | None = None
 	model_config = ConfigDict(extra='forbid')
+
+
+class PluginData(BaseModel):
+	enabled: bool = False
+	description: str | None = None
+	model_config = ConfigDict(extra='allow')
 
 
 class AppConfig(BaseSettings):
@@ -48,6 +54,7 @@ class AppConfig(BaseSettings):
 	vrc_osc_ip: str = '127.0.0.1'
 	osc_detectors: dict[str, str] | None = None
 	zeroconf: bool = True
+	plugins: dict[str, PluginData] = {}
 	debug: bool = False
 	install_to_steamvr: bool = True
 
@@ -69,19 +76,6 @@ def get_config():
 		conf = AppConfig()
 	except ValidationError as e:
 		fatal(f'Config file invalid! Check below for details!', detail=str(e), nodecor=True)
-	if not conf.senders.water:
-		logging.warning('No water messages found in config, water effect will not work.')
-	if not conf.senders.fire:
-		logging.warning('No fire messages found in config, fire effect will not work.')
-	if not conf.senders.water_off:
-		logging.warning('No water messages off found in config, water effect will not work.')
-	if not conf.senders.fire_off:
-		logging.warning('No fire messages off found in config, fire effect will not work.')
-
-	if not (conf.osc_detectors or {}).get('water', None):
-		logging.warning('No water OSC detector found in config, water effect will not work.')
-	if not (conf.osc_detectors or {}).get('fire', None):
-		logging.warning('No fire OSC detector found in config, fire effect will not work.')
 
 	if not conf.zeroconf:
 		logging.warning('Zeroconf is disabled, warranty void!')

@@ -2,6 +2,7 @@ import asyncio
 import os
 import sys
 import time
+from typing import Awaitable
 from psutil import process_iter
 
 import ctypes
@@ -10,10 +11,10 @@ import logging
 
 from pathlib import Path
 
-import asyncio
 from aiohttp import web
 from zeroconf.asyncio import AsyncZeroconf
 from pythonosc.osc_server import AsyncIOOSCUDPServer
+from pythonosc.udp_client import SimpleUDPClient
 from pythonosc.dispatcher import Dispatcher
 from vrchat_oscquery.common import _unused_port, _oscjson_response, _create_service_info, _get_app_host
 
@@ -21,11 +22,10 @@ from vrchat_oscquery.common import _unused_port, _oscjson_response, _create_serv
 import tkinter as tk
 import tkinter.ttk as ttk
 import webbrowser
+from asyncio import Future
 
-import sys, math, time
 import openvr
-import wave
-import sys
+import openvr.error_code
 # import audio_visualization
 # audio_visualization.init()
 
@@ -36,8 +36,6 @@ FROZEN = getattr(sys, 'frozen', False)
 DEBUGGER = 'debugpy' in sys.modules
 EXEDIR = Path(sys.prefix) if FROZEN else Path(__file__).parent
 # print(Path(__file__).parent, Path(sys.prefix), EXEDIR)
-
-from pythonosc.udp_client import SimpleUDPClient
 
 
 def show_console():
@@ -53,7 +51,7 @@ def is_vrchat_running() -> bool:
 
 def fatal(msg, detail=None, nodecor=False):
 	if 'debugpy' in sys.modules:
-		raise Exception(str(msg))
+		raise  # Exception(str(msg))
 
 	# if os.name == 'nt':
 	# ctypes.windll.user32.MessageBoxW(0, traceback.format_exc(), 'vr_asmr_petting - ERROR', 0)
@@ -87,7 +85,7 @@ def task_done(task):
 
 
 def spawn_task(awaitable, loop=None):
-	loop = loop or asyncio.get_event_loop()
+	loop = loop or asyncio.get_running_loop()
 	task = loop.create_task(awaitable)
 	all_tasks.append(task)
 	task.add_done_callback(task_done)
@@ -185,7 +183,7 @@ async def vrc_osc(name: str, dispatcher: Dispatcher, foreground=False, zeroconf=
 
 			return web.Response(body=_oscjson_response(req.path_qs, osc_port))
 
-		app.add_routes([web.get('/', req_handler)])
+		app.add_routes([web.get('/', req_handler)])  # type: ignore
 		runner = web.AppRunner(app)
 		await runner.setup()
 		await web.TCPSite(runner, host, http_port).start()
@@ -217,8 +215,8 @@ def get_controller_ids(vrsys=None):
 	return left, right
 
 
-def getDeviceIDbySerial(serial_want, vr_system):
-	if type(serial_want) == int:
+def getDeviceIDbySerial(serial_want: int | str, vr_system) -> int | bool | None:
+	if type(serial_want) is int:
 		return serial_want
 
 	try:
@@ -248,29 +246,31 @@ def dump_devices(vr_system):
 
 
 class TrackConfig:
-	name = None
-	osc_message = None
-	osc_tap_message = None
-	serial = None
-	device_id = None
-	delta = None
-	tapped = None
+	name: str
+	osc_message: str
+	osc_tap_message: str
+	serial: str | None
+	device_id: int = -9999
+	delta: list[int | float] = [0, 0]
+	tapped: bool | None = None
 	send_untap = None
+	oscClient: SimpleUDPClient
 
-	def __init__(self, name=None, osc_message=None, osc_tap_message=None, serial=None, oscClient=None):
+	def __init__(
+		self, name: str, osc_message: str, osc_tap_message: str, serial: str | None, oscClient: SimpleUDPClient
+	):
 		self.name = name
 		self.osc_message = osc_message
 		self.osc_tap_message = osc_tap_message
 		self.serial = serial
-		self.device_id = None
+		self.device_id = None  # type: ignore
 		self.delta = [0, 0]
 		self.tapped = None
 		self.send_untap = False
 		self.oscClient = oscClient
 
 	def attempt_tracking(self):
-		todo()
-		pass
+		raise NotImplementedError('TODO')
 
 	def set_tap_telemetry(self, f):
 		self.oscClient.send_message(self.osc_tap_message, f)
@@ -279,7 +279,7 @@ class TrackConfig:
 		self.oscClient.send_message(self.osc_message, f)
 
 
-def wait_controllers(vrsystem):
+async def wait_controllers(vrsystem) -> tuple[int, int] | None:
 	left_id, right_id = None, None
 	printed = False
 	try:
@@ -288,10 +288,53 @@ def wait_controllers(vrsystem):
 			if left_id and right_id:
 				print('GOT:', (left_id, right_id))
 				return (left_id, right_id)
-			printed = printed or print('Waiting for controllers (Press ctrl+c to quit)...') or True
-			time.sleep(1.1)
+			printed = printed or print('Waiting for controllers...') or True
+			await asyncio.sleep(1.1)
 	except KeyboardInterrupt:
 		openvr.shutdown()
+
+
+vr_system_fut: Future[openvr.IVRSystem]
+
+
+async def _get_vr_system(app_type=openvr.VRApplication_Overlay):
+	if not vr_system_fut:
+		raise RuntimeError('Future not initialized')
+
+	if vr_system_fut.done():
+		raise RuntimeError('VR System already initialized')
+	init_errored = False
+	for i in range(999999):
+		try:
+			vr_system = openvr.init(app_type)
+			vr_system_fut.set_result(vr_system)
+			logging.info('OpenVR initialized successfully')
+			break
+		except openvr.error_code.InitError_Init_VRClientDLLNotFound:
+			raise
+		except openvr.error_code.InitError_Init_NoServerForBackgroundApp:
+			if not init_errored:
+				init_errored = True
+				print('Waiting for SteamVR...')
+		except Exception as e:
+			fatal(f'Failed to initialize OpenVR: {e}')
+		await asyncio.sleep(2.1)
+
+
+vr_system_first = True
+
+
+async def get_vr_system(
+	app_type=openvr.VRApplication_Overlay, loop: asyncio.AbstractEventLoop | None = None
+) -> openvr.IVRSystem:
+	global vr_system_first, vr_system_fut
+	if vr_system_first:
+		vr_system_first = False
+		assert loop is not None, 'Loop must be provided on first call'
+		vr_system_fut = Future(loop=loop)
+		spawn_task(_get_vr_system(app_type))
+	await vr_system_fut
+	return vr_system_fut.result()
 
 
 if __name__ == '__main__':
