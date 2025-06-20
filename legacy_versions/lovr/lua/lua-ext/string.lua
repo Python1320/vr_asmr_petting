@@ -1,0 +1,115 @@
+--[[
+notice that,
+while this does override the 'string' and add some extra stuff,
+it does not explicitly replace the default string metatable __index
+to do that, require 'ext.meta' (or do it yourself)
+--]]
+local string = {}
+for k,v in pairs(require 'string') do string[k] = v end
+
+local table = require 'ext.table'
+
+-- string.concat(string.split(a,b),b) == a
+function string.split(s, exp)
+	exp = exp or ''
+	s = tostring(s)
+	local t = table()
+	-- handle the exp='' case
+	if exp == '' then
+		for i=1,#s do
+			t:insert(s:sub(i,i))
+		end
+	else
+		local searchpos = 1
+		local start, fin = s:find(exp, searchpos)
+		while start do
+			t:insert(s:sub(searchpos, start-1))
+			searchpos = fin+1
+			start, fin = s:find(exp, searchpos)
+		end
+		t:insert(s:sub(searchpos))
+	end
+	return t
+end
+
+function string.trim(s)
+	return s:match('^%s*(.-)%s*$')
+end
+
+-- should this wrap in a table?
+function string.bytes(s)
+	return table{s:byte(1,#s)}
+end
+
+string.load = load or loadstring
+
+--[[
+-- drifting further from standards...
+-- this string-converts everything concat'd (no more errors, no more print(a,b,c)'s)
+getmetatable('').__concat = function(a,b)
+	return tostring(a)..tostring(b)
+end
+--]]
+
+-- a C++-ized accessor to subsets
+-- indexes are zero-based inclusive
+-- sizes are zero-based-exclusive (or one-based-inclusive depending on how you think about it)
+-- parameters are (index, size) rather than (start index, end index)
+function string.csub(d, start, size)
+	if not size then return string.sub(d, start + 1) end	-- til-the-end
+	return string.sub(d, start + 1, start + size)
+end
+
+--d = string data
+--l = length of a column.  default 32
+--w = hex word size.  default 1
+--c = extra column space.  default 8
+function string.hexdump(d, l, w, c)
+	d = tostring(d)
+	l = tonumber(l)
+	w = tonumber(w)
+	c = tonumber(c)
+	if not l or l < 1 then l = 32 end
+	if not w or w < 1 then w = 1 end
+	if not c or c < 1 then c = 8 end
+	local s = table()
+	local rhs = table()
+	local col = 0
+	for i=1,#d,w do
+		if i % l == 1 then
+			s:insert(string.format('%.8x ', (i-1)))
+			rhs = table()
+			col = 1
+		end
+		s:insert' '
+		for j=w,1,-1 do
+			local e = i+j-1
+			local sub = d:sub(e,e)
+			if #sub > 0 then
+				local b = string.byte(sub)
+				s:insert(string.format('%.2x', b))
+				rhs:insert(b >= 32 and sub or '.')
+			end
+		end
+		if col % c == 0 then
+			s:insert' '
+		end
+		if (i + w - 1) % l == 0 or i+w>#d then
+			s:insert' '
+			s:insert(rhs:concat())
+		end
+		if (i + w - 1) % l == 0 then
+			s:insert'\n'
+		end
+		col = col + 1
+	end
+	return s:concat()
+end
+
+-- escape for pattern matching
+local escapeFind = '[' .. ([[^$()%.[]*+-?]]):gsub('.', '%%%1') .. ']'
+function string.patescape(s)
+	return (s:gsub(escapeFind, '%%%1'))
+end
+
+return string
