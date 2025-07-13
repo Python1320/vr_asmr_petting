@@ -3,7 +3,6 @@
 # TODO: Allow steamvr/devices to come and go
 
 
-import sys
 import math
 import time
 import openvr
@@ -43,7 +42,7 @@ SCALE = 1.0
 prev_ts = False
 
 
-async def loop():
+async def loop() -> None:
 	await sleep(0.1)
 	if not vr_system:
 		return
@@ -124,7 +123,7 @@ async def run(controllers):
 	for conf in trackings:
 		print('Tracking: ', conf.__dict__)
 	for i in range(999999999):
-		if await loop() == True:
+		if await loop():
 			break
 
 

@@ -2,7 +2,6 @@ import asyncio
 import os
 import sys
 import time
-from typing import Awaitable
 from psutil import process_iter
 
 import ctypes
@@ -227,7 +226,7 @@ def getDeviceIDbySerial(serial_want: int | str, vr_system) -> int | bool | None:
 			)
 			if serial == serial_want:
 				return i
-	except openvr.error_code.TrackedProp_InvalidDevice as e:
+	except openvr.error_code.TrackedProp_InvalidDevice:
 		print('ERROR FINDING', serial_want, ': TrackedProp_InvalidDevice')
 		return False
 
@@ -253,7 +252,7 @@ class TrackConfig:
 	device_id: int = -9999
 	delta: list[int | float] = [0, 0]
 	tapped: bool | None = None
-	send_untap = None
+	send_untap: float = 0
 	oscClient: SimpleUDPClient
 
 	def __init__(
