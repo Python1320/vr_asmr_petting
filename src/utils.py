@@ -57,7 +57,7 @@ def fatal(msg, detail=None, nodecor=False):
 	# else:
 	# print(msg)
 
-	title = 'VR Audience Fire: Error'
+	title = 'VR ASMR Petting: Error'
 	message = str(msg) if nodecor else 'An error has occured, sorry about that.\n\nDetails: ' + str(msg)
 	detail = detail or traceback.format_exc()
 	TopErrorWindow(title, message, detail)

@@ -16,7 +16,7 @@
 			"enabled": false
 		},
 		"static": {
-			"description": "WIP: Static electricity buildup makes you catch on fire if you have vr_asmr_petting",
+			"description": "WIP: Static electricity buildup makes you catch on fire if you have vr_audience_fire",
 			"enabled": false
 		}
 	},

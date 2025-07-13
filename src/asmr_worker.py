@@ -97,8 +97,7 @@ async def loop() -> None:
 			elif name == 'right':
 				# print("accel %3.2f vel=%3.2f" % ((velocity_up-ov)/(now-ot),velocity_up))
 				audio_visualization.set_volume_r(speed)
-		# print(speed)
-		# sys.stdout.flush()
+
 	for t in trackings:
 		if t.send_untap and now > t.send_untap:
 			t.send_untap = False

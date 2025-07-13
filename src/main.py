@@ -131,8 +131,9 @@ async def init_main():
 
 		try:
 			while True:
-				sys.stdout.write('.')
-				sys.stdout.flush()
+				if sys.stdout:
+					sys.stdout.write('.')
+					sys.stdout.flush()
 				await asyncio.sleep(7)
 		except asyncio.exceptions.CancelledError:
 			pass
