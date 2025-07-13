@@ -12,9 +12,18 @@ from vrchat_oscquery.common import vrc_client
 import openvr
 import openvr.error_code
 import config_reader
-from utils import fatal, exit as _exit, spawn_task, FROZEN, EXEDIR, DEBUGGER, show_console, vrc_osc, get_vr_system
-
-print('VR ASMR Petting starting...')
+from utils import (
+	fatal,
+	exit as _exit,
+	spawn_task,
+	FROZEN,
+	EXEDIR,
+	DEBUGGER,
+	show_console,
+	vrc_osc,
+	get_vr_system,
+	set_console_title,
+)
 
 
 NAME = 'vr_asmr_petting'
@@ -36,7 +45,9 @@ conf = config_reader.get_config()
 
 if conf.debug and os.name == 'nt' and not HAS_TTY:
 	show_console()
-	logging.basicConfig(level=logging.DEBUG)
+	logging.basicConfig(level=logging.DEBUG, force=True)
+
+set_console_title('VR ASMR Petting')
 
 
 def exit(n=0):
@@ -74,7 +85,7 @@ async def reg_openvr():
 		try:
 			openvr.IVRNotifications.createNotification(
 				notification,
-				overlay.createOverlay(overlayKey='vraf', overlayName=''),
+				overlay.createOverlay(overlayKey='vasmrp', overlayName='VR ASMR Petting'),
 				0,
 				openvr.EVRNotificationType_Transient,
 				'VR Audience Fire Starting',
