@@ -339,16 +339,16 @@ async def get_vr_system(
 	return vr_system_fut.result()
 
 
+def set_console_title(title: str):
+	if os.name == 'nt':
+		ctypes.windll.kernel32.SetConsoleTitleW(title)
+	else:
+		print(f'\033]0;{title}\a', end='', flush=True)
+
+
 if __name__ == '__main__':
 	show_console()
 	logging.error('This is a utility module, not meant to be run directly.')
 	print('Please run the main script instead.')
 	TopErrorWindow('test title', 'test message', """These are some details\nnewline\nmore details""")
 	input('Press Enter to exit...')
-
-
-def set_console_title(title: str):
-	if os.name == 'nt':
-		ctypes.windll.kernel32.SetConsoleTitleW(title)
-	else:
-		print(f'\033]0;{title}\a', end='', flush=True)

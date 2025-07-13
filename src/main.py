@@ -73,31 +73,11 @@ async def reg_openvr():
 	try:
 		_vr_system = await get_vr_system(openvr.VRApplication_Overlay, loop=main_loop)
 
-		log.debug('notification test')
-		overlay = openvr.IVROverlay()
-		notification = openvr.IVRNotifications()
 		log.info(
 			'Installing to SteamVR: %s %s',
 			EXEDIR / 'app.vrmanifest',
 			openvr.VRApplications().addApplicationManifest(str((EXEDIR / 'app.vrmanifest').resolve())),
 		)
-
-		try:
-			openvr.IVRNotifications.createNotification(
-				notification,
-				overlay.createOverlay(overlayKey='vasmrp', overlayName='VR ASMR Petting'),
-				0,
-				openvr.EVRNotificationType_Transient,
-				'VR Audience Fire Starting',
-				openvr.EVRNotificationStyle_Application,
-				None,
-			)
-		except openvr.error_code.NotificationError_OK:  # why would this throw an error
-			pass
-		except openvr.error_code.NotificationError as e:
-			log.error(f'NotificationError: {e}')
-			if DEBUGGER:
-				raise
 
 	except Exception as e:
 		fatal(str(e))
@@ -174,5 +154,4 @@ async def init_main():
 if __name__ == '__main__':
 	if conf.install_to_steamvr:
 		main_loop.run_until_complete(reg_openvr())
-	print('finished registration, starting main loop...')
 	main_loop.run_until_complete(init_main())
