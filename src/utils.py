@@ -273,6 +273,8 @@ class TrackConfig:
 		raise NotImplementedError('TODO')
 
 	def set_tap_telemetry(self, f):
+		f = True if f >= 1 else False
+		# print('tap', self.osc_tap_message, f, self.oscClient._address, self.oscClient._port)
 		self.oscClient.send_message(self.osc_tap_message, f)
 
 	def set_telemetry(self, f):
@@ -343,3 +345,10 @@ if __name__ == '__main__':
 	print('Please run the main script instead.')
 	TopErrorWindow('test title', 'test message', """These are some details\nnewline\nmore details""")
 	input('Press Enter to exit...')
+
+
+def set_console_title(title: str):
+	if os.name == 'nt':
+		ctypes.windll.kernel32.SetConsoleTitleW(title)
+	else:
+		print(f'\033]0;{title}\a', end='', flush=True)
