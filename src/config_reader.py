@@ -57,6 +57,7 @@ class AppConfig(BaseSettings):
 	plugins: dict[str, PluginData] = {}
 	debug: bool = False
 	install_to_steamvr: bool = True
+	run_count: int | None = None
 
 	@classmethod
 	def settings_customise_sources(
@@ -103,4 +104,6 @@ if __name__ == '__main__':
 	# For testing purposes
 	conf = get_config()
 	print(conf)
+	conf.run_count = (conf.run_count or 0) + 1
+	print(f'Run count: {conf.run_count}')
 	save_config(conf)

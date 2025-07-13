@@ -4,7 +4,7 @@
 		{
 			"app_key": "python1320.vr_asmr_petting",
 			"launch_type": "binary",
-			"binary_path_windows": "./vr_asmr_petting_NoConsole.exe",
+			"binary_path_windows": "./vr_asmr_petting.exe",
 			"is_dashboard_overlay": true,
 
 			"strings": {

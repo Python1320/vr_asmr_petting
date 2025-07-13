@@ -8,6 +8,7 @@ build_exe_options = {
 	'include_files': file_include,
 	'include_msvcr': False,
 	'optimize': 0,
+	'build_exe': '../build',
 }
 
 setup(
@@ -16,7 +17,7 @@ setup(
 	description='Lets you create ASMR sounds while moving tracked objects',
 	options={'build_exe': build_exe_options},
 	executables=[
-		Executable('main.py', target_name='vr_asmr_petting.exe', base='console', icon='../icon.ico'),
-		Executable('main.py', target_name='vr_asmr_petting_NoConsole.exe', base='Win32GUI', icon='../icon.ico'),
+		Executable('main.py', target_name='vr_asmr_petting_console.exe', base='console', icon='../icon.ico'),
+		Executable('main.py', target_name='vr_asmr_petting.exe', base='Win32GUI', icon='../icon.ico'),
 	],
 )
