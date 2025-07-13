@@ -8,27 +8,17 @@ import time
 import openvr
 import openvr.error_code
 from asyncio import sleep
+import logging
 
-# import pygame
+import config_reader
+from pluginhelper import VRPlugin, plugin_tick_callbacks
+
 import audio_visualization
-import plugin_zbye
+
 
 from utils import getDeviceIDbySerial, wait_controllers, dump_devices, TrackConfig
 
-# audio_visualization.init()
-""""
-init_errored = False
-for i in range(9999):
-	try:
-		vr_system = openvr.init(openvr.VRApplication_Background)
-	except openvr.error_code.InitError_Init_NoServerForBackgroundApp:
-		if not init_errored:
-			init_errored = True
-			print('Waiting for SteamVR...')
-		time.sleep(13.20)
-		continue
-	break
-"""
+
 vr_system: openvr.IVRSystem | None = None
 
 trackings: list[TrackConfig] = []
@@ -40,22 +30,49 @@ trackings: list[TrackConfig] = []
 
 SCALE = 1.0
 prev_ts = False
+poses = []
+
+enabled = True
+enabled_alt = True
+tapping_enabled = True
+
+
+# TODO: unused
+def on_enabled(e: bool) -> None:
+	global enabled
+	enabled = e
+	logging.debug(f'ASMR = {enabled}')
+
+
+def on_enabled_alt(e: bool) -> None:
+	global enabled_alt
+	enabled_alt = e
+	logging.debug(f'ASMR (alt) = {enabled_alt}')
+
+
+def set_tapping_enabled(enabled: bool) -> None:
+	global tapping_enabled
+	tapping_enabled = enabled
+	logging.debug(f'Tap = {tapping_enabled}')
 
 
 async def loop() -> None:
-	await sleep(0.1)
+	global poses
+	await sleep(0.101)
 	if not vr_system:
 		return
 
 	global prev_ts
-	poses = vr_system.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, 0, trackings)
+	poses = vr_system.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, 0, poses)
 	now = time.time()
 
 	ft = now - (prev_ts or now)
 	prev_ts = now
 	ft = ft > 0.9 and 0.9 or ft <= 0.0001 and 0.0001 or ft
 
-	plugin_zbye.on_tick(now, ft, poses)
+	for plugin in plugin_tick_callbacks.values():
+		await plugin(now, ft, poses)
+
 	for t in trackings:
 		delta = t.delta
 		name = t.name
@@ -84,11 +101,11 @@ async def loop() -> None:
 		t.set_telemetry(speed)
 		if name == 'left' or name == 'right':
 			# TODO: Both direction major acceleration required: unlock_tap/last_accelerated
-			if tap_detected and not t.tapped:
+			if tap_detected and not t.tapped and tapping_enabled:
 				t.tapped = True
 				t.send_untap = now + 0.101
 				t.set_tap_telemetry(1)
-				print('TAP', name)
+				print('TAP!', name)
 			elif t.tapped and not tap_detected:
 				t.tapped = False
 
@@ -126,7 +143,9 @@ async def run(controllers):
 			break
 
 
-async def start(client, _vr_system: openvr.IVRSystem):
+async def start(
+	client, _vr_system: openvr.IVRSystem, loaded_plugins: dict[str, VRPlugin], senders: config_reader.Senders
+) -> None:
 	global oscClient, trackings, vr_system
 	vr_system = _vr_system
 	oscClient = client
@@ -134,8 +153,8 @@ async def start(client, _vr_system: openvr.IVRSystem):
 	trackings.append(
 		TrackConfig(
 			name='left',
-			osc_message='/avatar/parameters/petting_volume',
-			osc_tap_message='/avatar/parameters/sound_taps_left',
+			osc_message=senders.volume_left or '/avatar/parameters/petting_volume',
+			osc_tap_message=senders.sound_taps_left or '/avatar/parameters/sound_taps_left',
 			oscClient=oscClient,
 			serial=None,
 		)
@@ -143,8 +162,8 @@ async def start(client, _vr_system: openvr.IVRSystem):
 	trackings.append(
 		TrackConfig(
 			name='right',
-			osc_message='/avatar/parameters/petting_volume_r',
-			osc_tap_message='/avatar/parameters/sound_taps_right',
+			osc_message=senders.volume_right or '/avatar/parameters/petting_volume_r',
+			osc_tap_message=senders.sound_taps_right or '/avatar/parameters/sound_taps_right',
 			oscClient=oscClient,
 			serial=None,
 		)
@@ -153,7 +172,16 @@ async def start(client, _vr_system: openvr.IVRSystem):
 	controllers = await wait_controllers(vr_system)
 	if not controllers:
 		return
-	plugin_zbye.init(vr_system, controllers)
+
+	for plugin in loaded_plugins.values():
+		await plugin.on_vr(vr=vr_system, controllers=controllers)
 
 	dump_devices(vr_system)
+
+	logging.info('Starting plugins...')
+	for plugin in loaded_plugins.values():
+		await plugin.on_start()
+
+	logging.info('Finished starting plugins, running main loop...')
+
 	await run(controllers)

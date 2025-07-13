@@ -1,8 +1,11 @@
 {
 	"debug": true,
+	"debug_audio_visualization": true,
 	"install_to_steamvr": true,
 	"osc_detectors": {
-		"enabled": "/avatar/parameters/petting_enabled"
+		"enabled": "/avatar/parameters/sounds/pets/normal",
+		"enabled_alt": "/avatar/parameters/sounds/pets/alt",
+		"tapping_enabled": "/avatar/parameters/tapping_enabled"
 	},
 	"plugins": {
 		"bullet": {
@@ -13,13 +16,14 @@
 		},
 		"byewave": {
 			"description": "WIP: sink to ground if your hand is above your head and other one is below your head",
-			"enabled": false
+			"enabled": true
 		},
 		"static": {
 			"description": "WIP: Static electricity buildup makes you catch on fire if you have vr_audience_fire",
 			"enabled": false
 		}
 	},
+	"run_count": 9,
 	"senders": {
 		"sound_taps_left": "/avatar/parameters/sound_taps_left",
 		"sound_taps_right": "/avatar/parameters/sound_taps_right",
@@ -28,5 +32,6 @@
 	},
 	"vrc_osc_ip": "127.0.0.1",
 	"vrc_osc_port": 9000,
+	"autotapping_enabled": false,
 	"zeroconf": true
 }

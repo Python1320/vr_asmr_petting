@@ -1,15 +1,15 @@
 import openvr
 import math
-import time
-from functools import wraps
-import openvr
 import numpy
 
-from utils import getDeviceIDbySerial, wait_controllers, TrackConfig
+import pluginhelper
+
+NAME = 'byewave'
 
 
 class State:
 	pos = 0
+	controllers: list[int] = []
 
 
 state = State()
@@ -26,10 +26,6 @@ def convert_steam_vr_matrix(pose):
 		),
 		dtype=numpy.float32,
 	)
-
-
-def init(vr_system, controllers):
-	state.controllers = controllers  # type: ignore
 
 
 def getpose(poses, device_id):
@@ -90,6 +86,27 @@ def move_z(ft, golower=False):
 	pose[1][3] += golower and (MOVESZ) or -MOVESZ
 	openvr.VRChaperoneSetup().setWorkingStandingZeroPoseToRawTrackingPose(pose)
 	openvr.VRChaperoneSetup().commitWorkingCopy(openvr.EChaperoneConfigFile_Live)
+
+
+async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main_loop: pluginhelper.TYPE_MAIN_LOOP):
+	plugin_conf = conf.plugins.get(NAME)
+
+	if not plugin_conf:
+		return False
+
+	if not plugin_conf.enabled:
+		return False
+
+	pluginhelper.register_plugin_tick_callback(NAME, on_tick)
+	return True
+
+
+async def on_vr(vr=None, controllers=None):
+	state.controllers = controllers  # type: ignore
+
+
+async def on_start():
+	return  # we run on tick
 
 
 if __name__ == '__main__':

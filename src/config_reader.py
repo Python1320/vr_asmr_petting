@@ -8,7 +8,7 @@ import sys
 from utils import fatal, EXEDIR
 
 
-from typing import Any, Tuple, Type
+from typing import Tuple, Type
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict, JsonConfigSettingsSource
@@ -27,7 +27,7 @@ conflocation = EXEDIR / 'config.json'
 try:
 	with conflocation.open('r') as f:
 		conf_json = json.load(f)
-except FileNotFoundError as e:
+except FileNotFoundError as _:
 	fatal(f'Configuration file missing! Location: {conflocation}')
 except json.JSONDecodeError as e:
 	fatal(f'Config file malformed! Check syntax for example with https://jsonlint.com/ \n Error: {e}')
@@ -56,8 +56,10 @@ class AppConfig(BaseSettings):
 	zeroconf: bool = True
 	plugins: dict[str, PluginData] = {}
 	debug: bool = False
+	debug_audio_visualization: bool | None = False
 	install_to_steamvr: bool = True
 	run_count: int | None = None
+	autotapping_enabled: bool | None = False
 
 	@classmethod
 	def settings_customise_sources(
@@ -76,7 +78,11 @@ def get_config():
 	try:
 		conf = AppConfig()
 	except ValidationError as e:
-		fatal(f'Config file invalid! Check below for details!', detail=str(e), nodecor=True)
+		fatal(
+			'Configuration file is no longer valid! Replace with a original copy or check below for details.',
+			detail=str(e),
+			nodecor=True,
+		)
 
 	if not conf.zeroconf:
 		logging.warning('Zeroconf is disabled, warranty void!')

@@ -14,6 +14,7 @@ from utils import *
 
 class State:
 	pos = 0
+	controllers: list[int] = []
 
 
 state = State()
@@ -36,24 +37,13 @@ def init(vr_system, controllers):
 	state.controllers = controllers
 
 
-def getpose(poses, device_id):
-	pose: openvr.TrackedDevicePose_t = poses[device_id]
-	if not pose.bDeviceIsConnected:
-		return (False, False)
-	if not pose.bPoseIsValid:
-		return (False, False)
-	mat = pose.mDeviceToAbsoluteTracking
-	z = mat[1][3]
-	x = mat[0][3]
-	y = mat[2][3]
-	xyz = (x, y, z)
-	return (xyz, math.hypot(*pose.vVelocity))
+async def on_load(conf=None, vrc=None, main_loop=None):
+	return False
 
 
-def on_tick(now, ft, poses):
-	(pose_lh, vel_lh) = getpose(poses, state.controllers[0])
-	(pose_rh, vel_rh) = getpose(poses, state.controllers[1])
+async def on_vr(vr=None, controllers=None):
+	pass
 
-	d_hr = math.dist(pose_rh, pose_hmd)
-	d_hl = math.dist(pose_lh, pose_hmd)
-	d_r = d_hl - d_hr
+
+async def on_start():
+	pass
