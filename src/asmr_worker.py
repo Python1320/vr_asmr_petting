@@ -87,7 +87,7 @@ async def loop():
 			# TODO: Both direction major acceleration required: unlock_tap/last_accelerated
 			if tap_detected and not t.tapped:
 				t.tapped = True
-				t.send_untap = True
+				t.send_untap = now + 0.101
 				t.set_tap_telemetry(1)
 				print('TAP', name)
 			elif t.tapped and not tap_detected:
@@ -101,10 +101,10 @@ async def loop():
 		# print(speed)
 		# sys.stdout.flush()
 	for t in trackings:
-		if t.send_untap:
+		if t.send_untap and now > t.send_untap:
 			t.send_untap = False
 			# print("UNTAP",t.name)
-			t.set_tap_telemetry(0.0)
+			t.set_tap_telemetry(0)
 
 
 async def run(controllers):
