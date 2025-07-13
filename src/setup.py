@@ -1,7 +1,7 @@
 from cx_Freeze import setup, Executable
 
 packages = ['pythonosc', 'psutil', 'zeroconf', 'json', 'threading', 'time', 'os', 'sys', 'ctypes', 'traceback']
-file_include = ['config.json', 'app.vrmanifest']
+file_include = ['config.json', 'app.vrmanifest', '../pettingloop_bad.wav']
 
 build_exe_options = {
 	'packages': packages,

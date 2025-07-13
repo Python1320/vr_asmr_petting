@@ -16,6 +16,7 @@ dependencies = [
     "pygame>=2.6.1",
     "python-osc>=1.9.3",
     "requests>=2.32.3",
+    "tendo>=0.3.0",
     "toml>=0.10.2",
     "zeroconf>=0.146.5",
 ]

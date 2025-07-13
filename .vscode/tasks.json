@@ -1,0 +1,13 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "group":"build",
+            "windows": {
+               "command": "${workspaceFolder}/build.cmd",
+            }
+         }
+    ]
+}
