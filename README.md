@@ -1,46 +1,44 @@
-## Movement Reactive ASMR Sounds System
+## Movement Reactive ASMR Sounds System 
 
-Realistic petting in VRChat
-
-### Description
-
-Movement reactive petting sounds. Smoothly fade in and out of petting sounds while moving hands in VR for enhanced meditation/ASMR experiences.
+*"Somewhat relaxing petting sounds in VRChat"*
+Movement reactive petting sounds 🖐.
+Smoothly fade in and out your petting sounds while moving hands in VR for enhanced meditation/ASMR experiences.
 
 ![petting demo](docs/teaser.png)
 
-## Marketplace
+## Marketplace 🛒
 
-https://python1320.gumroad.com/l/vrpets
+https://python1320.gumroad.com/l/vr_asmr_petting
 
 ### Includes
  
- - Installation instructions
- - VRCFury prefab
- - Petting sounds
- - Open source utility application (needed for volume control)
+ - Installation instructions 👉
+ - VRCFury prefab 📦
+ - Petting sounds 🔊
+ - Open source utility application (needed for automatic volume control!) 🛠️
 
 **NOT YET COMPATIBLE WITH QUEST**
 
-### Requirements
+### Requirements 📓
 
  - **Your custom avatar** (and source code). Used [example](https://drive.google.com/drive/folders/1ekIiFBnzJNhH2a6wwYLo2s5G-VuUlIY5)
  - **SteamVR** (**NOT YET COMPATIBLE WITH QUEST**)
- - **VR controllers**
+ - **VR controllers** 
  - **Windows only** *(Author cannot presently run Linux VR due to old PC troubles)*
  - **VRChat** (ChilloutVR should also work, but is not documented and probably no longer needed. Resonite also does not need this addon.)
  - **Knowledge about [OSC](https://docs.vrchat.com/docs/osc-overview)**
  - **[Unity editor](https://creators.vrchat.com/sdk/current-unity-version/)** for avatars 
  - **[VRCFury](https://vrcfury.com/getting-started)**
 
-### Test Avatar
+### Test Avatar 😎
 
 https://vrchat.com/home/avatar/avtr_6f59f68e-989e-42a1-8435-25c26d09a841
 
-### Installation Video
+### Installation Video 📹
 
  - [Using VRCFury prefab assets in Unity](https://www.youtube.com/watch?v=QDvzfLa82yI)
 
-### Installation Instructions
+### Installation Instructions ℹ️
 
 The steps are mostly the same as here https://morghus.gumroad.com/l/cugahoodie (replace with vr_asmr_petting.unitypackage)
 
@@ -63,21 +61,33 @@ The steps are mostly the same as here https://morghus.gumroad.com/l/cugahoodie (
 
   - VRCFury will automatically add a new [expression menu](https://docs.vrchat.com/docs/action-menu#expression-menu) entry and you will be able to toggle the pets on and off there. Test it in game and see if it works. 
 
-**App**
- 1. Download the latest installer: 
+**Helper app 🛠️**
+ 1. Download the latest `vr_asmr_petting_helper.zip` from [releases](https://github.com/Python1320/vr_asmr_petting/releases)
+ 2. Extract the ZIP file to somewhere
+ 3. Launch SteamVR
+ 4. Run `vr_asmr_petting.exe` once. *If unsure you can run it a second time and it will give an error about already running. If this does not happen the program is somehow crashing.*
+ 5. The program runs in background. Look in task manager for status.
+ 6. In case of trouble run `vr_asmr_petting_console.exe` to see debug output. You may also need to set debug to true in `config.json`
+ 7. Look in [`config.json`](https://github.com/Python1320/vr_asmr_petting/blob/main/src/config.json) for additional settings.
 
+### TODO 📌
 
-### TODO
+See [github issues](https://github.com/Python1320/vr_asmr_petting/issues?q=is%3Aissue%20state%3Aopen%20label%3Aenhancement%20OR%20label%3Aextra%20OR%20label%3A%22help%20wanted%22%20OR%20label%3Arelease)
 
- - [ ] Only enable pets when hand has been near a person's body
- - [ ] Autoupdater
- - [ ] Installer
- - [ ] Smoothing
- - [ ] React to petting direction
- - [ ] Pitch change experiments
+### Parameter usage 📋
 
+| **path**                              | **type**  | **synced bits**   |
+|---------------------------------------|-----------|-------------------|
+| /avatar/parameters/sounds/pets/normal | bool      | 1                 |
+| /avatar/parameters/sounds/pets/alt    | bool      | 1 _(optional)_    |
+| /avatar/parameters/petting_volume     | float     | 8                 |
+| /avatar/parameters/petting_volume_r   | float     | 8                 |
+| /avatar/parameters/sounds/cling       | bool      | 1 _(optional)_    |
+| /avatar/parameters/sound_taps_right   | bool      | 1 _(optional)_    |
+| /avatar/parameters/sound_taps_left    | bool      | 1 _(optional)_    |
+|                                       | **TOTAL** | **17 to 21 bits** |
 
-### Troubleshooting
+### Troubleshooting 🎯
 
  1. Ensure you have Avatar Self Interact enabled in the VRChat settings menu: ![img/self-interact.png](img/self-interact.png)
  2. [Enable OSC](https://docs.vrchat.com/docs/osc-overview#enabling-it)
@@ -86,21 +96,27 @@ The steps are mostly the same as here https://morghus.gumroad.com/l/cugahoodie (
 
 The application generates a `debug.log` file on start. This can provide clues on what is wrong.
 
-### How to change the sounds
+### How to change the sounds 🖊️
 
  - Navigate to your hand bones and just replace the sound files with your own
 
-### Known Issues
+### Related things 🤝
 
-https://github.com/python1320/vrpets/issues
+ - [HandSFX](https://booth.pm/en/items/5851561) (Untested!)
+ - Community recommendations [here](https://github.com/Python1320/vr_asmr_petting/issues/21)
+ - *There is (apparently) a similar behaving prefab or avatar with sound reaction (that probably does not require a helper application), please list it in the above issues!*
 
-### Helper app automatic start
+### Known Issues 🎯
+
+https://github.com/Python1320/vr_asmr_petting/issues
+
+### Helper app automatic start ℹ️
 
 After launching the helper exe succesfully once, you should be able to enable autostart in SteamVR:
 ![steamvr settings has autostart option](docs/autostart.png)
 
 ### NO SUPPORT NO WARRANTY
 
-This is a hobby for me, paying only gives you access to the asset files. Payment does not give support. I may or may not have time to look at github issues but that's about it.
+This is a hobby for me. Payment does not give personal support! I may or may not have time to look at github issues but that's about it.
 No warranty of any kind!
-I cannot afford supporting you, and you cannot afford my support, sorry. Feel free to ask someone else to fix things for you!
+*I cannot afford supporting you, and you cannot afford my support, sorry. Feel free to ask someone else to fix things for you!*
