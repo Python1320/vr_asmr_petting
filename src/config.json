@@ -1,4 +1,5 @@
 {
+	"autotapping_enabled": true,
 	"debug": true,
 	"debug_audio_visualization": true,
 	"install_to_steamvr": true,
@@ -23,7 +24,7 @@
 			"enabled": false
 		}
 	},
-	"run_count": 9,
+	"run_count": 0,
 	"senders": {
 		"sound_taps_left": "/avatar/parameters/sound_taps_left",
 		"sound_taps_right": "/avatar/parameters/sound_taps_right",
@@ -32,6 +33,5 @@
 	},
 	"vrc_osc_ip": "127.0.0.1",
 	"vrc_osc_port": 9000,
-	"autotapping_enabled": false,
 	"zeroconf": true
 }

@@ -22,5 +22,12 @@
       },
       "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
-      }
+      },
+      "cSpell.words": [
+        "ASMR",
+        "Chillout",
+        "Poiyomi",
+        "Resonite",
+        "unitypackage"
+      ]
 }
