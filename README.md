@@ -35,24 +35,9 @@ The message changes [avatar parameters](https://creators.vrchat.com/avatars/anim
  - **[Unity editor](https://creators.vrchat.com/sdk/current-unity-version/)** for avatars 
  - **[VRCFury](https://vrcfury.com/getting-started)**
 
-### HARM REDUCTION 😭
+### Test Avatar 🎭
 
-This is a tool, a tool can be used for good or bad (without realizing it), make note of the following:
-
- 1. SOME DO NOT TOLERATE MOVEMENT NEAR THEIR FACE AT ALL  
-    (ask for permission first, maybe do not use sounds at first)
-    1. (Also, a small minority tolerate only fast (or only slow) hand movement)
- 2. SOME GREATLY DISLIKE ASMR SOUNDS (but may also be too timid to say it!)
- 3. MANY DISLIKE UNKNOWN PEOPLE APPROACHING THEIR FACE (again, make sure contact is appreciated)
- 4. APPROACHING FROM SIDE/BEHIND CAN STARTLE PEOPLE (may appear to be a spider)
- 5. MANY OTHER PITFALLS (you have been warned)
-
-For non-verbal initiation, the following flowchart is provided (no warranty):
-![petting protocol](asmr-audiovisual-pets-protocol-v0.1.drawio.svg)
-
-### Test Avatar 😎
-
-https://vrchat.com/home/avatar/avtr_6f59f68e-989e-42a1-8435-25c26d09a841
+ - [Free Avatar Base: Toastacuga](https://vrchat.com/home/avatar/avtr_6f59f68e-989e-42a1-8435-25c26d09a841) ([source](https://www.vrcarena.com/assets/ZszLG-toastacuga))
 
 ### Installation Video 📹
 
@@ -92,10 +77,25 @@ The steps are mostly the same as here https://morghus.gumroad.com/l/cugahoodie (
 ### What it does NOT do 🛑
  - Does NOT let you experience ASMR, only give it (unless you pet yourself)
  - Does NOT automatically activate (you need to enable/disable it it in menu, there is no gesture yet)
-    - Only modulates the volume based on movement
- - Does NOT include models (Though it's easy to add)
+    - This only modulates the sounds based on movement speed
+ - Does NOT include hair brush models or the like (Though it's easy to add to the prefab's gameobject)
  - Does not (yet) have a collection of high quality ASMR petting sounds, [please help expand](https://github.com/Python1320/vr_asmr_petting/issues/22)!
- - Does not (yet) have a guide on how to make your own sound
+ - Does not (yet) have a guide on how to make your own looping sounds
+
+### HARM REDUCTION 😭
+
+This is a tool, a tool can be used for good or bad (without realizing it), make note of the following:
+
+ 1. SOME DO NOT TOLERATE MOVEMENT NEAR THEIR FACE AT ALL  
+    (ask for permission first, maybe do not use sounds at first)
+    1. (Also, a small minority tolerate only fast (or only slow) hand movement)
+ 2. SOME GREATLY DISLIKE ASMR SOUNDS (but may also be too timid to say it!)
+ 3. MANY DISLIKE UNKNOWN PEOPLE APPROACHING THEIR FACE (again, make sure contact is appreciated)
+ 4. APPROACHING FROM SIDE/BEHIND CAN STARTLE PEOPLE (may appear to be a spider)
+ 5. MANY OTHER PITFALLS (you have been warned)
+
+For non-verbal initiation, the following flowchart is provided (no warranty):
+![petting protocol](asmr-audiovisual-pets-protocol-v0.1.drawio.svg)
 
 ### TODO 📌
 
