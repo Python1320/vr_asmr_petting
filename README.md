@@ -79,6 +79,11 @@ The message changes [avatar parameters](https://creators.vrchat.com/avatars/anim
 
  2. There is no installer! Just extract the ZIP file somewhere where you don't remove/rename it accidentally.
 
+ 3. **IMPORTANT (Windows SmartScreen / Antivirus):**
+   Windows SmartScreen or your antivirus might show a warning about an unknown executable. This happens, because the helper application does not have a digital signature as it would cost too much.
+   If downloaded from the official GitHub release, the helper application should be safe.
+   **SmartScreen Dialog:** Click "More info" then "Run anyway". For antivirus, choose to "Allow" or "Trust" the application.
+
  4. Start SteamVR and run `vr_asmr_petting.exe` once in the extracted zip folder.   
     *If unsure you can run it a second time and it will give an error about already running. If this does not happen the program is somehow crashing.*
 
