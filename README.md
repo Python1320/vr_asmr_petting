@@ -167,6 +167,10 @@ https://github.com/Python1320/vr_asmr_petting/issues
 After launching the helper exe successfully once, you should be able to enable autostart in SteamVR:
 ![SteamVR settings has autostart option](docs/autostart.png)
 
+### VRChat Group(s) 👨‍👨‍👦‍👦
+
+ - [Dynamic ASMR](https://vrchat.com/home/group/grp_99da3c2f-b0db-442f-a499-10ed1faf8182)
+
 ### NO SUPPORT NO WARRANTY
 
 This is a hobby for me. Payment does not give personal support! I may or may not have time to look at github issues but that's about it.
