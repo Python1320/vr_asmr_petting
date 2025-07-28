@@ -83,7 +83,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -326,7 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -716,7 +716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -948,7 +948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1367,7 +1367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1421,7 +1421,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1475,7 +1475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1493,7 +1493,7 @@ MonoBehaviour:
             version: 1
             fileID: 0
             guid: 
-            id: d7defde0a04029f4ba2514c75a624338|Assets/vr_asmr_petting/Animations/vr_asmr_controller_merge.controller
+            id: d7defde0a04029f4ba2514c75a624338|Packages/io.github.python1320.vr-asmr-petting/Runtime/Animations/vr_asmr_controller_merge.controller
             objRef: {fileID: 9100000, guid: d7defde0a04029f4ba2514c75a624338, type: 2}
           type: 5
         menus: []
@@ -1502,7 +1502,7 @@ MonoBehaviour:
             version: 1
             fileID: 0
             guid: 
-            id: 05bef3b2099cdd549a29e6682db6c781|Assets/vr_asmr_petting/Misc/vr_asmr_petting_params.asset
+            id: 05bef3b2099cdd549a29e6682db6c781|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/vr_asmr_petting_params.asset
             objRef: {fileID: 11400000, guid: 05bef3b2099cdd549a29e6682db6c781, type: 2}
         smoothedPrms: []
         globalParams:
@@ -1562,7 +1562,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1594,7 +1594,7 @@ MonoBehaviour:
           version: 1
           fileID: 0
           guid: 
-          id: 5282456be9507ab4298aec49a5716c17|Assets/vr_asmr_petting/Misc/1FAF7_color.png
+          id: 5282456be9507ab4298aec49a5716c17|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1FAF7_color.png
           objRef: {fileID: 2800000, guid: 5282456be9507ab4298aec49a5716c17, type: 3}
         enableDriveGlobalParam: 0
         driveGlobalParam: 
@@ -1635,7 +1635,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1667,7 +1667,7 @@ MonoBehaviour:
           version: 1
           fileID: 0
           guid: 
-          id: 4854f125397de914ba0e478c542df67b|Assets/vr_asmr_petting/Misc/1FAF8_color.png
+          id: 4854f125397de914ba0e478c542df67b|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1FAF8_color.png
           objRef: {fileID: 2800000, guid: 4854f125397de914ba0e478c542df67b, type: 3}
         enableDriveGlobalParam: 0
         driveGlobalParam: 
@@ -1708,7 +1708,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1726,7 +1726,7 @@ MonoBehaviour:
           version: 1
           fileID: 0
           guid: 
-          id: a380827e277ec3048a01f2302c4ca815|Assets/vr_asmr_petting/Misc/1F590_color.png
+          id: a380827e277ec3048a01f2302c4ca815|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1F590_color.png
           objRef: {fileID: 2800000, guid: a380827e277ec3048a01f2302c4ca815, type: 3}
 --- !u!114 &1749095041285615449
 MonoBehaviour:
@@ -1742,7 +1742,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1760,7 +1760,7 @@ MonoBehaviour:
           version: 1
           fileID: 0
           guid: 
-          id: 267fb74c4f1be9b448585074343dfe1a|Assets/vr_asmr_petting/Misc/1F4E2_color.png
+          id: 267fb74c4f1be9b448585074343dfe1a|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1F4E2_color.png
           objRef: {fileID: 2800000, guid: 267fb74c4f1be9b448585074343dfe1a, type: 3}
 --- !u!1 &8638329252032659395
 GameObject:
@@ -1811,7 +1811,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2009,7 +2009,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1174.0
+  vrcfuryVersion: 1.1238.0
   somethingIsBroken: 0
   config:
     features: []
