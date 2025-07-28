@@ -1,0 +1,30 @@
+{
+  "displayName": "VR ASMR Petting",
+  "description": "Make avatar sounds when moving controllers (requires external app)",
+  "name": "io.github.python1320.vr-asmr-petting",
+  "version": "0.10.0",
+  "hideInEditor": false,
+  "author": {
+    "name": "Python1320",
+    "email": "python1320+vrap@gmail.com",
+    "url": "https://github.com/Python1320/vr_asmr_petting"
+  },
+  
+  "keywords": [
+    "Python1320",
+    "ASMR",
+    "petting",
+    "Sound",
+    "Effect",
+    "OSC",
+    "Executable",
+    "External",
+    "VRChat",
+    "Avatar"
+  ],
+  "vpmDependencies": {
+    "com.vrchat.avatars": ">=3.0.0",
+    "com.vrcfury.vrcfury" : ">=1.1127.0"
+  },
+  "unity": "2019.4"
+}

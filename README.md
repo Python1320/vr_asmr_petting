@@ -39,40 +39,62 @@ The message changes [avatar parameters](https://creators.vrchat.com/avatars/anim
 
  - [Free Avatar Base: Toastacuga](https://vrchat.com/home/avatar/avtr_6f59f68e-989e-42a1-8435-25c26d09a841) ([source](https://www.vrcarena.com/assets/ZszLG-toastacuga))
 
-### Installation Video 📹
+### Installation 🔨
 
- - [Using VRCFury prefab assets in Unity](https://www.youtube.com/watch?v=QDvzfLa82yI)
+**NOTE**: *Help improve the introductions by [updating this readme](https://github.com/Python1320/vr_asmr_petting/edit/main/README.md)*
 
-### Installation Instructions ℹ️
+(*Video help: [Using VRCFury prefab assets in Unity](https://www.youtube.com/watch?v=QDvzfLa82yI)*)
 
-The steps are mostly the same as here https://morghus.gumroad.com/l/cugahoodie (replace with vr_asmr_petting.unitypackage)
+**Unity** 🧊
 
-**Unity**
+ 1. Install [Creator Companion](https://vcc.docs.vrchat.com/) and add [VRCFury](https://vrcfury.com/getting-started).   
+     You also need your avatar as a project!   
 
- 1. Install Creator Companion and [VRCFury](https://vrcfury.com/getting-started)
- 2. Download the unitypackage and import it (or install via creator companion)
- 3. TAKE A BACKUP OF YOUR AVATAR HERE
- 4. How to import the downloaded `.unitypackage` in Unity: Top Menu: Assets -> Import Package -> Custom Package
- 5. Find the prefab from assets or packages, drag the prefab into the scene tree
-   - Locate the vrpets directory in the Project tab, within you'll find a "vrpets" object. 
-      - Click and drag it onto the main Avatar object in your Hierarchy. It should be a direct child of the object.
-	  - Once the prefab has been put in the correct place, it should show up on your avatar in the Scene view.
-	  - The package includes a script that will automatically setup sounds to correct hand bones. No manual setup should be necessary.
-      - Do not disable the "VRPets Prefab" object itself as the pets will not work properly
- 6. Run build and test or republish your avatar
- 7. Remember to enable OSC and to regenerate OSC config!
+ 2. In creator companion
+    1. Add `vr_asmr_petting` by pressing "add to VCC" in [this](https://python1320.github.io/vr_asmr_petting/) page.
+    2. Install the "VR ASMR Petting" package to your avatar. (*Remember to install VRCfury if not already installed!*)
+    3. Open the avatar in unity
 
-  - VRCFury will automatically add a new [expression menu](https://docs.vrchat.com/docs/action-menu#expression-menu) entry and you will be able to toggle the pets on and off there. Test it in game and see if it works. 
+ 3. **Recommended**: *backup avatar now!*
 
-**Helper app 🛠️**
+ 4. Find the "VR ASMR Petting" package in Unity and the prefab file inside it.   
+    Drag and drop the prefab into your avatar (note: the prefab must be put under avatar (not scene root) in the hierarchy but NOT inside armature/body, see picture):
+ ![avatar drag and drop to hierarchy](docs/prefab_drag_and_drop.png)
+ 
+ 5. Adjust the sound source positions as needed. Proper sound location depends on hand size and how you pet people. 
+![(adjust sound position gif todo)](docs/adjust_sound_position.gif)
+
+ 7. **Optional**: *test with [gesture manager](https://github.com/BlackStartx/VRC-Gesture-Manager?tab=readme-ov-file#how-to-use-sdk-30)* to see if the sound locations are where you want them to be.
+ 
+ 8. Publish your avatar
+
+ 9. Remember to [enable OSC](https://docs.vrchat.com/docs/osc-overview#enabling-it) and to regenerate OSC config in VR (otherwise helper app will not work)!
+
+  - VRCFury will automatically add a new [expression menu](https://docs.vrchat.com/docs/action-menu#expression-menu) entry and you will be able to toggle the sound on and off there. Test in VRChat and see if it works. 
+
+
+**Helper Application** 🛠️ *(required)*
+ 
  1. Download the latest `vr_asmr_petting_helper.zip` from [releases](https://github.com/Python1320/vr_asmr_petting/releases)
- 2. Extract the ZIP file to somewhere
- 3. Launch SteamVR
- 4. Run `vr_asmr_petting.exe` once. *If unsure you can run it a second time and it will give an error about already running. If this does not happen the program is somehow crashing.*
- 5. The program runs in background. Look in task manager for status.
- 6. In case of trouble run `vr_asmr_petting_console.exe` to see debug output. You may also need to set debug to true in `config.json`
- 7. Look in [`config.json`](https://github.com/Python1320/vr_asmr_petting/blob/main/src/config.json) for additional settings.
- 8. The program quits when SteamVR quits
+
+ 2. There is no installer! Just extract the ZIP file somewhere where you don't remove/rename it accidentally.
+
+ 4. Start SteamVR and run `vr_asmr_petting.exe` once in the extracted zip folder.   
+    *If unsure you can run it a second time and it will give an error about already running. If this does not happen the program is somehow crashing.*
+
+ 5. **Note**: The program runs in background. Look in task manager for status.
+ 
+ 6. **Troubleshooting:** In case of trouble, run `vr_asmr_petting_console.exe` to see debug output. You may also need to set debug to true in `config.json`
+ 
+ 7. **Advanced**: Look in [`config.json`](https://github.com/Python1320/vr_asmr_petting/blob/main/src/config.json) for additional settings.
+ 
+ 8. **Note:** The program quits when SteamVR quits
+ 
+ 9. **Optional:** Enable helper autostart in SteamVR settings 
+
+ 10. **TEST:** Go in game and check if volume sliders in your avatar menu are moving if you move your controllers:  
+   ![menu volume](docs/menu_volume.png)
+
 
 ### What it does NOT do 🛑
  - Does NOT let you experience ASMR, only give it (unless you pet yourself)
@@ -120,8 +142,9 @@ See [github issues](https://github.com/Python1320/vr_asmr_petting/issues?q=is%3A
  2. [Enable OSC](https://docs.vrchat.com/docs/osc-overview#enabling-it)
  3. Use [OSC Debug](https://docs.vrchat.com/docs/osc-debugging) to see if are receiving any data
  4. Make sure your VRChat SDK is updated in the companion app! VRCFury usually requires the latest VRChat SDK.
+ 5. Check that antivirus 🛡️ and firewall 🔒👮 are not blocking the helper application!
 
-The application generates a `debug.log` file on start. This can provide clues on what is wrong.
+**HINT:** *The application generates a `debug.log` file on start if debug is enabled. This can provide clues on what is wrong. You should include this file with bug reports, thank you!*
 
 ### How to change the sounds 🖊️
 
