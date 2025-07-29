@@ -25,13 +25,22 @@
       },
       "cSpell.words": [
         "ASMR",
+        "autotapping",
+        "byewave",
         "Chillout",
         "gameobject",
         "Poiyomi",
         "Resonite",
+        "steamvr",
         "Toastacuga",
         "unitypackage",
         "vrcfury",
-        "vrchat"
-      ]
+        "vrchat",
+        "zeroconf"
+      ],
+      "cSpell.enabledFileTypes": {
+        "markdown": true,
+        "python": false
+      },
+      "cSpell.useGitignore": false,
 }

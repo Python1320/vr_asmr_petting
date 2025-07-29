@@ -38,19 +38,19 @@ tapping_enabled = True
 
 
 # TODO: unused
-def on_enabled(e: bool) -> None:
+async def on_enabled(e: bool) -> None:
 	global enabled
 	enabled = e
 	logging.debug(f'ASMR = {enabled}')
 
 
-def on_enabled_alt(e: bool) -> None:
+async def on_enabled_alt(e: bool) -> None:
 	global enabled_alt
 	enabled_alt = e
 	logging.debug(f'ASMR (alt) = {enabled_alt}')
 
 
-def set_tapping_enabled(enabled: bool) -> None:
+async def set_tapping_enabled(enabled: bool) -> None:
 	global tapping_enabled
 	tapping_enabled = enabled
 	logging.debug(f'Tap = {tapping_enabled}')

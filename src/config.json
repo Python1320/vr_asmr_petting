@@ -1,7 +1,7 @@
 {
 	"autotapping_enabled": true,
-	"debug": true,
-	"debug_audio_visualization": true,
+	"debug": false,
+	"debug_audio_visualization": false,
 	"install_to_steamvr": true,
 	"osc_detectors": {
 		"enabled": "/avatar/parameters/sounds/pets/normal",
@@ -17,7 +17,7 @@
 		},
 		"byewave": {
 			"description": "WIP: sink to ground if your hand is above your head and other one is below your head",
-			"enabled": true
+			"enabled": false
 		},
 		"static": {
 			"description": "WIP: Static electricity buildup makes you catch on fire if you have vr_audience_fire",
