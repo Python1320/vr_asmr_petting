@@ -313,6 +313,14 @@ async def _get_vr_system(app_type=openvr.VRApplication_Overlay):
 			break
 		except openvr.error_code.InitError_Init_VRClientDLLNotFound:
 			raise
+		except openvr.error_code.InitError_Init_HmdNotFound:
+			if not init_errored:
+				init_errored = True
+				print('Waiting for headset (HDM)...')
+		except openvr.error_code.InitError_Init_HmdNotFoundPresenceFailed:
+			if not init_errored:
+				init_errored = True
+				print('Waiting for headset (HDM)...')
 		except openvr.error_code.InitError_Init_NoServerForBackgroundApp:
 			if not init_errored:
 				init_errored = True
