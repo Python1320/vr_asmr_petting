@@ -140,7 +140,7 @@ MonoBehaviour:
         simpleOutTransition: 1
         defaultSliderValue: 0
         useGlobalParam: 1
-        globalParam: sounds/pets/altt
+        globalParam: sounds/pets/alt
         holdButton: 0
         invertRestLogic: 0
         expandIntoTransition: 1
