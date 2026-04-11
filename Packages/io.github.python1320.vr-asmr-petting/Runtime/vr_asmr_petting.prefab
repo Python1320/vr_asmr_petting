@@ -83,7 +83,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -117,7 +117,7 @@ MonoBehaviour:
           version: 1
           fileID: 0
           guid: 
-          id: d59fa809f4756b04fa6f729aab97ba5e|Assets/vr_asmr_petting/Misc/E0B4_color.png
+          id: d59fa809f4756b04fa6f729aab97ba5e|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/E0B4_color.png
           objRef: {fileID: 2800000, guid: d59fa809f4756b04fa6f729aab97ba5e, type: 3}
         enableDriveGlobalParam: 0
         driveGlobalParam: 
@@ -326,7 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -360,7 +360,7 @@ MonoBehaviour:
           version: 1
           fileID: 0
           guid: 
-          id: a380827e277ec3048a01f2302c4ca815|Assets/vr_asmr_petting/Misc/1F590_color.png
+          id: a380827e277ec3048a01f2302c4ca815|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1F590_color.png
           objRef: {fileID: 2800000, guid: a380827e277ec3048a01f2302c4ca815, type: 3}
         enableDriveGlobalParam: 0
         driveGlobalParam: 
@@ -716,7 +716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -749,7 +749,7 @@ MonoBehaviour:
           version: 1
           fileID: 0
           guid: 
-          id: 4b0725b1ff280c046b3bdf3b33eb846b|Assets/vr_asmr_petting/Misc/1F6CE_color.png
+          id: 4b0725b1ff280c046b3bdf3b33eb846b|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1F6CE_color.png
           objRef: {fileID: 2800000, guid: 4b0725b1ff280c046b3bdf3b33eb846b, type: 3}
         enableDriveGlobalParam: 0
         driveGlobalParam: 
@@ -948,7 +948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1325,8 +1325,6 @@ GameObject:
   - component: {fileID: 4446218503576232518}
   - component: {fileID: 3349391367561848939}
   - component: {fileID: 1157049501190106915}
-  - component: {fileID: 3964265713157792289}
-  - component: {fileID: 8431374001783101303}
   - component: {fileID: 252512526364585367}
   - component: {fileID: 1749095041285615449}
   m_Layer: 0
@@ -1367,7 +1365,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1421,7 +1419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1475,7 +1473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1496,7 +1494,14 @@ MonoBehaviour:
             id: d7defde0a04029f4ba2514c75a624338|Packages/io.github.python1320.vr-asmr-petting/Runtime/Animations/vr_asmr_controller_merge.controller
             objRef: {fileID: 9100000, guid: d7defde0a04029f4ba2514c75a624338, type: 2}
           type: 5
-        menus: []
+        menus:
+        - menu:
+            version: 1
+            fileID: 0
+            guid: 
+            id: ce2a1d0f301377e4d88d68170c23567e|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/vol_debug.asset
+            objRef: {fileID: 11400000, guid: ce2a1d0f301377e4d88d68170c23567e, type: 2}
+          prefix: sounds/pets
         prms:
         - parameters:
             version: 1
@@ -1548,152 +1553,6 @@ MonoBehaviour:
         removePrefixes: []
         addPrefix: 
         useSecurityForToggle: 0
---- !u!114 &3964265713157792289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7935062285932265621}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 3
-  unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
-  somethingIsBroken: 0
-  config:
-    features: []
-  content:
-    rid: 1848836094688493588
-  references:
-    version: 2
-    RefIds:
-    - rid: 1848836094688493588
-      type: {class: Toggle, ns: VF.Model.Feature, asm: VRCFury}
-      data:
-        version: 3
-        name: sounds/pets/vol_l
-        state:
-          actions: []
-        saved: 0
-        slider: 1
-        sliderInactiveAtZero: 1
-        securityEnabled: 0
-        defaultOn: 0
-        includeInRest: 0
-        exclusiveOffState: 0
-        enableExclusiveTag: 0
-        exclusiveTag: 
-        resetPhysbones: []
-        hasExitTime: 0
-        enableIcon: 1
-        icon:
-          version: 1
-          fileID: 0
-          guid: 
-          id: 5282456be9507ab4298aec49a5716c17|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1FAF7_color.png
-          objRef: {fileID: 2800000, guid: 5282456be9507ab4298aec49a5716c17, type: 3}
-        enableDriveGlobalParam: 0
-        driveGlobalParam: 
-        separateLocal: 0
-        localState:
-          actions: []
-        hasTransition: 0
-        transitionStateIn:
-          actions: []
-        transitionStateOut:
-          actions: []
-        transitionTimeIn: 0
-        transitionTimeOut: 0
-        localTransitionStateIn:
-          actions: []
-        localTransitionStateOut:
-          actions: []
-        localTransitionTimeIn: 0
-        localTransitionTimeOut: 0
-        simpleOutTransition: 1
-        defaultSliderValue: 0
-        useGlobalParam: 1
-        globalParam: petting_volume
-        holdButton: 0
-        invertRestLogic: 0
-        expandIntoTransition: 1
---- !u!114 &8431374001783101303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7935062285932265621}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9e94e501a2d4c95bff3d5601013d923, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 3
-  unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
-  somethingIsBroken: 0
-  config:
-    features: []
-  content:
-    rid: 1848836094688493588
-  references:
-    version: 2
-    RefIds:
-    - rid: 1848836094688493588
-      type: {class: Toggle, ns: VF.Model.Feature, asm: VRCFury}
-      data:
-        version: 3
-        name: sounds/pets/vol_r
-        state:
-          actions: []
-        saved: 0
-        slider: 1
-        sliderInactiveAtZero: 1
-        securityEnabled: 0
-        defaultOn: 0
-        includeInRest: 0
-        exclusiveOffState: 0
-        enableExclusiveTag: 0
-        exclusiveTag: 
-        resetPhysbones: []
-        hasExitTime: 0
-        enableIcon: 1
-        icon:
-          version: 1
-          fileID: 0
-          guid: 
-          id: 4854f125397de914ba0e478c542df67b|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1FAF8_color.png
-          objRef: {fileID: 2800000, guid: 4854f125397de914ba0e478c542df67b, type: 3}
-        enableDriveGlobalParam: 0
-        driveGlobalParam: 
-        separateLocal: 0
-        localState:
-          actions: []
-        hasTransition: 0
-        transitionStateIn:
-          actions: []
-        transitionStateOut:
-          actions: []
-        transitionTimeIn: 0
-        transitionTimeOut: 0
-        localTransitionStateIn:
-          actions: []
-        localTransitionStateOut:
-          actions: []
-        localTransitionTimeIn: 0
-        localTransitionTimeOut: 0
-        simpleOutTransition: 1
-        defaultSliderValue: 0
-        useGlobalParam: 1
-        globalParam: petting_volume_r
-        holdButton: 0
-        invertRestLogic: 0
-        expandIntoTransition: 1
 --- !u!114 &252512526364585367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1708,7 +1567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1742,7 +1601,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1760,8 +1619,8 @@ MonoBehaviour:
           version: 1
           fileID: 0
           guid: 
-          id: 267fb74c4f1be9b448585074343dfe1a|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1F4E2_color.png
-          objRef: {fileID: 2800000, guid: 267fb74c4f1be9b448585074343dfe1a, type: 3}
+          id: dd43c5d177f959e4689491dba95990e5|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1F4E2_color_green.png
+          objRef: {fileID: 2800000, guid: dd43c5d177f959e4689491dba95990e5, type: 3}
 --- !u!1 &8638329252032659395
 GameObject:
   m_ObjectHideFlags: 0
@@ -1811,7 +1670,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -1844,7 +1703,7 @@ MonoBehaviour:
           version: 1
           fileID: 0
           guid: 
-          id: e4312be692b3e4d4eb2bf738cb9912c3|Assets/vr_asmr_petting/Misc/1F94E_color.png
+          id: e4312be692b3e4d4eb2bf738cb9912c3|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1F94E_color.png
           objRef: {fileID: 2800000, guid: e4312be692b3e4d4eb2bf738cb9912c3, type: 3}
         enableDriveGlobalParam: 0
         driveGlobalParam: 
@@ -2009,7 +1868,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 3
   unityVersion: 2022.3.22f1
-  vrcfuryVersion: 1.1238.0
+  vrcfuryVersion: 1.1298.0
   somethingIsBroken: 0
   config:
     features: []
@@ -2027,5 +1886,5 @@ MonoBehaviour:
           version: 1
           fileID: 0
           guid: 
-          id: e4312be692b3e4d4eb2bf738cb9912c3|Assets/vr_asmr_petting/Misc/1F94E_color.png
+          id: e4312be692b3e4d4eb2bf738cb9912c3|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/1F94E_color.png
           objRef: {fileID: 2800000, guid: e4312be692b3e4d4eb2bf738cb9912c3, type: 3}
