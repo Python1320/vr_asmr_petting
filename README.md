@@ -1,5 +1,3 @@
-**WORK IN PROGRESS UNTIL END OF 2025, MAY NOT WORK**
-
 # Motion Controlled ASMR Sounds System 
 
 *Experimental hand-motion 🖐 controlled ASMR sounds system for VRChat*
@@ -130,6 +128,7 @@ See [github issues](https://github.com/Python1320/vr_asmr_petting/issues?q=is%3A
 
 ### Parameter usage 📋
 
+
 | **path**                              | **type**  | **synced bits**   |
 |---------------------------------------|-----------|-------------------|
 | /avatar/parameters/sounds/pets/normal | bool      | 1                 |
@@ -141,7 +140,33 @@ See [github issues](https://github.com/Python1320/vr_asmr_petting/issues?q=is%3A
 | /avatar/parameters/sound_taps_left    | bool      | 1 _(optional)_    |
 |                                       | **TOTAL** | **17 to 21 bits** |
 
+(See also below for details on VRCFury parameter compression!)
+
+
 ### Troubleshooting 🎯
+
+
+#### VRCFury parameter compression
+
+**WARNING:** VRCFury will automatically "[compress](https://vrcfury.com/components/other/#parameter-compressor-beta)" parameters that it can.
+If you want to know if you may be affected, set the compression mode to "ask" in VRCFury settings.
+The BETA compressor works except for OSC, which this system uses.
+To fix, remove the volume controls from the menu (this prevents VRCFury from trying to compress them).
+
+**Details from VRCFury:**
+
+> Non menu-controlled parameters and parameters used in two/four axis puppets are not optimized as they might be driven by OSC
+
+
+#### It stopped working suddenly
+
+Some worlds already have so many sounds the petting sounds get overriden, these include:
+  - AVPro Mediapalayer (likely related to surround sound)
+  - The recently popular **FISH !** world has many sounds that interfere
+
+You can try increasing priority of the sounds, but likely there is nothing you can do in those worlds. 
+
+#### General troubleshoot
 
  1. Ensure you have Avatar Self Interact enabled in the VRChat settings menu: ![img/self-interact.png](img/self-interact.png)
  2. [Enable OSC](https://docs.vrchat.com/docs/osc-overview#enabling-it)
@@ -151,21 +176,22 @@ See [github issues](https://github.com/Python1320/vr_asmr_petting/issues?q=is%3A
 
 **HINT:** *The application generates a `debug.log` file on start if debug is enabled. This can provide clues on what is wrong. You should include this file with bug reports, thank you!*
 
+#### Known Issues 🎯
+
+Ideas and known issues are [**here**](https://github.com//Python1320vr_asmr_petting/issues).
+
 ### How to change the sounds 🖊️
 
  - Navigate to your hand bones and just replace the sound files with your own
 
-### Related things 🤝
+### Related addons 🤝
 
+ - Community recommendations [**here**](https://github.com/Python1320/vr_asmr_petting/issues/21)
  - [HandSFX](https://booth.pm/en/items/5851561) (Untested!)
- - Community recommendations [here](https://github.com/Python1320/vr_asmr_petting/issues/21)
- - *There is (apparently) a similar behaving prefab or avatar with sound reaction (that probably does not require a helper application), please list it in the above issues!*
+ - *There is a similar behaving prefab or avatar with sound reaction (that does not require a helper application), please list it in the above issues!*
  - Similar addons: [ASMR VRChat Prefab](https://fluffyteddy.gumroad.com/l/ASMR), [Dynamic Hairbrush for VRChat avatars](https://iaminvalid.gumroad.com/l/hctbu)
- - Recommended: add distance fading to your model hands either using [Poiyomi Proximity Color](https://www.poiyomi.com/special-fx/proximity-color) or via a [custom standard shader (experimental)](https://github.com/python1320/reroStandard)
+ - Recommended: For added immersion add distance fading to your model hands either using [Poiyomi Proximity Color](https://www.poiyomi.com/special-fx/proximity-color) or via a [custom standard shader (experimental)](https://github.com/python1320/reroStandard)
 
-### Known Issues 🎯
-
-https://github.com/Python1320/vr_asmr_petting/issues
 
 ### Helper app automatic start ℹ️
 
@@ -178,6 +204,6 @@ After launching the helper exe successfully once, you should be able to enable a
 
 ### NO SUPPORT NO WARRANTY
 
-This is a hobby for me. Payment does not give personal support! I may or may not have time to look at github issues but that's about it.
+This is a hobby for me. Payment does not give personal support! I may or may not have time to look at github issues, but that's about it.
 No warranty of any kind, this might even hurt your friendships or get you reported for harassment if used wrong! Likely it just refuses to work because I forgot to document something.
 *I cannot afford supporting you, and you cannot afford my support, sorry. Feel free to ask someone else to fix things for you!*
