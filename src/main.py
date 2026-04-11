@@ -138,7 +138,17 @@ async def load_plugins():
 
 
 async def init_main():
-	global disp, vrc, osc_receiver, osc_server, qclient, transport, protocol, main_loop, asmr_worker_routine
+	global \
+		disp, \
+		vrc, \
+		osc_receiver, \
+		osc_server, \
+		qclient, \
+		transport, \
+		protocol, \
+		main_loop, \
+		asmr_worker_routine, \
+		server_details
 
 	def avatar_change(addr, value):
 		log.info(f'Avatar changed/reset {addr} {value}...')
@@ -167,7 +177,7 @@ async def init_main():
 				disp.map(detector_path, wrap_into_async_osc_bool(cb))
 			else:
 				log.warning(f'No OSC avatar parameter path for "{key}" found in config, {key} will not work')
-		# disp.set_default_handler(asdqwe)
+		# disp.set_default_handler(print)
 
 		server_details = await vrc_osc(NAME, disp, zeroconf=conf.zeroconf)
 		log.info(

@@ -32,8 +32,8 @@ SCALE = 1.0
 prev_ts = False
 poses = []
 
-enabled = True
-enabled_alt = True
+enabled = None
+enabled_alt = None
 tapping_enabled = True
 
 
@@ -101,7 +101,7 @@ async def loop() -> None:
 		t.set_telemetry(speed)
 		if name == 'left' or name == 'right':
 			# TODO: Both direction major acceleration required: unlock_tap/last_accelerated
-			if tap_detected and not t.tapped and tapping_enabled:
+			if tap_detected and not t.tapped and tapping_enabled and not enabled and not enabled_alt:
 				t.tapped = True
 				t.send_untap = now + 0.101
 				t.set_tap_telemetry(1)
