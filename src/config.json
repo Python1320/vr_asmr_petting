@@ -1,5 +1,5 @@
 {
-	"autotapping_enabled": true,
+	"autotapping_enabled": false,
 	"debug": false,
 	"debug_audio_visualization": false,
 	"install_to_steamvr": true,
