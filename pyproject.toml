@@ -1,11 +1,12 @@
 [project]
 name = "vr-asmr-petting"
-version = "0.1.0"
+version = "0.13.0"
 description = "ASMR Petting Sounds System"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "aiohttp>=3.11.18",
+    "colorama>=0.4.6",
     "coloredlogs>=15.0.1",
     "cx-freeze>=8.3.0",
     "numpy>=2.3.0",
@@ -16,6 +17,7 @@ dependencies = [
     "pygame>=2.6.1",
     "python-osc>=1.9.3",
     "requests>=2.32.3",
+    "structlog>=25.5.0",
     "tendo>=0.3.0",
     "toml>=0.10.2",
     "zeroconf>=0.146.5",

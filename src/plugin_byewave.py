@@ -1,6 +1,7 @@
 import openvr
 import math
 import numpy
+import time
 
 import pluginhelper
 
@@ -42,7 +43,9 @@ def getpose(poses, device_id):
 	return (xyz, math.hypot(*pose.vVelocity))
 
 
-def on_tick(now, ft, poses):
+async def on_tick(now, ft, poses):
+	if not poses:
+		return
 	(pose_lh, vel_lh) = getpose(poses, state.controllers[1])  # type: ignore
 	(pose_rh, vel_rh) = getpose(poses, state.controllers[0])  # type: ignore
 	(pose_hmd, vel_hmd) = getpose(poses, openvr.k_unTrackedDeviceIndex_Hmd)
@@ -70,12 +73,17 @@ def on_tick(now, ft, poses):
 
 def godown(ft, go_down):
 	# TODO: handle movement quantas with ft
+	prev_pos = state.pos
 	if go_down and state.pos < 30:
 		state.pos += 1
 		move_z(ft, True)
 	elif not go_down and state.pos > 0:
 		state.pos -= 1
 		move_z(ft, False)
+	if prev_pos == 0 and state.pos > 0:
+		print(f'BYEWAVE: Starting movement (pos={state.pos})')
+	elif prev_pos > 0 and state.pos == 0:
+		print('BYEWAVE: Stopping movement')
 
 
 def move_z(ft, golower=False):
@@ -110,13 +118,4 @@ async def on_start():
 
 
 if __name__ == '__main__':
-	"""	
-	vr_system = openvr.init(openvr.VRApplication_Background)
-	for _ in range(5):
-		for i in range(50):
-			time.sleep(0.01)
-			on_tick(False,0.1)
-		for i in range(50):
-			time.sleep(0.01)
-			on_tick(True,0.1)
-"""
+	raise NotImplementedError('This plugin is not meant to be run standalone')

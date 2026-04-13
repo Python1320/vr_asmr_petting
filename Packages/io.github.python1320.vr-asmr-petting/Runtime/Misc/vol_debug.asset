@@ -16,13 +16,15 @@ MonoBehaviour:
   controls:
   - name: Vol
     icon: {fileID: 2800000, guid: 5282456be9507ab4298aec49a5716c17, type: 3}
-    type: 201
+    type: 202
     parameter:
       name: 
     value: 1
     style: 0
     subMenu: {fileID: 0}
     subParameters:
+    - name: petting_volume_r
+    - name: petting_volume
     - name: petting_volume_r
     - name: petting_volume
     labels:

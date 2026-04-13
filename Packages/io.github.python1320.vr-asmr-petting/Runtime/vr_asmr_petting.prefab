@@ -1494,14 +1494,7 @@ MonoBehaviour:
             id: d7defde0a04029f4ba2514c75a624338|Packages/io.github.python1320.vr-asmr-petting/Runtime/Animations/vr_asmr_controller_merge.controller
             objRef: {fileID: 9100000, guid: d7defde0a04029f4ba2514c75a624338, type: 2}
           type: 5
-        menus:
-        - menu:
-            version: 1
-            fileID: 0
-            guid: 
-            id: ce2a1d0f301377e4d88d68170c23567e|Packages/io.github.python1320.vr-asmr-petting/Runtime/Misc/vol_debug.asset
-            objRef: {fileID: 11400000, guid: ce2a1d0f301377e4d88d68170c23567e, type: 2}
-          prefix: sounds/pets
+        menus: []
         prms:
         - parameters:
             version: 1
