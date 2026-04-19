@@ -11,22 +11,22 @@ NAME = 'bullet'
 
 class State:
 	pos = 0
-	sink_end_time = 0
+	end_time = 0
 
 
 state = State()
 
 
 async def on_tick(now, ft, poses):
-	if asmr_worker.attacked and now < state.sink_end_time:
+	if asmr_worker.worker.attacked and now < state.end_time:
 		godown(ft, True)  # sink
-	elif asmr_worker.attacked and now >= state.sink_end_time:
-		state.sink_end_time = now + 5
+	elif asmr_worker.worker.attacked and now >= state.end_time:
+		state.end_time = now + 5
 		print('BULLET: Attacked! Sinking for 5 seconds')
-	elif state.sink_end_time > 0 and now < state.sink_end_time:
+	elif state.end_time > 0 and now < state.end_time:
 		godown(ft, False)  # rise back up
-	elif state.sink_end_time > 0 and now >= state.sink_end_time:
-		state.sink_end_time = 0
+	elif state.end_time > 0 and now >= state.end_time:
+		state.end_time = 0
 
 
 def godown(ft, go_down):

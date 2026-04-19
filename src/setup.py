@@ -19,7 +19,7 @@ setup(
 	options={'build_exe': build_exe_options},
 	executables=[
 		Executable('main.py', target_name='vr_asmr_petting_console.exe', base='console', icon='../icon.ico'),
-		Executable('main.py', target_name='vr_asmr_petting.exe', base='Win32GUI', icon='../icon.ico'),
+		Executable('main.py', target_name='vr_asmr_petting.exe', base='gui', icon='../icon.ico'),
 	],
 )
 

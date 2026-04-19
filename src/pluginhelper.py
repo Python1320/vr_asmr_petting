@@ -24,7 +24,22 @@ class VRPlugin:
 
 
 plugin_tick_callbacks: dict[str, Callable[[float, float, Any], Awaitable[Any]]] = {}
+_osc_dispatcher: Any = None
+
+
+def set_osc_dispatcher(disp):
+	global _osc_dispatcher
+	_osc_dispatcher = disp
+
+
+def get_osc_dispatcher():
+	return _osc_dispatcher
 
 
 def register_plugin_tick_callback(plugin_name: str, callback: Callable):
 	plugin_tick_callbacks[plugin_name] = callback
+
+
+def register_osc_handler(path: str, handler: Callable):
+	if _osc_dispatcher:
+		_osc_dispatcher.map(path, handler)

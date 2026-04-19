@@ -2,6 +2,7 @@ import logging
 import asyncio
 import os
 import sys
+import ctypes
 
 # vrchat_oscquery provides zeroconf
 import coloredlogs
@@ -58,7 +59,9 @@ except singleton.SingleInstanceException:
 	os._exit(1)
 
 conf.run_count = (conf.run_count or 0) + 1
-asmr_worker.tapping_enabled = conf.autotapping_enabled
+asmr_worker.worker.tapping_enabled = bool(conf.autotapping_enabled)
+asmr_worker.worker.autopet_on_detect = bool(conf.autopet_on_detect)
+asmr_worker.worker.autopet_osc_path = conf.autopet_osc_path
 config_reader.save_config(conf)
 
 if conf.debug and os.name == 'nt' and not HAS_TTY:
@@ -110,6 +113,70 @@ async def reg_openvr():
 		fatal(str(e))
 
 
+async def reg_openvr_actions():
+	log.info('Registering OpenVR actions...')
+	try:
+		_vr_system = await get_vr_system(openvr.VRApplication_Overlay, loop=main_loop)
+
+		action_manifest_path = str((EXEDIR / 'actions.json').resolve())
+		log.info('Registering action manifest: %s', action_manifest_path)
+		error = openvr.VRInput().setActionManifestPath(action_manifest_path)
+		if error is not None and error != 0:
+			log.error(f'Error setting action manifest path: {action_manifest_path}, OpenVR Error: {error}')
+
+		import json
+
+		with open(action_manifest_path, 'r') as f:
+			actions_json = json.load(f)
+		print(f'Actions from actions.json: {actions_json.get("actions", [])}')
+
+		action_handle_left = openvr.VRInput().getActionHandle('/actions/default/in/TouchLeft')
+		if action_handle_left is None:
+			log.error('Error getting action handle: /actions/default/in/TouchLeft')
+		action_handle_right = openvr.VRInput().getActionHandle('/actions/default/in/TouchRight')
+		if action_handle_right is None:
+			log.error('Error getting action handle: /actions/default/in/TouchRight')
+		action_set_handle = openvr.VRInput().getActionSetHandle('/actions/default')
+		if action_set_handle is None:
+			log.error('Error getting action set handle: /actions/default')
+
+		log.info(f'Action handles: left={action_handle_left}, right={action_handle_right}, set={action_set_handle}')
+
+		if action_handle_left is None or action_handle_right is None or action_set_handle is None:
+			log.error('Failed to get action handles, not starting polling')
+		else:
+			spawn_task(
+				poll_openvr_actions(_vr_system, action_handle_left, action_handle_right), name='poll_openvr_actions'
+			)
+
+	except Exception as e:
+		fatal(str(e))
+
+
+async def poll_openvr_actions(_vr_system, action_handle_left, action_handle_right):
+	prev_states = {action_handle_left: None, action_handle_right: None}
+
+	while True:
+		poses = _vr_system.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, 0, [])
+		action_set = openvr.VRInput().getActionSetHandle('/actions/default')
+		active_action_set = openvr.VRActiveActionSet_t()
+		active_action_set.ulActionSet = action_set
+		active_action_set.ulRestrictedToDevice = 0
+		active_action_set.nPriority = 0
+
+		actions = [
+			(action_handle_left, 'TouchLeft'),
+			(action_handle_right, 'TouchRight'),
+		]
+		openvr.VRInput().updateActionState([active_action_set])
+		for handle, name in actions:
+			state = openvr.VRInput().getDigitalActionData(handle, ctypes.sizeof(openvr.InputDigitalActionData_t))
+			if prev_states.get(handle) is not None and prev_states[handle] != state.bState:
+				print(f'{name}: bState={state.bState}, bActive={state.bActive}')
+			prev_states[handle] = state.bState
+		await asyncio.sleep(0.1)
+
+
 async def load_plugins():
 	for finder, name, ispkg in pkgutil.iter_modules():
 		if name.startswith('plugin_'):
@@ -155,6 +222,7 @@ async def init_main():
 
 	try:
 		disp = Dispatcher()
+		pluginhelper.set_osc_dispatcher(disp)
 
 		disp.map(AVATAR_CHANGE_PARAMETER, avatar_change)
 
@@ -167,8 +235,10 @@ async def init_main():
 			return _wrapper
 
 		detection_map = {
-			'enabled': asmr_worker.on_enabled,
-			'tapping_enabled': asmr_worker.set_tapping_enabled,
+			'enabled': asmr_worker.worker.on_enabled,
+			'tapping_enabled': asmr_worker.worker.set_tapping_enabled,
+			'attacked': asmr_worker.worker.on_attacked,
+			'detect_headpet': asmr_worker.worker.on_detect_headpet,
 		}
 		osc_detectors = conf.osc_detectors or {}
 		for key, cb in detection_map.items():
@@ -189,7 +259,7 @@ async def init_main():
 		vr = await get_vr_system(openvr.VRApplication_Overlay)
 
 		asmr_worker_routine = spawn_task(
-			asmr_worker.start(vrc, vr, loaded_plugins=loaded_plugins, senders=conf.senders)
+			asmr_worker.worker.start(vrc, vr, loaded_plugins=loaded_plugins, senders=conf.senders), name='asmr_worker'
 		)
 
 		try:
@@ -228,4 +298,5 @@ if __name__ == '__main__':
 	if had_debug or conf.debug:
 		main_loop.set_debug(True)
 
+	main_loop.run_until_complete(reg_openvr_actions())
 	main_loop.run_until_complete(init_main())

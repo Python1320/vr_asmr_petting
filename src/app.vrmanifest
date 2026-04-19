@@ -7,6 +7,7 @@
 			"image_path": "header.jpg",
 			"binary_path_windows": "./vr_asmr_petting.exe",
 			"is_dashboard_overlay": true,
+			"action_manifest_path": "actions.json",
 
 			"strings": {
 				"en_us": {

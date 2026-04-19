@@ -1,13 +1,19 @@
 {
+	"arm_on_touch": false,
+	"autopet_on_detect": false,
+	"autopet_osc_path": "/avatar/parameters/sounds/pets/normal",
 	"autotapping_enabled": false,
 	"debug": false,
 	"debug_audio_visualization": false,
 	"install_to_steamvr": true,
 	"osc_detectors": {
+		"attacked": "/avatar/parameters/attacked",
+		"detect_headpet": "/avatar/parameters/detect_headpet",
 		"enabled": "/avatar/parameters/sounds/pets/normal",
 		"enabled_alt": "/avatar/parameters/sounds/pets/alt",
 		"tapping_enabled": "/avatar/parameters/tapping_enabled"
 	},
+	"pets_only_stop_when_movement_stops": false,
 	"plugins": {
 		"bullet": {
 			"description": "WIP: If someone hits you with 'bullet' contact sender, sink to ground, or catch on fire if you have vr_asmr_petting",
@@ -19,6 +25,12 @@
 			"description": "WIP: sink to ground if your hand is above your head and other one is below your head",
 			"enabled": false
 		},
+		"punch": {
+			"attack_back": "/avatar/parameters/attack_back",
+			"attack_front": "/avatar/parameters/attack_front",
+			"description": "WIP: sink to ground if your hand is above your head and other one is below your head",
+			"enabled": false
+		},
 		"static": {
 			"description": "WIP: Static electricity buildup makes you catch on fire if you have vr_audience_fire",
 			"enabled": false
@@ -26,6 +38,7 @@
 	},
 	"run_count": 0,
 	"senders": {
+		"autopet_on": "/avatar/parameters/sounds/pets/normal",
 		"sound_taps_left": "/avatar/parameters/sound_taps_left",
 		"sound_taps_right": "/avatar/parameters/sound_taps_right",
 		"volume_left": "/avatar/parameters/petting_volume",

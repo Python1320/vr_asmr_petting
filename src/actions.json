@@ -1,0 +1,18 @@
+{
+    "actions": [
+        {
+            "name": "/actions/default/in/TouchLeft",
+            "type": "boolean"
+        },{
+            "name": "/actions/default/in/TouchRight",
+            "type": "boolean"
+        }
+    ],
+    "localization": [
+        {
+            "language_tag": "en_US",
+            "/actions/default/in/TouchLeft": "Touch left",
+            "/actions/default/in/TouchRight": "Touch right"
+        }
+    ]
+}

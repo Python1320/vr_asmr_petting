@@ -12,6 +12,7 @@ from pathlib import Path
 
 from aiohttp import web
 from zeroconf.asyncio import AsyncZeroconf
+from zeroconf._exceptions import NonUniqueNameException
 from pythonosc.osc_server import AsyncIOOSCUDPServer
 from pythonosc.udp_client import SimpleUDPClient
 from pythonosc.dispatcher import Dispatcher
@@ -83,9 +84,11 @@ def task_done(task):
 	handle_errors(task)
 
 
-def spawn_task(awaitable, loop=None):
+def spawn_task(awaitable, loop=None, name=None):
 	loop = loop or asyncio.get_running_loop()
 	task = loop.create_task(awaitable)
+	if name:
+		task.set_name(name)
 	all_tasks.append(task)
 	task.add_done_callback(task_done)
 	return task
@@ -187,7 +190,15 @@ async def vrc_osc(name: str, dispatcher: Dispatcher, foreground=False, zeroconf=
 		await runner.setup()
 		await web.TCPSite(runner, host, http_port).start()
 
-		await AsyncZeroconf().async_register_service(_create_service_info(name, http_port))
+		try:
+			await AsyncZeroconf().async_register_service(_create_service_info(name, http_port))
+		except NonUniqueNameException:
+			fatal(
+				'Another instance of this program is already running!',
+				detail=f'Another instance of this program is already running (zeroconf name conflict). If you are sure that this is not the case, wait a moment and try again.',
+				nodecor=True,
+			)
+			os._exit(1)
 
 	if foreground:
 		await asyncio.gather(*asyncio.all_tasks())
@@ -341,7 +352,7 @@ async def get_vr_system(
 		vr_system_first = False
 		assert loop is not None, 'Loop must be provided on first call'
 		vr_system_fut = Future(loop=loop)
-		spawn_task(_get_vr_system(app_type))
+		spawn_task(_get_vr_system(app_type), name='get_vr_system')
 	await vr_system_fut
 	return vr_system_fut.result()
 

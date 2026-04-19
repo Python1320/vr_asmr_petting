@@ -14,14 +14,6 @@ from pydantic import BaseModel, ConfigDict, ValidationError
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict, JsonConfigSettingsSource
 
 
-class DatabaseJsonSettings(BaseModel):
-	postgres_user: str
-	postgres_password: str
-	postgres_host: str
-	postgres_port: int
-	postgres_db: str
-
-
 conflocation = EXEDIR / 'config.json'
 
 try:
@@ -38,6 +30,7 @@ class Senders(BaseModel):
 	volume_right: str | None = None
 	sound_taps_right: str | None = None
 	sound_taps_left: str | None = None
+	autopet_on: str | None = None
 	model_config = ConfigDict(extra='forbid')
 
 
@@ -55,11 +48,15 @@ class AppConfig(BaseSettings):
 	osc_detectors: dict[str, str] | None = None
 	zeroconf: bool = True
 	plugins: dict[str, PluginData] = {}
+	arm_on_touch: bool | None = None
 	debug: bool = False
 	debug_audio_visualization: bool | None = False
 	install_to_steamvr: bool = True
 	run_count: int | None = None
 	autotapping_enabled: bool | None = False
+	autopet_on_detect: bool | None = False
+	autopet_osc_path: str | None = None
+	pets_only_stop_when_movement_stops: bool | None = False
 
 	@classmethod
 	def settings_customise_sources(
