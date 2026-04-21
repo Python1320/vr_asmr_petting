@@ -195,7 +195,7 @@ async def vrc_osc(name: str, dispatcher: Dispatcher, foreground=False, zeroconf=
 		except NonUniqueNameException:
 			fatal(
 				'Another instance of this program is already running!',
-				detail=f'Another instance of this program is already running (zeroconf name conflict). If you are sure that this is not the case, wait a moment and try again.',
+				detail='Another instance of this program is already running (zeroconf name conflict). If you are sure that this is not the case, wait a moment and try again.',
 				nodecor=True,
 			)
 			os._exit(1)
@@ -320,6 +320,7 @@ async def _get_vr_system(app_type=openvr.VRApplication_Overlay):
 		try:
 			vr_system = openvr.init(app_type)
 			vr_system_fut.set_result(vr_system)
+			openvr.VRApplications().identifyApplication(os.getpid(), 'python1320.vr_asmr_petting')
 			logging.info('OpenVR initialized successfully')
 			break
 		except openvr.error_code.InitError_Init_VRClientDLLNotFound:
