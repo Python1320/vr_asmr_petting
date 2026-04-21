@@ -38,6 +38,24 @@ EXEDIR = Path(sys.prefix) if FROZEN else Path(__file__).parent
 # print(Path(__file__).parent, Path(sys.prefix), EXEDIR)
 
 
+def find_asset(filename: str) -> Path | None:
+	"""Gotta find it somewhere eventually"""
+	search_paths = [
+		EXEDIR / 'assets' / filename,
+		EXEDIR / filename,
+		Path('assets') / filename,
+		EXEDIR / 'src' / 'assets' / filename,
+		Path('src') / 'assets' / filename,
+		Path(filename),
+	]
+
+	for path in search_paths:
+		if path.exists():
+			return path.resolve()
+
+	return None
+
+
 def show_console():
 	ctypes.windll.kernel32.AllocConsole()
 	sys.stdout = open('CONOUT$', 'wt')

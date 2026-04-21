@@ -2,7 +2,7 @@ import shutil
 from cx_Freeze import setup, Executable
 
 packages = ['pythonosc', 'psutil', 'zeroconf', 'json', 'threading', 'time', 'os', 'sys', 'ctypes', 'traceback']
-file_include = ['config.json', 'app.vrmanifest', '../pettingloop_bad.wav']
+file_include = ['config.json', 'bindings_generic.json', 'bindings_knuckles.json', 'actions.json', 'header.jpg', 'app.vrmanifest', 'assets/debugsoundloop_l.ogg',, 'assets/debugsoundloop_r.ogg']
 
 build_exe_options = {
 	'packages': packages,
