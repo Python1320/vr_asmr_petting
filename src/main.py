@@ -2,7 +2,7 @@ import logging
 import asyncio
 import os
 import sys
-import ctypes
+import json
 
 # vrchat_oscquery provides zeroconf
 import coloredlogs
@@ -99,16 +99,17 @@ loaded_plugins: dict[str, pluginhelper.VRPlugin] = {}
 
 async def reg_openvr():
 	log.info('Registering OpenVR autostart...')
-	global overlay
+	global _vr_system
 	try:
 		_vr_system = await get_vr_system(openvr.VRApplication_Overlay, loop=main_loop)
 
 		log.info(
 			'Installing to SteamVR: %s %s',
 			EXEDIR / 'app.vrmanifest',
-			openvr.VRApplications().addApplicationManifest(str((EXEDIR / 'app.vrmanifest').resolve())),
+			openvr.VRApplications().addApplicationManifest(str((EXEDIR / 'app.vrmanifest').resolve()), True),
 		)
-
+		print('I AM ', os.getpid(), 'aka', openvr.VRApplications().getApplicationKeyByProcessId(os.getpid()))
+		print('ASMR IS', openvr.VRApplications().getApplicationProcessId('python1320.vr_asmr_petting'))
 	except Exception as e:
 		fatal(str(e))
 
@@ -117,14 +118,12 @@ async def reg_openvr_actions():
 	log.info('Registering OpenVR actions...')
 	try:
 		_vr_system = await get_vr_system(openvr.VRApplication_Overlay, loop=main_loop)
-
 		action_manifest_path = str((EXEDIR / 'actions.json').resolve())
 		log.info('Registering action manifest: %s', action_manifest_path)
+
 		error = openvr.VRInput().setActionManifestPath(action_manifest_path)
 		if error is not None and error != 0:
 			log.error(f'Error setting action manifest path: {action_manifest_path}, OpenVR Error: {error}')
-
-		import json
 
 		with open(action_manifest_path, 'r') as f:
 			actions_json = json.load(f)
@@ -156,21 +155,26 @@ async def reg_openvr_actions():
 async def poll_openvr_actions(_vr_system, action_handle_left, action_handle_right):
 	prev_states = {action_handle_left: None, action_handle_right: None}
 
+	action_set = openvr.VRInput().getActionSetHandle('/actions/default')
+	try:
+		pass  # openvr.VRInput().openBindingUI('', action_set, 0, True)
+	except Exception as e:
+		log.error(f'Error opening binding UI: {e}')
 	while True:
-		poses = _vr_system.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, 0, [])
-		action_set = openvr.VRInput().getActionSetHandle('/actions/default')
-		active_action_set = openvr.VRActiveActionSet_t()
+		active_action_sets = (openvr.VRActiveActionSet_t * 1)()
+		active_action_set = active_action_sets[0]
 		active_action_set.ulActionSet = action_set
-		active_action_set.ulRestrictedToDevice = 0
-		active_action_set.nPriority = 0
+		openvr.VRInput().updateActionState(active_action_sets)
 
 		actions = [
 			(action_handle_left, 'TouchLeft'),
 			(action_handle_right, 'TouchRight'),
 		]
-		openvr.VRInput().updateActionState([active_action_set])
 		for handle, name in actions:
-			state = openvr.VRInput().getDigitalActionData(handle, ctypes.sizeof(openvr.InputDigitalActionData_t))
+			try:
+				state = openvr.VRInput().getDigitalActionData(handle, openvr.k_ulInvalidInputValueHandle)
+			except openvr.error_code.InputError_InvalidHandle as e:
+				continue
 			if prev_states.get(handle) is not None and prev_states[handle] != state.bState:
 				print(f'{name}: bState={state.bState}, bActive={state.bActive}')
 			prev_states[handle] = state.bState
