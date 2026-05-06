@@ -9,7 +9,6 @@ import openvr
 import openvr.error_code
 from asyncio import sleep
 import logging
-from typing import Any
 
 import config_reader
 from pluginhelper import VRPlugin, plugin_tick_callbacks

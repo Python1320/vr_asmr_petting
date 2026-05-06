@@ -176,7 +176,7 @@ async def poll_openvr_actions(_vr_system, action_handle_left, action_handle_righ
 		for handle, name in actions:
 			try:
 				state = openvr.VRInput().getDigitalActionData(handle, openvr.k_ulInvalidInputValueHandle)
-			except openvr.error_code.InputError_InvalidHandle as e:
+			except openvr.error_code.InputError_InvalidHandle as e:  # noqa: F841
 				continue
 			if prev_states.get(handle) is not None and prev_states[handle] != state.bState:
 				print(f'{name}: bState={state.bState}, bActive={state.bActive}')

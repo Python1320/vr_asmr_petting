@@ -86,3 +86,10 @@ disallow_untyped_defs = false
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
+
+[dependency-groups]
+dev = [
+    "pylance>=4.0.1",
+    "pyright>=1.1.409",
+    "ruff>=0.15.12",
+]
