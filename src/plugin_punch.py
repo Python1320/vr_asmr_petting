@@ -1,11 +1,6 @@
 import openvr
-import math
-import numpy
-import time
-import asyncio
 
 import pluginhelper
-import asmr_worker
 import logging
 
 log = logging.getLogger('plugin_punch')
