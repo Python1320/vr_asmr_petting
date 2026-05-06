@@ -8,6 +8,13 @@ import json
 import coloredlogs
 from pythonosc.dispatcher import Dispatcher
 import asmr_worker
+from vrappcommon import openvrutils
+from vrappcommon.jankyguihelpers import fatal, show_console
+import vrappcommon.jankyguihelpers as gui
+
+from vrappcommon.openvrutils import get_vr_system
+from vrappcommon.task_helper import spawn_task
+from vrappcommon.vrutils import vrc_osc
 from vrchat_oscquery.common import vrc_client
 import vrchat_oscquery.common
 import pluginhelper
@@ -15,22 +22,23 @@ import openvr
 import openvr.error_code
 import config_reader
 from utils import (
-	fatal,
-	exit as _exit,
-	spawn_task,
 	FROZEN,
 	EXEDIR,
 	DEBUGGER,
-	show_console,
-	vrc_osc,
-	get_vr_system,
-	set_console_title,
 )
 from tendo import singleton
 import importlib
 import pkgutil
 
 NAME = 'vr_asmr_petting'
+IDENTITY = f'python1320.{NAME}'
+APPNAME = 'VR ASMR Petting'
+HELP_URL = 'https://github.com/Python1320/vr_asmr_petting?tab=readme-ov-file#help'
+
+gui.set_help_url(HELP_URL)
+gui.set_program_name(APPNAME)
+gui.set_console_title(APPNAME)
+openvrutils.set_identity(IDENTITY)
 
 # === Logging madness ====
 LOGFILE = EXEDIR / 'debug.log'
@@ -56,7 +64,7 @@ except singleton.SingleInstanceException:
 		detail=f'Another instance of this program is already running. If you are sure that this is not the case, delete the lock file {NAME}.lock in the current directory and try again.',
 		nodecor=True,
 	)
-	os._exit(1)
+	gui.exit(1)
 
 conf.run_count = (conf.run_count or 0) + 1
 asmr_worker.worker.tapping_enabled = bool(conf.autotapping_enabled)
@@ -68,7 +76,6 @@ if conf.debug and os.name == 'nt' and not HAS_TTY:
 	show_console()
 	logging.basicConfig(level=logging.DEBUG, force=True)
 
-set_console_title('VR ASMR Petting')
 
 if conf.debug_audio_visualization:
 	asmr_worker.audio_visualization.init()
@@ -78,10 +85,6 @@ if conf.vrc_osc_ip:
 	vrchat_oscquery.common.VRC_HOST = conf.vrc_osc_ip
 if conf.vrc_osc_port:
 	vrchat_oscquery.common.VRC_PORT = conf.vrc_osc_port
-
-
-def exit(n=0):
-	_exit(n)
 
 
 log.info(f'EXEDIR: {EXEDIR}')

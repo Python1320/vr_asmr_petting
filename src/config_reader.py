@@ -5,13 +5,15 @@ import json
 
 import logging
 import sys
-from utils import fatal, EXEDIR
+from utils import EXEDIR
 
 
 from typing import Tuple, Type
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict, JsonConfigSettingsSource
+
+from vrappcommon.jankyguihelpers import fatal
 
 
 conflocation = EXEDIR / 'config.json'

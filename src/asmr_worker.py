@@ -39,11 +39,12 @@ class ASMRWorker:
 	attack_back: bool = False
 	SCALE = 1.0
 	prev_ts: float | bool = False
+	poses: openvr.Array[openvr.TrackedDevicePose_t] | None
 
 	def __init__(self) -> None:
 
+		self.poses = None
 		self.trackings: list[TrackConfig] = []
-		self.poses: list[openvr.TrackedDevicePose_t] = []
 
 	async def on_enabled(self, e: bool) -> None:
 		self.enabled = e
@@ -93,7 +94,10 @@ class ASMRWorker:
 		if not self.vr_system:
 			return
 
-		self.poses = self.vr_system.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, 0, self.poses)
+		self.poses = self.vr_system.getDeviceToAbsoluteTrackingPose(
+			openvr.TrackingUniverseStanding, 0, self.poses or []
+		)
+
 		now = time.time()
 
 		ft = now - (self.prev_ts or now)
@@ -131,6 +135,7 @@ class ASMRWorker:
 			t.set_telemetry(speed)
 			if name == 'left' or name == 'right':
 				# TODO: Both direction major acceleration required: unlock_tap/last_accelerated
+				# TODO: Detect joystick being pressed and disable tap
 				if tap_detected and not t.tapped and self.tapping_enabled and not self.enabled and not self.enabled_alt:
 					t.tapped = True
 					t.send_untap = now + 0.101
