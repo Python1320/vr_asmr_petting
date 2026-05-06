@@ -1,7 +1,4 @@
 import openvr
-import math
-import numpy
-import time
 
 import pluginhelper
 import asmr_worker

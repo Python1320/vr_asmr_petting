@@ -1,7 +1,6 @@
 import openvr
 import math
 import numpy
-import time
 
 import pluginhelper
 from pythonosc.udp_client import SimpleUDPClient
