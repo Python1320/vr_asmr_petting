@@ -18,30 +18,32 @@ import audio_visualization
 
 
 from utils import getDeviceIDbySerial, wait_controllers, dump_devices, TrackConfig
+from vrappcommon.vrutils import VRChatUDP
 
 
 class ASMRWorker:
+	oscClient: VRChatUDP
+	vr_system: openvr.IVRSystem
+
+	enabled: bool = False
+	enabled_alt: bool = False
+	tapping_enabled: bool = True
+
+	autopet_on_detect: bool = False
+	autopet_osc_path: str | None = None
+	is_petting: bool = False
+	detect_headpet: bool = False
+
+	attacked: bool = False
+	attack_front: bool = False
+	attack_back: bool = False
+	SCALE = 1.0
+	prev_ts: float | bool = False
+
 	def __init__(self) -> None:
-		self.vr_system: openvr.IVRSystem | None = None
+
 		self.trackings: list[TrackConfig] = []
-		self.SCALE = 1.0
-		self.prev_ts: float | bool = False
 		self.poses: list[openvr.TrackedDevicePose_t] = []
-
-		self.enabled: bool = False
-		self.enabled_alt: bool = False
-		self.tapping_enabled: bool = True
-
-		self.autopet_on_detect: bool = False
-		self.autopet_osc_path: str | None = None
-		self.is_petting: bool = False
-		self.detect_headpet: bool = False
-
-		self.attacked: bool = False
-		self.attack_front: bool = False
-		self.attack_back: bool = False
-
-		self.oscClient: Any | None = None
 
 	async def on_enabled(self, e: bool) -> None:
 		self.enabled = e
@@ -215,5 +217,6 @@ class ASMRWorker:
 		logging.info('Finished starting plugins, running main loop...')
 
 		await self.run(controllers)
+
 
 worker = ASMRWorker()
