@@ -28,7 +28,7 @@ class VRCOSCClient:
 
 
 def is_vrchat_running() -> bool:
-    from psutil import process_iter
+    from psutil import process_iter  # pyright: ignore[reportMissingModuleSource]
 
     _proc_name = "VRChat.exe" if os.name == "nt" else "VRChat"
     return _proc_name in (p.name() for p in process_iter())
