@@ -17,12 +17,12 @@ MonoBehaviour:
   - name: petting_volume
     valueType: 1
     saved: 0
-    defaultValue: 0
+    defaultValue: 0.2
     networkSynced: 1
   - name: petting_volume_r
     valueType: 1
     saved: 0
-    defaultValue: 0
+    defaultValue: 0.2
     networkSynced: 1
   - name: sounds/pets/normal
     valueType: 2
