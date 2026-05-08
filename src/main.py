@@ -302,8 +302,7 @@ if __name__ == '__main__':
 	if conf.install_to_steamvr:
 		main_loop.run_until_complete(reg_openvr())
 
+	main_loop.run_until_complete(reg_openvr_actions())
 	if had_debug or conf.debug:
 		main_loop.set_debug(True)
-
-	main_loop.run_until_complete(reg_openvr_actions())
 	main_loop.run_until_complete(init_main())
