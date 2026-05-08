@@ -134,7 +134,7 @@ class ASMRWorker:
 			t.set_telemetry(speed)
 			if name == 'left' or name == 'right':
 				# TODO: Both direction major acceleration required: unlock_tap/last_accelerated
-				# TODO: Detect joystick being pressed and disable tap
+				# TODO: Detect joystick being pressed and disable tap (maybe via OSC?)
 				if tap_detected and not t.tapped and self.tapping_enabled and not self.enabled and not self.enabled_alt:
 					t.tapped = True
 					t.send_untap = now + 0.101
