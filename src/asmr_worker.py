@@ -32,6 +32,7 @@ class ASMRWorker:
 	autopet_osc_path: str | None = None
 	is_petting: bool = False
 	detect_headpet: bool = False
+	velocity_magnitude_suppress_tap: bool = False
 
 	attacked: bool = False
 	attack_front: bool = False
@@ -75,6 +76,10 @@ class ASMRWorker:
 	async def set_tapping_enabled(self, enabled: bool) -> None:
 		self.tapping_enabled = enabled
 		logging.debug(f'Tap = {self.tapping_enabled}')
+
+	async def set_velocity_magnitude(self, magnitude_nonzero: bool) -> None:
+		self.velocity_magnitude_suppress_tap = magnitude_nonzero
+		logging.debug(f'Velocity magnitude suppress tap = {self.velocity_magnitude_suppress_tap}')
 
 	async def on_attacked(self, e: bool) -> None:
 		self.attacked = e
@@ -135,7 +140,14 @@ class ASMRWorker:
 			if name == 'left' or name == 'right':
 				# TODO: Both direction major acceleration required: unlock_tap/last_accelerated
 				# TODO: Detect joystick being pressed and disable tap (maybe via OSC?)
-				if tap_detected and not t.tapped and self.tapping_enabled and not self.enabled and not self.enabled_alt:
+				if (
+					tap_detected
+					and not t.tapped
+					and self.tapping_enabled
+					and not self.enabled
+					and not self.enabled_alt
+					and not self.velocity_magnitude_suppress_tap
+				):
 					t.tapped = True
 					t.send_untap = now + 0.101
 					t.set_tap_telemetry(1)

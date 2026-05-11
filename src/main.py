@@ -14,6 +14,7 @@ import vrappcommon.jankyguihelpers as gui
 
 from vrappcommon.openvrutils import get_vr_system
 from vrappcommon.task_helper import spawn_task
+from vrappcommon.jankyguihelpers import ensure_single_instance_app
 from vrappcommon.vrutils import vrc_osc
 from vrchat_oscquery.common import vrc_client
 import vrchat_oscquery.common
@@ -26,7 +27,6 @@ from utils import (
 	EXEDIR,
 	DEBUGGER,
 )
-from tendo import singleton
 import importlib
 import pkgutil
 
@@ -56,15 +56,9 @@ log.debug('Logging to %s', LOGFILE)
 
 # === Load configuration, singleton handling ===
 conf = config_reader.get_config()
-try:
-	me = singleton.SingleInstance(lockfile=f'{NAME}.lock')
-except singleton.SingleInstanceException:
-	fatal(
-		'Another instance of this program is already running!',
-		detail=f'Another instance of this program is already running. If you are sure that this is not the case, delete the lock file {NAME}.lock in the current directory and try again.',
-		nodecor=True,
-	)
-	gui.exit(1)
+
+
+ensure_single_instance_app(NAME)
 
 conf.run_count = (conf.run_count or 0) + 1
 asmr_worker.worker.tapping_enabled = bool(conf.autotapping_enabled)
@@ -92,7 +86,7 @@ log.info(f'FROZEN: {FROZEN}')
 log.info(f'DEBUGGER: {DEBUGGER}')
 
 
-main_loop = asyncio.new_event_loop()  # type: ignore
+main_loop = False
 
 vrc = vrc_client()
 asmr_worker_routine = None
@@ -246,6 +240,7 @@ async def init_main():
 			'tapping_enabled': asmr_worker.worker.set_tapping_enabled,
 			'attacked': asmr_worker.worker.on_attacked,
 			'detect_headpet': asmr_worker.worker.on_detect_headpet,
+			'velocity_magnitude': asmr_worker.worker.set_velocity_magnitude,
 		}
 		osc_detectors = conf.osc_detectors or {}
 		for key, cb in detection_map.items():
@@ -293,16 +288,26 @@ async def init_main():
 			fatal(str(e))
 
 
-if __name__ == '__main__':
+async def main():
+	global main_loop
+	main_loop = asyncio.get_event_loop()
+
 	had_debug = main_loop.get_debug()
 	if had_debug:
 		main_loop.set_debug(False)
-	main_loop.run_until_complete(load_plugins())
+
+	await load_plugins()
 
 	if conf.install_to_steamvr:
-		main_loop.run_until_complete(reg_openvr())
+		await reg_openvr()
 
-	main_loop.run_until_complete(reg_openvr_actions())
+	await reg_openvr_actions()
+
 	if had_debug or conf.debug:
 		main_loop.set_debug(True)
-	main_loop.run_until_complete(init_main())
+
+	await init_main()
+
+
+if __name__ == '__main__':
+	asyncio.run(main())

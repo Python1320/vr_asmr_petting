@@ -7,6 +7,12 @@ import tkinter.ttk as ttk
 import traceback
 import webbrowser
 
+from colorama import Fore, Style
+
+import vrappcommon.jankyguihelpers as gui
+
+from tendo import singleton
+
 
 HELP_URL = ''
 PROGRAMNAME = ''
@@ -130,3 +136,36 @@ if __name__ == '__main__':
 		"""These are some details\nnewline\nmore details""",
 	)
 	input('Press Enter to exit...')
+
+
+_app_instance_lock = None
+
+
+IS_WINDOWS = os.name == 'nt'
+if IS_WINDOWS:
+	from win32event import CreateMutex
+	from win32api import GetLastError
+	from winerror import ERROR_ALREADY_EXISTS
+
+
+def ensure_single_instance_app(NAME):
+
+	global _app_instance_lock
+
+	try:
+		if IS_WINDOWS:
+			_app_instance_lock = CreateMutex(None, False, f'Global\\NAME')  # pyright: ignore[reportPossiblyUnboundVariable, reportArgumentType]
+			lasterror = GetLastError()  # pyright: ignore[reportPossiblyUnboundVariable]
+			if lasterror == ERROR_ALREADY_EXISTS:  # pyright: ignore[reportPossiblyUnboundVariable]
+				raise singleton.SingleInstanceException()
+		else:
+			_app_instance_lock = singleton.SingleInstance(flavor_id=f'{NAME}')
+	except (singleton.SingleInstanceException,):
+		fatal(
+			'Another instance of this program is already running!',
+			detail='Another instance of this program is already running.'
+			if IS_WINDOWS
+			else f'Another instance of this program is already running. If you are sure that this is not the case, delete the lock file {NAME}.lock in the current directory and try again.',
+			nodecor=True,
+		)
+		gui.exit(1)

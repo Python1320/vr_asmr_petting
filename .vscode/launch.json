@@ -15,6 +15,18 @@
                 "PYTHONASYNCIODEBUG": "1",
                 "DEBUG": "1"
             }
+        },
+        
+        {
+            "name": "MAIN",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "src/main.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONASYNCIODEBUG": "1",
+                "DEBUG": "1"
+            }
         }
     ]
 }
