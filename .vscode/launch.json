@@ -6,22 +6,21 @@
     "configurations": [
     
         {
-            "name": "Python Debugger: Current File",
+            "name": "MAIN",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
+            "program": "src/main.py",
             "console": "integratedTerminal",
             "env": {
                 "PYTHONASYNCIODEBUG": "1",
                 "DEBUG": "1"
             }
         },
-        
         {
-            "name": "MAIN",
+            "name": "Python Debugger: Current File",
             "type": "debugpy",
             "request": "launch",
-            "program": "src/main.py",
+            "program": "${file}",
             "console": "integratedTerminal",
             "env": {
                 "PYTHONASYNCIODEBUG": "1",

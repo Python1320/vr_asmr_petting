@@ -193,6 +193,11 @@ Ideas and known issues are [**here**](https://github.com//Python1320vr_asmr_pett
  - Recommended: For added immersion add distance fading to your model hands either using [Poiyomi Proximity Color](https://www.poiyomi.com/special-fx/proximity-color) or via a [custom standard shader (experimental)](https://github.com/python1320/reroStandard)
 
 
+### Development 💻
+
+This project depends on the shared `vrappcommon` library (`../vrappcommon`), configured as an editable dependency in `pyproject.toml`.
+To switch to the GitHub version instead, uncomment the git source in `[tool.uv.sources]`.
+
 ### Helper app automatic start ℹ️
 
 After launching the helper exe successfully once, you should be able to enable autostart in SteamVR:

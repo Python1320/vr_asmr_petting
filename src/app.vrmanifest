@@ -6,6 +6,7 @@
 			"launch_type": "binary",
 			"image_path": "header.jpg",
 			"binary_path_windows": "./vr_asmr_petting.exe",
+			"binary_path_linux": "./vr_asmr_petting_launcher.sh",
 			"is_dashboard_overlay": true,
 			"action_manifest_path": "actions.json",
 
