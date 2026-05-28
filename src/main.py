@@ -207,7 +207,7 @@ async def load_plugins():
 
 async def init_main():
 	global \
-		disp, \
+		dispatcher, \
 		vrc, \
 		osc_receiver, \
 		osc_server, \
@@ -222,10 +222,22 @@ async def init_main():
 		log.info(f'Avatar changed/reset {addr} {value}...')
 
 	try:
-		disp = Dispatcher()
-		pluginhelper.set_osc_dispatcher(disp)
+		dispatcher = Dispatcher()
+		pluginhelper.set_osc_dispatcher(dispatcher)
 
-		disp.map(AVATAR_CHANGE_PARAMETER, avatar_change)
+		dispatcher.map(AVATAR_CHANGE_PARAMETER, avatar_change)
+
+		discarded_msg_count = 0
+
+		def received_first_message_from(address, *args):
+			nonlocal discarded_msg_count
+			discarded_msg_count += 1
+			if discarded_msg_count <= 5:
+				log.debug(f'Ignoring unknown OSC message from {address}, payload: {args}')
+			else:
+				dispatcher.set_default_handler(None)  # type: ignore
+
+		dispatcher.set_default_handler(received_first_message_from, True)
 
 		def wrap_into_async_osc_bool(cb):
 			def _wrapper(key, *val):
@@ -246,12 +258,12 @@ async def init_main():
 		for key, cb in detection_map.items():
 			detector_path = osc_detectors.get(key, None)
 			if detector_path:
-				disp.map(detector_path, wrap_into_async_osc_bool(cb))
+				dispatcher.map(detector_path, wrap_into_async_osc_bool(cb))
 			else:
 				log.warning(f'No OSC avatar parameter path for "{key}" found in config, {key} will not work')
 		# disp.set_default_handler(print)
 
-		server_details = await vrc_osc(NAME, disp, zeroconf=conf.zeroconf)
+		server_details = await vrc_osc(NAME, dispatcher, zeroconf=conf.zeroconf)
 		log.info(
 			f'Server started: http://{server_details.osc_host}:{server_details.http_port} osc_port={server_details.osc_port}'
 		)
