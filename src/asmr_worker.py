@@ -78,8 +78,9 @@ class ASMRWorker:
 		logging.debug(f'Tap = {self.tapping_enabled}')
 
 	async def set_velocity_magnitude(self, magnitude_nonzero: bool) -> None:
-		self.velocity_magnitude_suppress_tap = magnitude_nonzero
-		logging.debug(f'Velocity magnitude suppress tap = {self.velocity_magnitude_suppress_tap}')
+		if magnitude_nonzero != self.velocity_magnitude_suppress_tap:
+			self.velocity_magnitude_suppress_tap = magnitude_nonzero
+			logging.debug(f'Velocity magnitude suppress tap = {self.velocity_magnitude_suppress_tap}')
 
 	async def on_attacked(self, e: bool) -> None:
 		self.attacked = e

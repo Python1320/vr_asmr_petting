@@ -36,9 +36,9 @@ def godown(ft, go_down):
 		state.pos -= 1
 		move_z(ft, False)
 	if prev_pos == 0 and state.pos > 0:
-		print(f'BYEWAVE: Starting movement (pos={state.pos})')
+		print(f'ATTACK: Starting movement (pos={state.pos})')
 	elif prev_pos > 0 and state.pos == 0:
-		print('BYEWAVE: Stopping movement')
+		print('ATTACK: Stopping movement')
 
 
 def move_z(ft, golower=False):

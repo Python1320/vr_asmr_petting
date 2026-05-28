@@ -2,13 +2,11 @@
   "python.autoComplete.extraPaths": [],
   "python.analysis.autoImportCompletions": true,
   "[python]": {
-    "editor.formatOnSaveMode": "file",
+    "editor.formatOnSaveMode": "modificationsIfAvailable",
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnType": false,
-    "editor.insertSpaces": false,
-    "editor.tabSize": 4,
-    "editor.detectIndentation": false
+    "editor.detectIndentation": true
   },
   "editor.defaultFormatter": "charliermarsh.ruff",
   "notebook.defaultFormatter": "charliermarsh.ruff",
