@@ -117,14 +117,19 @@ class ASMRWorker:
 			name = t.name
 
 			pose: openvr.TrackedDevicePose_t = self.poses[t.device_id]
+			# If device disconnected or pose invalid, report only on transition from OK -> not-OK
 			if not pose.bDeviceIsConnected:
-				print('Not connected', name)
-				t.set_telemetry(0.0)
-				continue
+				if t.was_okay:
+					logging.warning(f'Not connected {name}')
+					t.was_okay = False
+					t.set_telemetry(0.0)
+					continue
 			if not pose.bPoseIsValid:
-				print('Not valid', name)
-				t.set_telemetry(0.0)
-				continue
+				if t.was_okay:
+					logging.warning(f'Not valid {name}')
+					t.was_okay = False
+					t.set_telemetry(0.0)
+					continue
 
 			velocity = math.hypot(*pose.vVelocity)
 			velocity_up = pose.vVelocity[1]
@@ -138,6 +143,10 @@ class ASMRWorker:
 			# r	print(accel)
 			speed = min(max(velocity * self.SCALE, 0), 1)
 			t.set_telemetry(speed)
+			# mark device as seen in a good state (connected + valid)
+			if not t.was_okay:
+				logging.info(f'Device recovered: {name}')
+				t.was_okay = True
 			if name == 'left' or name == 'right':
 				# TODO: Both direction major acceleration required: unlock_tap/last_accelerated
 				# TODO: Detect joystick being pressed and disable tap (maybe via OSC?)
@@ -152,7 +161,7 @@ class ASMRWorker:
 					t.tapped = True
 					t.send_untap = now + 0.101
 					t.set_tap_telemetry(1)
-					print('TAP!', name)
+					logging.info(f'TAP! {name}')
 				elif t.tapped and not tap_detected:
 					t.tapped = False
 

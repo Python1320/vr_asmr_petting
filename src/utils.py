@@ -109,6 +109,8 @@ class TrackConfig:
 		self.tapped = None
 		self.send_untap = False
 		self.oscClient = oscClient
+		# Tracks whether this device has been seen in a good (connected + valid) state
+		self.was_okay = False
 
 	def attempt_tracking(self):
 		raise NotImplementedError('TODO')
