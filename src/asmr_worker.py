@@ -40,25 +40,46 @@ class ASMRWorker:
 	SCALE = 1.0
 	prev_ts: float | bool = False
 	poses: openvr.Array[openvr.TrackedDevicePose_t] | None
+	petting_sound_enable_move_threshold: float = 0.0
+	petting_sound_touch_fade_seconds: float = 0.5
+	arm_on_touch: bool = False
+	arm_touch_state: dict[str, bool]
+	arm_touch_ready: dict[str, bool]
 
 	def __init__(self) -> None:
 
 		self.poses = None
 		self.trackings: list[TrackConfig] = []
+		self.arm_touch_state = {'left': False, 'right': False}
+		self.arm_touch_ready = {'left': False, 'right': False}
 
 	async def on_enabled(self, e: bool) -> None:
 		self.enabled = e
 		logging.debug(f'ASMR = {self.enabled}')
 		if not self.enabled and not self.enabled_alt:
 			self.is_petting = False
+		# If enabling, suppress per-track sound until movement drops near zero
+		if e:
+			threshold = self.petting_sound_enable_move_threshold or 0.0
+			for t in self.trackings:
+				if getattr(t, 'last_raw_speed', 0.0) > threshold:
+					t.suppress_until_zero = True
 
 	async def on_enabled_alt(self, e: bool) -> None:
 		self.enabled_alt = e
 		logging.debug(f'ASMR (alt) = {self.enabled_alt}')
 		if not self.enabled and not self.enabled_alt:
 			self.is_petting = False
+		# If enabling alt, suppress per-track sound until movement drops near zero
+		if e:
+			threshold = self.petting_sound_enable_move_threshold or 0.0
+			for t in self.trackings:
+				if getattr(t, 'last_raw_speed', 0.0) > threshold:
+					t.suppress_until_zero = True
 
 	async def on_detect_headpet(self, e: bool) -> None:
+		if self.detect_headpet == e:
+			return
 		self.detect_headpet = e
 		logging.debug(f'Detect headpet = {self.detect_headpet}')
 		if (
@@ -81,6 +102,28 @@ class ASMRWorker:
 		if magnitude_nonzero != self.velocity_magnitude_suppress_tap:
 			self.velocity_magnitude_suppress_tap = magnitude_nonzero
 			logging.debug(f'Velocity magnitude suppress tap = {self.velocity_magnitude_suppress_tap}')
+
+	async def set_arm_touch_state(self, hand: str, touched: bool) -> None:
+		if hand not in ('left', 'right'):
+			return
+		current = self.arm_touch_state.get(hand, False)
+		if current == touched:
+			return
+		self.arm_touch_state[hand] = touched
+		# find matching track and set up fade timer on release
+		for t in self.trackings:
+			if t.name == hand:
+				if not touched:
+					self.arm_touch_ready[hand] = False
+					fade = float(self.petting_sound_touch_fade_seconds or 0.5)
+					# record the telemetry start value so fade cannot increase above it
+					t.touch_fade_start_value = getattr(t, 'last_sent_speed', 0.0)
+					t.touch_fade_until = time.time() + fade
+				else:
+					# clear any outstanding fade when touch re-acquired
+					self.arm_touch_ready[hand] = False
+					t.touch_fade_until = 0.0
+		logging.debug(f'Arm touch {hand} = {touched}')
 
 	async def on_attacked(self, e: bool) -> None:
 		self.attacked = e
@@ -122,14 +165,14 @@ class ASMRWorker:
 				if t.was_okay:
 					logging.warning(f'Not connected {name}')
 					t.was_okay = False
-					t.set_telemetry(0.0)
-					continue
+				t.set_telemetry(0.0)
+				continue
 			if not pose.bPoseIsValid:
 				if t.was_okay:
 					logging.warning(f'Not valid {name}')
 					t.was_okay = False
-					t.set_telemetry(0.0)
-					continue
+				t.set_telemetry(0.0)
+				continue
 
 			velocity = math.hypot(*pose.vVelocity)
 			velocity_up = pose.vVelocity[1]
@@ -141,8 +184,41 @@ class ASMRWorker:
 			tap_detected = accel > 15 and ov < 0
 			# if name=="left" and abs(accel)>4:
 			# r	print(accel)
-			speed = min(max(velocity * self.SCALE, 0), 1)
+			raw_speed = min(max(velocity * self.SCALE, 0), 1)
+			speed = raw_speed
+			# Arm-on-touch: allow fadeout on release instead of immediate clamp
+			if self.arm_on_touch and name in ('left', 'right'):
+				touched = self.arm_touch_state.get(name, False)
+				if not touched:
+					# if we have an active fade timer, apply fade factor
+					fade_until = getattr(t, 'touch_fade_until', 0.0) or 0.0
+					now = time.time()
+					fade_seconds = float(self.petting_sound_touch_fade_seconds or 0.5)
+					if fade_until > now:
+						remaining = fade_until - now
+						factor = max(remaining / fade_seconds, 0.0)
+						candidate = raw_speed * factor
+						start_val = getattr(t, 'touch_fade_start_value', 0.0) or 0.0
+						# Never allow fade to increase above the start value recorded at release
+						speed = min(start_val, candidate)
+					else:
+						speed = 0.0
+				elif getattr(t, 'suppress_until_zero', False):
+					threshold = self.petting_sound_enable_move_threshold or 0.0
+					if raw_speed <= threshold:
+						t.suppress_until_zero = False
+					else:
+						speed = 0.0
+			# Global enable clamp
+			if not self.enabled and not self.enabled_alt:
+				speed = 0.0
 			t.set_telemetry(speed)
+			# record last sent telemetry so fades can reference the start value
+			try:
+				t.last_sent_speed = float(speed)
+			except Exception:
+				t.last_sent_speed = 0.0
+			t.last_raw_speed = raw_speed
 			# mark device as seen in a good state (connected + valid)
 			if not t.was_okay:
 				logging.info(f'Device recovered: {name}')

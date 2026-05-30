@@ -64,6 +64,9 @@ conf.run_count = (conf.run_count or 0) + 1
 asmr_worker.worker.tapping_enabled = bool(conf.autotapping_enabled)
 asmr_worker.worker.autopet_on_detect = bool(conf.autopet_on_detect)
 asmr_worker.worker.autopet_osc_path = conf.autopet_osc_path
+asmr_worker.worker.arm_on_touch = bool(conf.arm_on_touch)
+asmr_worker.worker.petting_sound_enable_move_threshold = float(conf.petting_sound_enable_move_threshold or 0.0)
+asmr_worker.worker.petting_sound_touch_fade_seconds = float(conf.petting_sound_touch_fade_seconds or 0.5)
 config_reader.save_config(conf)
 
 if conf.debug and os.name == 'nt' and not HAS_TTY:
@@ -175,6 +178,10 @@ async def poll_openvr_actions(_vr_system, action_handle_left, action_handle_righ
 			if prev_states.get(handle) is not None and prev_states[handle] != state.bState:
 				print(f'{name}: bState={state.bState}, bActive={state.bActive}')
 			prev_states[handle] = state.bState
+			if name == 'TouchLeft':
+				await asmr_worker.worker.set_arm_touch_state('left', bool(state.bState))
+			elif name == 'TouchRight':
+				await asmr_worker.worker.set_arm_touch_state('right', bool(state.bState))
 		await asyncio.sleep(0.1)
 
 
