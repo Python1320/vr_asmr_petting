@@ -111,6 +111,15 @@ class TrackConfig:
 		self.oscClient = oscClient
 		# Tracks whether this device has been seen in a good (connected + valid) state
 		self.was_okay = False
+		self.last_raw_speed = 0.0
+		# When enabled while already moving, suppress sound until movement nears zero
+		self.suppress_until_zero = False
+		# Fade-out on touch release: epoch seconds until which we should fade
+		self.touch_fade_until = 0.0
+		# The telemetry value last sent for this track
+		self.last_sent_speed = 0.0
+		# Speed value at the moment touch-release fade started; fades should not rise above this
+		self.touch_fade_start_value = 0.0
 
 	def attempt_tracking(self):
 		raise NotImplementedError('TODO')

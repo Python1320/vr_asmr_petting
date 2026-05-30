@@ -53,11 +53,13 @@ class AppConfig(BaseSettings):
 	arm_on_touch: bool | None = None
 	debug: bool = False
 	debug_audio_visualization: bool | None = False
+	petting_sound_touch_fade_seconds: float | None = 0.5
 	install_to_steamvr: bool = True
 	run_count: int | None = None
 	autotapping_enabled: bool | None = False
 	autopet_on_detect: bool | None = False
 	autopet_osc_path: str | None = None
+	petting_sound_enable_move_threshold: float | None = 0.0
 	pets_only_stop_when_movement_stops: bool | None = False
 
 	@classmethod
