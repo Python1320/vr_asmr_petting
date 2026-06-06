@@ -16,16 +16,56 @@
                "path" : "/user/hand/left/input/trigger"
             },
             {
-               "inputs" : {
-                  "touch" : {
-                     "output" : "/actions/default/in/touchright"
-                  }
-               },
-               "mode" : "button",
-               "parameters" : {},
-               "path" : "/user/hand/right/input/trigger"
-            }
-         ]
+                "inputs" : {
+                   "touch" : {
+                      "output" : "/actions/default/in/touchright"
+                   }
+                },
+                "mode" : "button",
+                "parameters" : {},
+                "path" : "/user/hand/right/input/trigger"
+             },
+             {
+                "inputs" : {
+                   "click" : {
+                      "output" : "/actions/default/in/StickyTouchLeft"
+                   }
+                },
+                "mode" : "button",
+                "parameters" : {},
+                "path" : "/user/hand/left/input/a"
+             },
+             {
+                "inputs" : {
+                   "click" : {
+                      "output" : "/actions/default/in/StickyTouchRight"
+                   }
+                },
+                "mode" : "button",
+                "parameters" : {},
+                "path" : "/user/hand/right/input/a"
+             },
+             {
+                "inputs" : {
+                   "click" : {
+                      "output" : "/actions/default/in/StickyCancelLeft"
+                   }
+                },
+                "mode" : "button",
+                "parameters" : {},
+                "path" : "/user/hand/left/input/b"
+             },
+             {
+                "inputs" : {
+                   "click" : {
+                      "output" : "/actions/default/in/StickyCancelRight"
+                   }
+                },
+                "mode" : "button",
+                "parameters" : {},
+                "path" : "/user/hand/right/input/b"
+             }
+          ]
       }
    },
    "category": "steamvr_input",

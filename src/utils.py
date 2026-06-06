@@ -120,6 +120,10 @@ class TrackConfig:
 		self.last_sent_speed = 0.0
 		# Speed value at the moment touch-release fade started; fades should not rise above this
 		self.touch_fade_start_value = 0.0
+		# Fade-in on touch acquire: epoch seconds until which we should fade in
+		self.touch_fade_in_until = 0.0
+		# Speed value at the moment touch-acquire fade started; fade-in rises from here to raw_speed
+		self.touch_fade_in_start_value = 0.0
 
 	def attempt_tracking(self):
 		raise NotImplementedError('TODO')

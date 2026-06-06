@@ -3,8 +3,20 @@
         {
             "name": "/actions/default/in/TouchLeft",
             "type": "boolean"
-        },{
+        },        {
             "name": "/actions/default/in/TouchRight",
+            "type": "boolean"
+        },{
+            "name": "/actions/default/in/StickyTouchLeft",
+            "type": "boolean"
+        },{
+            "name": "/actions/default/in/StickyTouchRight",
+            "type": "boolean"
+        },{
+            "name": "/actions/default/in/StickyCancelLeft",
+            "type": "boolean"
+        },{
+            "name": "/actions/default/in/StickyCancelRight",
             "type": "boolean"
         }
     ],
@@ -22,7 +34,11 @@
         {
             "language_tag": "en_US",
             "/actions/default/in/TouchLeft": "Touch left",
-            "/actions/default/in/TouchRight": "Touch right"
+            "/actions/default/in/TouchRight": "Touch right",
+            "/actions/default/in/StickyTouchLeft": "Sticky touch left",
+            "/actions/default/in/StickyTouchRight": "Sticky touch right",
+            "/actions/default/in/StickyCancelLeft": "Cancel sticky left",
+            "/actions/default/in/StickyCancelRight": "Cancel sticky right"
         }
     ]
 }

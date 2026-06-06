@@ -9,7 +9,7 @@ from vrappcommon.jankyguihelpers import fatal
 
 from utils import EXEDIR
 
-log = logging.getLogger('vr_asmr_petting.openvr_actions')
+log = logging.getLogger('controller')
 
 
 class ActionHandle:

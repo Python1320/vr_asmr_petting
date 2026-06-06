@@ -52,6 +52,8 @@ class ASMRWorker:
 		self.trackings: list[TrackConfig] = []
 		self.arm_touch_state = {'left': False, 'right': False}
 		self.arm_touch_ready = {'left': False, 'right': False}
+		self.sticky_state = {'left': False, 'right': False}
+		self._sticky_touch_released = {'left': False, 'right': False}
 
 	async def on_enabled(self, e: bool) -> None:
 		self.enabled = e
@@ -110,20 +112,55 @@ class ASMRWorker:
 		if current == touched:
 			return
 		self.arm_touch_state[hand] = touched
-		# find matching track and set up fade timer on release
+		# find matching track and set up fade timer on release/acquire
 		for t in self.trackings:
 			if t.name == hand:
+				fade = float(self.petting_sound_touch_fade_seconds or 0.5)
 				if not touched:
 					self.arm_touch_ready[hand] = False
-					fade = float(self.petting_sound_touch_fade_seconds or 0.5)
 					# record the telemetry start value so fade cannot increase above it
 					t.touch_fade_start_value = getattr(t, 'last_sent_speed', 0.0)
 					t.touch_fade_until = time.time() + fade
+					t.touch_fade_in_until = 0.0
 				else:
-					# clear any outstanding fade when touch re-acquired
+					# start fade-in on acquire
 					self.arm_touch_ready[hand] = False
+					t.touch_fade_in_start_value = getattr(t, 'last_sent_speed', 0.0)
+					t.touch_fade_in_until = time.time() + fade
 					t.touch_fade_until = 0.0
 		logging.debug(f'Arm touch {hand} = {touched}')
+
+	async def toggle_sticky(self, hand: str) -> None:
+		if hand not in ('left', 'right'):
+			return
+		if self.sticky_state[hand]:
+			self.sticky_state[hand] = False
+			self._sticky_touch_released[hand] = False
+			import openvr_actions
+			physically_touched = openvr_actions.state.get(
+				f'/actions/default/in/Touch{hand.capitalize()}', False
+			)
+			logging.debug(f'Sticky {hand} OFF (physical touch = {physically_touched})')
+			await self.set_arm_touch_state(hand, physically_touched)
+		else:
+			self.sticky_state[hand] = True
+			self._sticky_touch_released[hand] = False
+			logging.debug(f'Sticky {hand} ON')
+			await self.set_arm_touch_state(hand, True)
+
+	async def cancel_sticky(self, hand: str) -> None:
+		if hand not in ('left', 'right'):
+			return
+		if not self.sticky_state[hand]:
+			return
+		self.sticky_state[hand] = False
+		self._sticky_touch_released[hand] = False
+		import openvr_actions
+		physically_touched = openvr_actions.state.get(
+			f'/actions/default/in/Touch{hand.capitalize()}', False
+		)
+		logging.debug(f'Sticky {hand} CANCELLED (physical touch = {physically_touched})')
+		await self.set_arm_touch_state(hand, physically_touched)
 
 	async def on_attacked(self, e: bool) -> None:
 		self.attacked = e
@@ -186,14 +223,13 @@ class ASMRWorker:
 			# r	print(accel)
 			raw_speed = min(max(velocity * self.SCALE, 0), 1)
 			speed = raw_speed
-			# Arm-on-touch: allow fadeout on release instead of immediate clamp
+			# Arm-on-touch: allow fadeout on release and fadein on acquire
 			if self.arm_on_touch and name in ('left', 'right'):
 				touched = self.arm_touch_state.get(name, False)
+				fade_seconds = float(self.petting_sound_touch_fade_seconds or 0.5)
 				if not touched:
 					# if we have an active fade timer, apply fade factor
 					fade_until = getattr(t, 'touch_fade_until', 0.0) or 0.0
-					now = time.time()
-					fade_seconds = float(self.petting_sound_touch_fade_seconds or 0.5)
 					if fade_until > now:
 						remaining = fade_until - now
 						factor = max(remaining / fade_seconds, 0.0)
@@ -203,12 +239,24 @@ class ASMRWorker:
 						speed = min(start_val, candidate)
 					else:
 						speed = 0.0
-				elif getattr(t, 'suppress_until_zero', False):
-					threshold = self.petting_sound_enable_move_threshold or 0.0
-					if raw_speed <= threshold:
-						t.suppress_until_zero = False
+				else:
+					# fade in on acquire
+					fade_in_until = getattr(t, 'touch_fade_in_until', 0.0) or 0.0
+					if fade_in_until > now:
+						remaining = fade_in_until - now
+						factor = max((fade_seconds - remaining) / fade_seconds, 0.0)
+						start_val = getattr(t, 'touch_fade_in_start_value', 0.0) or 0.0
+						speed = start_val + (raw_speed - start_val) * factor
+						if speed > raw_speed:
+							speed = raw_speed
 					else:
-						speed = 0.0
+						speed = raw_speed
+					if getattr(t, 'suppress_until_zero', False):
+						threshold = self.petting_sound_enable_move_threshold or 0.0
+						if raw_speed <= threshold:
+							t.suppress_until_zero = False
+						else:
+							speed = 0.0
 			# Global enable clamp
 			if not self.enabled and not self.enabled_alt:
 				speed = 0.0
@@ -327,16 +375,57 @@ worker = ASMRWorker()
 def register_actions():
 	import openvr_actions
 
+	def make_touch_handler(hand: str):
+		async def handler(handle):
+			physically_touched = bool(openvr_actions.state.get(handle.path, False))
+			if worker.sticky_state.get(hand, False):
+				if not physically_touched:
+					worker._sticky_touch_released[hand] = True
+					return
+				elif worker._sticky_touch_released.get(hand, False):
+					worker.sticky_state[hand] = False
+					worker._sticky_touch_released[hand] = False
+					logging.debug(f'Sticky {hand} cleared by physical touch')
+					await worker.set_arm_touch_state(hand, True)
+				return
+			await worker.set_arm_touch_state(hand, physically_touched)
+		return handler
+
 	left = openvr_actions.get_handle('/actions/default/in/TouchLeft')
 	right = openvr_actions.get_handle('/actions/default/in/TouchRight')
+	sticky_left = openvr_actions.get_handle('/actions/default/in/StickyTouchLeft')
+	sticky_right = openvr_actions.get_handle('/actions/default/in/StickyTouchRight')
 
-	async def on_left(handle):
-		await worker.set_arm_touch_state('left', bool(openvr_actions.state.get(handle.path, False)))
+	openvr_actions.listen(left, make_touch_handler('left'))
+	openvr_actions.listen(right, make_touch_handler('right'))
 
-	async def on_right(handle):
-		await worker.set_arm_touch_state('right', bool(openvr_actions.state.get(handle.path, False)))
+	def make_sticky_handler(hand: str):
+		prev = [False]
+		async def handler(handle):
+			pressed = bool(openvr_actions.state.get(handle.path, False))
+			rising = pressed and not prev[0]
+			prev[0] = pressed
+			if rising:
+				await worker.toggle_sticky(hand)
+		return handler
 
-	openvr_actions.listen(left, on_left)
-	openvr_actions.listen(right, on_right)
+	openvr_actions.listen(sticky_left, make_sticky_handler('left'))
+	openvr_actions.listen(sticky_right, make_sticky_handler('right'))
+
+	sticky_cancel_left = openvr_actions.get_handle('/actions/default/in/StickyCancelLeft')
+	sticky_cancel_right = openvr_actions.get_handle('/actions/default/in/StickyCancelRight')
+
+	def make_sticky_cancel_handler(hand: str):
+		prev = [False]
+		async def handler(handle):
+			pressed = bool(openvr_actions.state.get(handle.path, False))
+			rising = pressed and not prev[0]
+			prev[0] = pressed
+			if rising:
+				await worker.cancel_sticky(hand)
+		return handler
+
+	openvr_actions.listen(sticky_cancel_left, make_sticky_cancel_handler('left'))
+	openvr_actions.listen(sticky_cancel_right, make_sticky_cancel_handler('right'))
 
 	return left, right
