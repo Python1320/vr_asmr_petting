@@ -251,6 +251,7 @@ async def main():
 		await reg_openvr()
 
 	await openvr_actions.reg_openvr_actions(main_loop)  # pyright: ignore[reportArgumentType]
+	asmr_worker_handles = asmr_worker.register_actions()
 
 	if had_debug or conf.debug:
 		main_loop.set_debug(True)

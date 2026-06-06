@@ -322,3 +322,21 @@ class ASMRWorker:
 
 
 worker = ASMRWorker()
+
+
+def register_actions():
+	import openvr_actions
+
+	left = openvr_actions.get_handle('/actions/default/in/TouchLeft')
+	right = openvr_actions.get_handle('/actions/default/in/TouchRight')
+
+	async def on_left(handle):
+		await worker.set_arm_touch_state('left', bool(openvr_actions.state.get(handle.path, False)))
+
+	async def on_right(handle):
+		await worker.set_arm_touch_state('right', bool(openvr_actions.state.get(handle.path, False)))
+
+	openvr_actions.listen(left, on_left)
+	openvr_actions.listen(right, on_right)
+
+	return left, right

@@ -7,10 +7,45 @@ from vrappcommon.openvrutils import get_vr_system
 from vrappcommon.task_helper import spawn_task
 from vrappcommon.jankyguihelpers import fatal
 
-import asmr_worker
 from utils import EXEDIR
 
 log = logging.getLogger('vr_asmr_petting.openvr_actions')
+
+
+class ActionHandle:
+	def __init__(self, path: str):
+		self.path = path
+		self._openvr_handle = None
+
+	@property
+	def name(self):
+		return self.path.rsplit('/', 1)[-1]
+
+	def get_digital(self):
+		if self._openvr_handle is None:
+			self._openvr_handle = openvr.VRInput().getActionHandle(self.path)
+		return openvr.VRInput().getDigitalActionData(self._openvr_handle, openvr.k_ulInvalidInputValueHandle)
+
+
+# Global state: path -> bState (bool)
+state: dict[str, bool] = {}
+
+# Path -> list of async callbacks
+_listeners: dict[str, list] = {}
+
+_handles: dict[str, ActionHandle] = {}
+
+
+def get_handle(path: str) -> ActionHandle:
+	if path not in _handles:
+		_handles[path] = ActionHandle(path)
+	return _handles[path]
+
+
+def listen(handle: ActionHandle, callback):
+	if handle.path not in _listeners:
+		_listeners[handle.path] = []
+	_listeners[handle.path].append(callback)
 
 
 async def reg_openvr_actions(loop=False):
@@ -28,23 +63,24 @@ async def reg_openvr_actions(loop=False):
 			actions_json = json.load(f)
 		print(f'Actions from actions.json: {actions_json.get("actions", [])}')
 
-		action_handle_left = openvr.VRInput().getActionHandle('/actions/default/in/TouchLeft')
-		if action_handle_left is None:
-			log.error('Error getting action handle: /actions/default/in/TouchLeft')
-		action_handle_right = openvr.VRInput().getActionHandle('/actions/default/in/TouchRight')
-		if action_handle_right is None:
-			log.error('Error getting action handle: /actions/default/in/TouchRight')
+		for action_def in actions_json.get('actions', []):
+			path = action_def['name']
+			handle = get_handle(path)
+			handle._openvr_handle = openvr.VRInput().getActionHandle(path)
+			if handle._openvr_handle is None:
+				log.error(f'Error getting action handle: {path}')
+			else:
+				log.info(f'Got action handle: {path} -> {handle._openvr_handle}')
+
 		action_set_handle = openvr.VRInput().getActionSetHandle('/actions/default')
 		if action_set_handle is None:
 			log.error('Error getting action set handle: /actions/default')
 
-		log.info(f'Action handles: left={action_handle_left}, right={action_handle_right}, set={action_set_handle}')
-
-		if action_handle_left is None or action_handle_right is None or action_set_handle is None:
+		if not _handles or action_set_handle is None:
 			log.error('Failed to get action handles, not starting polling')
 		else:
 			spawn_task(
-				poll_openvr_actions(_vr_system, action_handle_left, action_handle_right),
+				poll_openvr_actions(_vr_system, action_set_handle),
 				name='poll_openvr_actions',
 			)
 
@@ -52,10 +88,12 @@ async def reg_openvr_actions(loop=False):
 		fatal(str(e))
 
 
-async def poll_openvr_actions(_vr_system, action_handle_left, action_handle_right):
-	prev_states = {action_handle_left: None, action_handle_right: None}
+async def poll_openvr_actions(_vr_system, action_set_handle):
+	prev_states: dict[str, bool | None] = {}
 
-	action_set = openvr.VRInput().getActionSetHandle('/actions/default')
+	for path in _handles:
+		prev_states[path] = None
+
 	try:
 		pass  # openvr.VRInput().openBindingUI('', action_set, 0, True)
 	except Exception as e:
@@ -64,26 +102,24 @@ async def poll_openvr_actions(_vr_system, action_handle_left, action_handle_righ
 	while True:
 		active_action_sets = (openvr.VRActiveActionSet_t * 1)()
 		active_action_set = active_action_sets[0]
-		active_action_set.ulActionSet = action_set
+		active_action_set.ulActionSet = action_set_handle
 		openvr.VRInput().updateActionState(active_action_sets)
 
-		actions = [
-			(action_handle_left, 'TouchLeft'),
-			(action_handle_right, 'TouchRight'),
-		]
-		for handle, name in actions:
+		for path, handle in list(_handles.items()):
 			try:
-				state = openvr.VRInput().getDigitalActionData(handle, openvr.k_ulInvalidInputValueHandle)
+				digital_data = handle.get_digital()
 			except openvr.error_code.InputError_InvalidHandle:
 				continue
 
-			if prev_states.get(handle) is not None and prev_states[handle] != state.bState:
-				print(f'{name}: bState={state.bState}, bActive={state.bActive}')
-			prev_states[handle] = state.bState
+			state[path] = bool(digital_data.bState)
 
-			if name == 'TouchLeft':
-				await asmr_worker.worker.set_arm_touch_state('left', bool(state.bState))
-			elif name == 'TouchRight':
-				await asmr_worker.worker.set_arm_touch_state('right', bool(state.bState))
+			prev = prev_states.get(path)
+			if prev is not None and prev != digital_data.bState:
+				log.debug(f'{handle.name}: bState={digital_data.bState}, bActive={digital_data.bActive}')
+			prev_states[path] = digital_data.bState
+
+			if path in _listeners:
+				for cb in _listeners[path]:
+					await cb(handle)
 
 		await asyncio.sleep(0.1)
