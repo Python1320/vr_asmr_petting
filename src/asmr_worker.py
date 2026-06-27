@@ -376,11 +376,14 @@ def register_actions():
 	import openvr_actions
 
 	def make_touch_handler(hand: str):
+		prev_physical = [False]
 		async def handler(handle):
 			physically_touched = bool(openvr_actions.state.get(handle.path, False))
 			if worker.sticky_state.get(hand, False):
-				if not physically_touched:
+				if prev_physical[0] and not physically_touched:
 					worker._sticky_touch_released[hand] = True
+				prev_physical[0] = physically_touched
+				if not physically_touched:
 					return
 				elif worker._sticky_touch_released.get(hand, False):
 					worker.sticky_state[hand] = False
@@ -388,6 +391,7 @@ def register_actions():
 					logging.debug(f'Sticky {hand} cleared by physical touch')
 					await worker.set_arm_touch_state(hand, True)
 				return
+			prev_physical[0] = physically_touched
 			await worker.set_arm_touch_state(hand, physically_touched)
 		return handler
 
@@ -405,7 +409,7 @@ def register_actions():
 			pressed = bool(openvr_actions.state.get(handle.path, False))
 			rising = pressed and not prev[0]
 			prev[0] = pressed
-			if rising:
+			if rising and not worker.sticky_state.get(hand, False):
 				await worker.toggle_sticky(hand)
 		return handler
 
@@ -422,7 +426,10 @@ def register_actions():
 			rising = pressed and not prev[0]
 			prev[0] = pressed
 			if rising:
-				await worker.cancel_sticky(hand)
+				sticky_on_path = f'/actions/default/in/StickyTouch{hand.capitalize()}'
+				on_held = bool(openvr_actions.state.get(sticky_on_path, False))
+				if not on_held:
+					await worker.cancel_sticky(hand)
 		return handler
 
 	openvr_actions.listen(sticky_cancel_left, make_sticky_cancel_handler('left'))
