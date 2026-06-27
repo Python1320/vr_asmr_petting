@@ -1,17 +1,23 @@
 from typing import Any, Awaitable, Callable
+import asyncio
 import config_reader
 from pythonosc.udp_client import SimpleUDPClient
-import asyncio
 
 TYPE_CONF = config_reader.AppConfig
 TYPE_VRC = SimpleUDPClient
 TYPE_MAIN_LOOP = asyncio.AbstractEventLoop
+TYPE_TASK_GROUP = asyncio.TaskGroup | None
 TYPE_PLUGIN_CONF = config_reader.PluginData
 
 
 class VRPlugin:
 	@staticmethod
-	async def on_load(conf: TYPE_CONF, vrc: TYPE_VRC, main_loop: TYPE_MAIN_LOOP) -> bool:
+	async def on_load(
+		conf: TYPE_CONF,
+		vrc: TYPE_VRC,
+		main_loop: TYPE_MAIN_LOOP,
+		task_group: TYPE_TASK_GROUP = None,
+	) -> bool:
 		return False
 
 	@staticmethod

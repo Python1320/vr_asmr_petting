@@ -2,6 +2,7 @@ import openvr
 
 import pluginhelper
 import logging
+from vrappcommon.task_helper import spawn_task
 
 log = logging.getLogger('plugin_punch')
 
@@ -90,7 +91,12 @@ def move_x(ft, goforward=False):
 	openvr.VRChaperoneSetup().commitWorkingCopy(openvr.EChaperoneConfigFile_Live)
 
 
-async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main_loop: pluginhelper.TYPE_MAIN_LOOP):
+async def on_load(
+	conf: pluginhelper.TYPE_CONF,
+	vrc: pluginhelper.TYPE_VRC,
+	main_loop: pluginhelper.TYPE_MAIN_LOOP,
+	task_group: pluginhelper.TYPE_TASK_GROUP = None,
+):
 	plugin_conf = conf.plugins.get(NAME)
 
 	if not plugin_conf:
@@ -110,7 +116,11 @@ async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main
 
 	def wrap(cb):
 		def _wrapper(key, *val):
-			main_loop.create_task(cb(bool(val[0])))
+			spawn_task(
+				cb(bool(val[0])),
+				loop=task_group or main_loop,
+				name=f'{NAME}_osc_{cb.__name__}',
+			)
 
 		return _wrapper
 

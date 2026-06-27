@@ -48,10 +48,10 @@ def listen(handle: ActionHandle, callback):
 	_listeners[handle.path].append(callback)
 
 
-async def reg_openvr_actions(loop=False):
+async def reg_openvr_actions(loop, task_group: asyncio.TaskGroup | None = None):
 	log.info('Registering OpenVR actions...')
 	try:
-		_vr_system = await get_vr_system(openvr.VRApplication_Overlay, loop=loop)
+		_vr_system = await get_vr_system(openvr.VRApplication_Overlay, loop=loop, task_group=task_group)
 		action_manifest_path = str((EXEDIR / 'actions.json').resolve())
 		log.info('Registering action manifest: %s', action_manifest_path)
 
@@ -81,6 +81,7 @@ async def reg_openvr_actions(loop=False):
 		else:
 			spawn_task(
 				poll_openvr_actions(_vr_system, action_set_handle),
+				loop=task_group,
 				name='poll_openvr_actions',
 			)
 

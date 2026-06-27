@@ -6,7 +6,7 @@ import json
 
 # vrchat_oscquery provides zeroconf
 import coloredlogs
-from pythonosc.dispatcher import Dispatcher
+from vrappcommon.AsyncOSCDispatcher import AsyncOSCDispatcher
 import asmr_worker
 from vrappcommon import openvrutils
 from vrappcommon.jankyguihelpers import fatal, show_console
@@ -98,11 +98,15 @@ AVATAR_CHANGE_PARAMETER = '/avatar/change'
 loaded_plugins: dict[str, pluginhelper.VRPlugin] = {}
 
 
-async def reg_openvr():
+async def reg_openvr(task_group: asyncio.TaskGroup | None = None):
 	log.info('Registering OpenVR autostart...')
 	global _vr_system
 	try:
-		_vr_system = await get_vr_system(openvr.VRApplication_Overlay, loop=main_loop)
+		_vr_system = await get_vr_system(
+			openvr.VRApplication_Overlay,
+			loop=main_loop,
+			task_group=task_group,
+		)
 
 		log.info(
 			'Installing to SteamVR: %s %s',
@@ -115,7 +119,7 @@ async def reg_openvr():
 		fatal(str(e))
 
 
-async def load_plugins():
+async def load_plugins(task_group: asyncio.TaskGroup | None = None):
 	for finder, name, ispkg in pkgutil.iter_modules():
 		if name.startswith('plugin_'):
 			if ispkg:
@@ -128,7 +132,12 @@ async def load_plugins():
 					continue
 
 				try:
-					if not await plugin.on_load(conf=conf, vrc=vrc, main_loop=main_loop):
+					if not await plugin.on_load(
+						conf=conf,
+						vrc=vrc,
+						main_loop=main_loop,
+						task_group=task_group,
+					):
 						continue
 				except Exception as e:
 					log.exception(f'Failed to load plugin {name}: {e}')
@@ -142,9 +151,9 @@ async def load_plugins():
 		log.info(f' - {name}')
 
 
-async def init_main():
+async def init_main(task_group: asyncio.TaskGroup):
 	global \
-		dispatcher, \
+		disp, \
 		vrc, \
 		osc_receiver, \
 		osc_server, \
@@ -155,14 +164,17 @@ async def init_main():
 		asmr_worker_routine, \
 		server_details
 
+
+
 	def avatar_change(addr, value):
 		log.info(f'Avatar changed/reset {addr} {value}...')
 
 	try:
-		dispatcher = Dispatcher()
-		pluginhelper.set_osc_dispatcher(dispatcher)
+		disp = AsyncOSCDispatcher()
+		await disp.set_task_group(task_group)
+		pluginhelper.set_osc_dispatcher(disp)
 
-		dispatcher.map(AVATAR_CHANGE_PARAMETER, avatar_change)
+		disp.map(AVATAR_CHANGE_PARAMETER, avatar_change)
 
 		discarded_msg_count = 0
 
@@ -172,15 +184,19 @@ async def init_main():
 			if discarded_msg_count <= 5:
 				log.debug(f'Ignoring unknown OSC message from {address}, payload: {args}')
 			else:
-				dispatcher.set_default_handler(None)  # type: ignore
+				disp.set_default_handler(None)  # type: ignore
 
-		dispatcher.set_default_handler(received_first_message_from, True)
+		disp.set_default_handler(received_first_message_from, True)
 
 		def wrap_into_async_osc_bool(cb):
 			def _wrapper(key, *val):
 				# log.debug(f'{key} {val}')
 				# TODO: queue?
-				spawn_task(cb(bool(val[0])))
+				spawn_task(
+					cb(bool(val[0])),
+					loop=task_group,
+					name=f'osc_bool_{key}',
+				)
 
 			return _wrapper
 
@@ -196,7 +212,7 @@ async def init_main():
 		for key, cb in detection_map.items():
 			detector_path = osc_detectors.get(key, None)
 			if detector_path:
-				dispatcher.map(detector_path, wrap_into_async_osc_bool(cb))
+				disp.map(detector_path, wrap_into_async_osc_bool(cb))
 			else:
 				log.warning(f'No OSC avatar parameter path for "{key}" found in config, {key} will not work')
 
@@ -206,22 +222,30 @@ async def init_main():
 		# for plugins that already registered handlers.
 		for name, plugin in loaded_plugins.items():
 			try:
-				await plugin.on_load(conf=conf, vrc=vrc, main_loop=main_loop)
+				await plugin.on_load(
+					conf=conf,
+					vrc=vrc,
+					main_loop=main_loop,
+					task_group=task_group,
+				)
 			except Exception as e:
 				log.exception(f'Failed to re-run on_load for plugin {name}: {e}')
 		# disp.set_default_handler(print)
 
-		server_details = await vrc_osc(NAME, dispatcher, zeroconf=conf.zeroconf)
+		server_details = await vrc_osc(NAME, disp, zeroconf=conf.zeroconf)
 		log.info(
 			f'Server started: http://{server_details.osc_host}:{server_details.http_port} osc_port={server_details.osc_port}'
 		)
 		log.info(
 			f'Example: sendosc {server_details.osc_host} {server_details.osc_port} {osc_detectors.get("bullet", "/avatar/parameters/???")} b true'
 		)
-		vr = await get_vr_system(openvr.VRApplication_Overlay)
+
+		vr = await get_vr_system(openvr.VRApplication_Overlay, task_group=task_group)
 
 		asmr_worker_routine = spawn_task(
-			asmr_worker.worker.start(vrc, vr, loaded_plugins=loaded_plugins, senders=conf.senders), name='asmr_worker'
+			asmr_worker.worker.start(vrc, vr, loaded_plugins=loaded_plugins, senders=conf.senders),
+			loop=task_group,
+			name='asmr_worker',
 		)
 
 		try:
@@ -256,18 +280,19 @@ async def main():
 	if had_debug:
 		main_loop.set_debug(False)
 
-	await load_plugins()
+	async with asyncio.TaskGroup() as tg:
+		await load_plugins(task_group=tg)
 
-	if conf.install_to_steamvr:
-		await reg_openvr()
+		if conf.install_to_steamvr:
+			await reg_openvr(tg)
 
-	await openvr_actions.reg_openvr_actions(main_loop)  # pyright: ignore[reportArgumentType]
-	asmr_worker_handles = asmr_worker.register_actions()
+		await openvr_actions.reg_openvr_actions(main_loop, task_group=tg)  # pyright: ignore[reportArgumentType]
+		asmr_worker_handles = asmr_worker.register_actions()
 
-	if had_debug or conf.debug:
-		main_loop.set_debug(True)
+		if had_debug or conf.debug:
+			main_loop.set_debug(True)
 
-	await init_main()
+		await init_main(tg)
 
 
 if __name__ == '__main__':

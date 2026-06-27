@@ -4,6 +4,7 @@ import math
 import numpy
 
 import pluginhelper
+from vrappcommon.task_helper import spawn_task
 
 NAME = 'byewave'
 log = logging.getLogger('plugin_byewave')
@@ -119,7 +120,12 @@ def move_z(ft, golower=False):
 	openvr.VRChaperoneSetup().commitWorkingCopy(openvr.EChaperoneConfigFile_Live)
 
 
-async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main_loop: pluginhelper.TYPE_MAIN_LOOP):
+async def on_load(
+	conf: pluginhelper.TYPE_CONF,
+	vrc: pluginhelper.TYPE_VRC,
+	main_loop: pluginhelper.TYPE_MAIN_LOOP,
+	task_group: pluginhelper.TYPE_TASK_GROUP = None,
+):
 	plugin_conf = conf.plugins.get(NAME)
 
 	if not plugin_conf:
@@ -141,7 +147,11 @@ async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main
 	def wrap(key: str):
 		def _wrapper(path, *vals):
 			value = osc_value_to_bool(vals[0]) if vals else False
-			main_loop.create_task(on_inhibit_detector(key, value))
+			spawn_task(
+				on_inhibit_detector(key, value),
+				loop=task_group or main_loop,
+				name=f'{NAME}_osc_inhibit_{key}',
+			)
 
 		return _wrapper
 

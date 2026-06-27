@@ -56,7 +56,12 @@ def restore_from_ground():
 	adjust_ground_height(-SINK_DEPTH)
 
 
-async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main_loop: pluginhelper.TYPE_MAIN_LOOP):
+async def on_load(
+	conf: pluginhelper.TYPE_CONF,
+	vrc: pluginhelper.TYPE_VRC,
+	main_loop: pluginhelper.TYPE_MAIN_LOOP,
+	task_group: pluginhelper.TYPE_TASK_GROUP = None,
+):
 	plugin_conf = conf.plugins.get(NAME)
 
 	if not plugin_conf:

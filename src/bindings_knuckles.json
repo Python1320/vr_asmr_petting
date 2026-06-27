@@ -1,77 +1,80 @@
 {
-   "action_manifest_version": 0,
-   "alias_info": {},
+   "action_manifest_version" : 0,
+   "alias_info" : {},
    "app_key" : "python1320.vr_asmr_petting",
    "bindings" : {
       "/actions/default" : {
+         "poses" : [],
+         "skeleton" : [],
          "sources" : [
             {
                "inputs" : {
                   "touch" : {
-                     "output" : "/actions/default/in/touchleft"
+                     "output" : "/actions/default/in/stickycancelleft"
                   }
                },
                "mode" : "button",
                "parameters" : {},
-               "path" : "/user/hand/left/input/trigger"
+               "path" : "/user/hand/left/input/a"
             },
             {
-                "inputs" : {
-                   "touch" : {
-                      "output" : "/actions/default/in/touchright"
-                   }
-                },
-                "mode" : "button",
-                "parameters" : {},
-                "path" : "/user/hand/right/input/trigger"
-             },
-             {
-                "inputs" : {
-                   "click" : {
-                      "output" : "/actions/default/in/StickyTouchLeft"
-                   }
-                },
-                "mode" : "button",
-                "parameters" : {},
-                "path" : "/user/hand/left/input/a"
-             },
-             {
-                "inputs" : {
-                   "click" : {
-                      "output" : "/actions/default/in/StickyTouchRight"
-                   }
-                },
-                "mode" : "button",
-                "parameters" : {},
-                "path" : "/user/hand/right/input/a"
-             },
-             {
-                "inputs" : {
-                   "click" : {
-                      "output" : "/actions/default/in/StickyCancelLeft"
-                   }
-                },
-                "mode" : "button",
-                "parameters" : {},
-                "path" : "/user/hand/left/input/b"
-             },
-             {
-                "inputs" : {
-                   "click" : {
-                      "output" : "/actions/default/in/StickyCancelRight"
-                   }
-                },
-                "mode" : "button",
-                "parameters" : {},
-                "path" : "/user/hand/right/input/b"
-             }
-          ]
+               "inputs" : {
+                  "touch" : {
+                     "output" : "/actions/default/in/stickycancelright"
+                  }
+               },
+               "mode" : "button",
+               "parameters" : {},
+               "path" : "/user/hand/right/input/a"
+            },
+            {
+               "inputs" : {
+                  "touch" : {
+                     "output" : "/actions/default/in/stickycancelleft"
+                  }
+               },
+               "mode" : "button",
+               "parameters" : {},
+               "path" : "/user/hand/left/input/b"
+            },
+            {
+               "inputs" : {
+                  "touch" : {
+                     "output" : "/actions/default/in/stickycancelright"
+                  }
+               },
+               "mode" : "button",
+               "parameters" : {},
+               "path" : "/user/hand/right/input/b"
+            },
+            {
+               "inputs" : {
+                  "touch" : {
+                     "output" : "/actions/default/in/stickytouchright"
+                  }
+               },
+               "mode" : "trackpad",
+               "parameters" : {},
+               "path" : "/user/hand/right/input/trackpad"
+            },
+            {
+               "inputs" : {
+                  "touch" : {
+                     "output" : "/actions/default/in/stickytouchleft"
+                  }
+               },
+               "mode" : "trackpad",
+               "parameters" : {},
+               "path" : "/user/hand/left/input/trackpad"
+            }
+         ]
       }
    },
-   "category": "steamvr_input",
-   "controller_type": "knuckles",
-   "description": "The default binding for Valve Index controllers",
-   "name": "Default Index Controller Binding",
-   "options": {},
-   "simulated_actions": []
-}  
+   "category" : "steamvr_input",
+   "controller_type" : "knuckles",
+   "description": "Example bindings for Index controllers. Hold trackpad to fade in sounds and a+b to make them go away. Buggy.",
+   "name": "Index Binding - VR ASMR Petting example",
+   "interaction_profile" : "",
+   "options" : {},
+   "simulated_actions" : []
+}
