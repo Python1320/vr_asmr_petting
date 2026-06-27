@@ -11,9 +11,12 @@
 		"detect_headpet": "/avatar/parameters/detect_headpet",
 		"enabled": "/avatar/parameters/sounds/pets/normal",
 		"enabled_alt": "/avatar/parameters/sounds/pets/alt",
-		"tapping_enabled": "/avatar/parameters/tapping_enabled"
+		"tapping_enabled": "/avatar/parameters/tapping_enabled",
+		"velocity_magnitude": "/avatar/parameters/VelocityMagnitude"
 	},
-	"pets_only_stop_when_movement_stops": false,
+	"pets_only_stop_when_movement_stops": true,
+	"petting_sound_enable_move_threshold": 0.15,
+	"petting_sound_touch_fade_seconds": 0.5,
 	"plugins": {
 		"bullet": {
 			"description": "WIP: If someone hits you with 'bullet' contact sender, sink to ground, or catch on fire if you have vr_asmr_petting",
