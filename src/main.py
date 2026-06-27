@@ -186,6 +186,7 @@ async def init_main():
 
 		detection_map = {
 			'enabled': asmr_worker.worker.on_enabled,
+			'enabled_alt': asmr_worker.worker.on_enabled_alt,
 			'tapping_enabled': asmr_worker.worker.set_tapping_enabled,
 			'attacked': asmr_worker.worker.on_attacked,
 			'detect_headpet': asmr_worker.worker.on_detect_headpet,
@@ -198,6 +199,16 @@ async def init_main():
 				dispatcher.map(detector_path, wrap_into_async_osc_bool(cb))
 			else:
 				log.warning(f'No OSC avatar parameter path for "{key}" found in config, {key} will not work')
+
+		# Some plugins may have been loaded earlier (before the dispatcher existed).
+		# Re-run their on_load now that the dispatcher is available so they can
+		# register OSC handlers (inhibitors, detectors, etc.). This is idempotent
+		# for plugins that already registered handlers.
+		for name, plugin in loaded_plugins.items():
+			try:
+				await plugin.on_load(conf=conf, vrc=vrc, main_loop=main_loop)
+			except Exception as e:
+				log.exception(f'Failed to re-run on_load for plugin {name}: {e}')
 		# disp.set_default_handler(print)
 
 		server_details = await vrc_osc(NAME, dispatcher, zeroconf=conf.zeroconf)
