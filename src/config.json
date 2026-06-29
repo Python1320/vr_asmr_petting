@@ -47,6 +47,7 @@
 		"volume_left": "/avatar/parameters/petting_volume",
 		"volume_right": "/avatar/parameters/petting_volume_r"
 	},
+	"sticky_cancel_holds": true,
 	"vrc_osc_ip": "127.0.0.1",
 	"vrc_osc_port": 9000,
 	"zeroconf": true

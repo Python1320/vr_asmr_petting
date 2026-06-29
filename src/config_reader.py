@@ -61,6 +61,7 @@ class AppConfig(BaseSettings):
 	autopet_osc_path: str | None = None
 	petting_sound_enable_move_threshold: float | None = 0.0
 	pets_only_stop_when_movement_stops: bool | None = False
+	sticky_cancel_holds: bool | None = False
 
 	@classmethod
 	def settings_customise_sources(

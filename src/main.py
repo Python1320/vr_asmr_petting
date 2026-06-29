@@ -68,6 +68,7 @@ asmr_worker.worker.autopet_osc_path = conf.autopet_osc_path
 asmr_worker.worker.arm_on_touch = bool(conf.arm_on_touch)
 asmr_worker.worker.petting_sound_enable_move_threshold = float(conf.petting_sound_enable_move_threshold or 0.0)
 asmr_worker.worker.petting_sound_touch_fade_seconds = float(conf.petting_sound_touch_fade_seconds or 0.5)
+asmr_worker.worker.sticky_cancel_holds = bool(conf.sticky_cancel_holds)
 config_reader.save_config(conf)
 
 if conf.debug and os.name == 'nt' and not HAS_TTY:

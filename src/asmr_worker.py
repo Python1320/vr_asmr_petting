@@ -43,6 +43,7 @@ class ASMRWorker:
 	petting_sound_enable_move_threshold: float = 0.0
 	petting_sound_touch_fade_seconds: float = 0.5
 	arm_on_touch: bool = False
+	sticky_cancel_holds: bool = False
 	arm_touch_state: dict[str, bool]
 	arm_touch_ready: dict[str, bool]
 
@@ -408,9 +409,18 @@ def register_actions():
 		async def handler(handle):
 			pressed = bool(openvr_actions.state.get(handle.path, False))
 			rising = pressed and not prev[0]
+			falling = prev[0] and not pressed
 			prev[0] = pressed
 			if rising and not worker.sticky_state.get(hand, False):
 				await worker.toggle_sticky(hand)
+			if (
+				falling
+				and worker.sticky_state.get(hand, False)
+				and getattr(worker, 'sticky_cancel_holds', False)
+			):
+				cancel_path = f'/actions/default/in/StickyCancel{hand.capitalize()}'
+				if openvr_actions.state.get(cancel_path, False):
+					await worker.cancel_sticky(hand)
 		return handler
 
 	openvr_actions.listen(sticky_left, make_sticky_handler('left'))
