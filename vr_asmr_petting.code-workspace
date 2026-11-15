@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../vrappcommon"
+		}
+	],
+	"settings": {
+		"notebook.defaultFormatter": "charliermarsh.ruff",
+		"workbench.colorCustomizations": {
+			"titleBar.activeBackground": "#374e19",
+			"titleBar.inactiveBackground": "#2c3f14"
+		}
+	}
+}
