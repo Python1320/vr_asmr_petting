@@ -17,171 +17,480 @@ import audio_visualization
 
 
 from utils import getDeviceIDbySerial, wait_controllers, dump_devices, TrackConfig
+from vrappcommon.vrutils import VRChatUDP
 
 
-vr_system: openvr.IVRSystem | None = None
+class ASMRWorker:
+	oscClient: VRChatUDP
+	vr_system: openvr.IVRSystem
 
-trackings: list[TrackConfig] = []
+	enabled: bool = False
+	enabled_alt: bool = False
+	tapping_enabled: bool = True
 
-# https://github.com/cmbruns/pyopenvr/blob/f466e1001d0db1d6ff4efdab0529747cf8a6fdee/src/samples/objmesh/test_obj.py#L734
+	autopet_on_detect: bool = False
+	autopet_osc_path: str | None = None
+	is_petting: bool = False
+	detect_headpet: bool = False
+	velocity_magnitude_suppress_tap: bool = False
+	walk_time_accumulator: float = 0
+	velocity_magnitude_disable_reported: bool = False
 
-# getControllerState
-# https://gist.github.com/awesomebytes/75daab3adb62b331f21ecf3a03b3ab46
+	attacked: bool = False
+	attack_front: bool = False
+	attack_back: bool = False
+	SCALE = 1.0
+	prev_ts: float | bool = False
+	poses: openvr.Array[openvr.TrackedDevicePose_t] | None
+	petting_sound_enable_move_threshold: float = 0.0
+	petting_sound_touch_fade_seconds: float = 0.5
+	arm_on_touch: bool = False
+	sticky_cancel_holds: bool = False
+	arm_touch_state: dict[str, bool]
+	arm_touch_ready: dict[str, bool]
 
-SCALE = 1.0
-prev_ts = False
-poses = []
+	def __init__(self) -> None:
 
-enabled = None
-enabled_alt = None
-tapping_enabled = True
+		self.poses = None
+		self.trackings: list[TrackConfig] = []
+		self.arm_touch_state = {'left': False, 'right': False}
+		self.arm_touch_ready = {'left': False, 'right': False}
+		self.sticky_state = {'left': False, 'right': False}
+		self._sticky_touch_released = {'left': False, 'right': False}
+		self.walk_time_accumulator = 0
+		self.velocity_magnitude_disable_reported = False
 
+	async def on_enabled(self, e: bool) -> None:
+		self.enabled = e
+		logging.debug(f'ASMR = {self.enabled}')
+		if not self.enabled and not self.enabled_alt:
+			self.is_petting = False
+		if e:
+			threshold = self.petting_sound_enable_move_threshold or 0.0
+			for t in self.trackings:
+				if getattr(t, 'last_raw_speed', 0.0) > threshold:
+					t.suppress_until_zero = True
+			if self.velocity_magnitude_suppress_tap:
+				self.velocity_magnitude_disable_reported = True
+				self.walk_time_accumulator = 0
 
-# TODO: unused
-async def on_enabled(e: bool) -> None:
-	global enabled
-	enabled = e
-	logging.debug(f'ASMR = {enabled}')
+	async def on_enabled_alt(self, e: bool) -> None:
+		self.enabled_alt = e
+		logging.debug(f'ASMR (alt) = {self.enabled_alt}')
+		if not self.enabled and not self.enabled_alt:
+			self.is_petting = False
+		if e:
+			threshold = self.petting_sound_enable_move_threshold or 0.0
+			for t in self.trackings:
+				if getattr(t, 'last_raw_speed', 0.0) > threshold:
+					t.suppress_until_zero = True
+			if self.velocity_magnitude_suppress_tap:
+				self.velocity_magnitude_disable_reported = True
+				self.walk_time_accumulator = 0
 
+	async def on_detect_headpet(self, e: bool) -> None:
+		if self.detect_headpet == e:
+			return
+		self.detect_headpet = e
+		logging.debug(f'Detect headpet = {self.detect_headpet}')
+		if (
+			self.autopet_on_detect
+			and self.detect_headpet
+			and self.autopet_osc_path
+			and not self.enabled
+			and not self.enabled_alt
+			and not self.is_petting
+		):
+			self.is_petting = True
+			logging.info(f'Auto-petting triggered by detect_headpet, sending {self.autopet_osc_path} 1')
+			self.oscClient.send_message(self.autopet_osc_path, [1])
 
-async def on_enabled_alt(e: bool) -> None:
-	global enabled_alt
-	enabled_alt = e
-	logging.debug(f'ASMR (alt) = {enabled_alt}')
+	async def set_tapping_enabled(self, enabled: bool) -> None:
+		self.tapping_enabled = enabled
+		logging.debug(f'Tap = {self.tapping_enabled}')
 
+	async def set_velocity_magnitude(self, velocity: float) -> None:
+		magnitude_nonzero = velocity > 1.8
+		if magnitude_nonzero != self.velocity_magnitude_suppress_tap:
+			self.velocity_magnitude_suppress_tap = magnitude_nonzero
+			logging.debug(f'Velocity magnitude suppress tap = {self.velocity_magnitude_suppress_tap}')
 
-async def set_tapping_enabled(enabled: bool) -> None:
-	global tapping_enabled
-	tapping_enabled = enabled
-	logging.debug(f'Tap = {tapping_enabled}')
+	async def think__player_walking_disable_pets(self, now: float, dt: float) -> None:
+		WALK_DURATION_BEFORE_DISABLE = 1.2
 
-
-async def loop() -> None:
-	global poses
-	await sleep(0.101)
-	if not vr_system:
-		return
-
-	global prev_ts
-	poses = vr_system.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, 0, poses)
-	now = time.time()
-
-	ft = now - (prev_ts or now)
-	prev_ts = now
-	ft = ft > 0.9 and 0.9 or ft <= 0.0001 and 0.0001 or ft
-
-	for plugin in plugin_tick_callbacks.values():
-		await plugin(now, ft, poses)
-
-	for t in trackings:
-		delta = t.delta
-		name = t.name
-
-		pose: openvr.TrackedDevicePose_t = poses[t.device_id]
-		if not pose.bDeviceIsConnected:
-			print('Not connected', name)
-			t.set_telemetry(0.0)
-			continue
-		if not pose.bPoseIsValid:
-			print('Not valid', name)
-			t.set_telemetry(0.0)
-			continue
-
-		velocity = math.hypot(*pose.vVelocity)
-		velocity_up = pose.vVelocity[1]
-		ov = delta[0]
-		ot = delta[1]
-		delta[0] = velocity_up
-		delta[1] = now
-		accel = (velocity_up - ov) / (now - ot)
-		tap_detected = accel > 15 and ov < 0
-		# if name=="left" and abs(accel)>4:
-		# r	print(accel)
-		speed = min(max(velocity * SCALE, 0), 1)
-		t.set_telemetry(speed)
-		if name == 'left' or name == 'right':
-			# TODO: Both direction major acceleration required: unlock_tap/last_accelerated
-			if tap_detected and not t.tapped and tapping_enabled and not enabled and not enabled_alt:
-				t.tapped = True
-				t.send_untap = now + 0.101
-				t.set_tap_telemetry(1)
-				print('TAP!', name)
-			elif t.tapped and not tap_detected:
-				t.tapped = False
-
-			if name == 'left':
-				audio_visualization.set_volume_l(speed)
-			elif name == 'right':
-				# print("accel %3.2f vel=%3.2f" % ((velocity_up-ov)/(now-ot),velocity_up))
-				audio_visualization.set_volume_r(speed)
-
-	for t in trackings:
-		if t.send_untap and now > t.send_untap:
-			t.send_untap = False
-			# print("UNTAP",t.name)
-			t.set_tap_telemetry(0)
-
-
-async def run(controllers):
-	for t in trackings:
-		if t.name == 'left':
-			t.device_id = controllers[0]
-		elif t.name == 'right':
-			t.device_id = controllers[1]
-		elif t.name == 'head':
-			t.device_id = controllers[2]
+		if self.velocity_magnitude_suppress_tap:
+			self.walk_time_accumulator = min(self.walk_time_accumulator + dt, WALK_DURATION_BEFORE_DISABLE * 1.5)
 		else:
-			t.name = t.name or t.serial or '???'
-			device_id = getDeviceIDbySerial(t.serial or t.name, vr_system)
-			if device_id:
-				t.device_id = device_id
+			self.walk_time_accumulator = max(self.walk_time_accumulator - dt, 0)
+		# print(self.walk_time_accumulator)
+		if self.walk_time_accumulator < WALK_DURATION_BEFORE_DISABLE:
+			if self.walk_time_accumulator < 0.1:
+				self.velocity_magnitude_disable_reported = False
+			return
 
-	for conf in trackings:
-		print('Tracking: ', conf.__dict__)
-	for i in range(999999999):
-		if await loop():
-			break
+		# print(
+		# 'HUUH', self.enabled, self.enabled_alt, self.velocity_magnitude_disable_reported, self.walk_time_accumulator
+		# )
+		if self.velocity_magnitude_disable_reported:
+			return
 
+		self.velocity_magnitude_disable_reported = True
+		await self.send_disable_pets()
 
-async def start(
-	client, _vr_system: openvr.IVRSystem, loaded_plugins: dict[str, VRPlugin], senders: config_reader.Senders
-) -> None:
-	global oscClient, trackings, vr_system
-	vr_system = _vr_system
-	oscClient = client
+	async def send_disable_pets(self):
+		if not self.enabled and not self.enabled_alt:
+			return
+		logging.info('send:disable_pets')
+		osc_detectors = config_reader.get_config().osc_detectors or {}
+		for key in ('enabled', 'enabled_alt'):
+			path = osc_detectors.get(key)
+			if not path:
+				continue
+			self.oscClient.send_message(path, [0])
+			logging.debug(f'Disabled petting detector {key} via {path}')
+		self.enabled = False
+		self.enabled_alt = False
+		self.is_petting = False
 
-	trackings.append(
-		TrackConfig(
-			name='left',
-			osc_message=senders.volume_left or '/avatar/parameters/petting_volume',
-			osc_tap_message=senders.sound_taps_left or '/avatar/parameters/sound_taps_left',
-			oscClient=oscClient,
-			serial=None,
+	async def set_arm_touch_state(self, hand: str, touched: bool) -> None:
+		if hand not in ('left', 'right'):
+			return
+		current = self.arm_touch_state.get(hand, False)
+		if current == touched:
+			return
+		self.arm_touch_state[hand] = touched
+		# find matching track and set up fade timer on release/acquire
+		for t in self.trackings:
+			if t.name == hand:
+				fade = float(self.petting_sound_touch_fade_seconds or 0.5)
+				if not touched:
+					self.arm_touch_ready[hand] = False
+					# record the telemetry start value so fade cannot increase above it
+					t.touch_fade_start_value = getattr(t, 'last_sent_speed', 0.0)
+					t.touch_fade_until = time.time() + fade
+					t.touch_fade_in_until = 0.0
+				else:
+					# start fade-in on acquire
+					self.arm_touch_ready[hand] = False
+					t.touch_fade_in_start_value = getattr(t, 'last_sent_speed', 0.0)
+					t.touch_fade_in_until = time.time() + fade
+					t.touch_fade_until = 0.0
+		logging.debug(f'Arm touch {hand} = {touched}')
+
+	async def toggle_sticky(self, hand: str) -> None:
+		if hand not in ('left', 'right'):
+			return
+		if self.sticky_state[hand]:
+			self.sticky_state[hand] = False
+			self._sticky_touch_released[hand] = False
+			import openvr_actions
+			physically_touched = openvr_actions.state.get(
+				f'/actions/default/in/Touch{hand.capitalize()}', False
+			)
+			logging.debug(f'Sticky {hand} OFF (physical touch = {physically_touched})')
+			await self.set_arm_touch_state(hand, physically_touched)
+		else:
+			self.sticky_state[hand] = True
+			self._sticky_touch_released[hand] = False
+			logging.debug(f'Sticky {hand} ON')
+			await self.set_arm_touch_state(hand, True)
+
+	async def cancel_sticky(self, hand: str) -> None:
+		if hand not in ('left', 'right'):
+			return
+		if not self.sticky_state[hand]:
+			return
+		self.sticky_state[hand] = False
+		self._sticky_touch_released[hand] = False
+		import openvr_actions
+		physically_touched = openvr_actions.state.get(
+			f'/actions/default/in/Touch{hand.capitalize()}', False
 		)
-	)
-	trackings.append(
-		TrackConfig(
-			name='right',
-			osc_message=senders.volume_right or '/avatar/parameters/petting_volume_r',
-			osc_tap_message=senders.sound_taps_right or '/avatar/parameters/sound_taps_right',
-			oscClient=oscClient,
-			serial=None,
+		logging.debug(f'Sticky {hand} CANCELLED (physical touch = {physically_touched})')
+		await self.set_arm_touch_state(hand, physically_touched)
+
+	async def on_attacked(self, e: bool) -> None:
+		self.attacked = e
+		logging.debug(f'Attacked = {self.attacked}')
+
+	async def on_attack_front(self, e: bool) -> None:
+		self.attack_front = e
+		logging.debug(f'Attack front = {self.attack_front}')
+
+	async def on_attack_back(self, e: bool) -> None:
+		self.attack_back = e
+		logging.debug(f'Attack back = {self.attack_back}')
+
+	async def loop(self) -> None:
+		await sleep(0.101)
+		if not self.vr_system:
+			return
+
+		self.poses = self.vr_system.getDeviceToAbsoluteTrackingPose(
+			openvr.TrackingUniverseStanding, 0, self.poses or []
 		)
-	)
 
-	controllers = await wait_controllers(vr_system)
-	if not controllers:
-		return
+		now = time.time()
 
-	for plugin in loaded_plugins.values():
-		await plugin.on_vr(vr=vr_system, controllers=controllers)
 
-	dump_devices(vr_system)
+		ft = now - (self.prev_ts or now)
+		self.prev_ts = now
+		ft = ft > 0.9 and 0.9 or ft <= 0.0001 and 0.0001 or ft
 
-	logging.info('Starting plugins...')
-	for plugin in loaded_plugins.values():
-		await plugin.on_start()
+		await self.think__player_walking_disable_pets(now, ft)
+		for plugin in plugin_tick_callbacks.values():
+			await plugin(now, ft, self.poses)
 
-	logging.info('Finished starting plugins, running main loop...')
+		for t in self.trackings:
+			delta = t.delta
+			name = t.name
 
-	await run(controllers)
+			pose: openvr.TrackedDevicePose_t = self.poses[t.device_id]
+			# If device disconnected or pose invalid, report only on transition from OK -> not-OK
+			if not pose.bDeviceIsConnected:
+				if t.was_okay:
+					logging.warning(f'Not connected {name}')
+					t.was_okay = False
+				t.set_telemetry(0.0)
+				continue
+			if not pose.bPoseIsValid:
+				if t.was_okay:
+					logging.warning(f'Not valid {name}')
+					t.was_okay = False
+				t.set_telemetry(0.0)
+				continue
+
+			velocity = math.hypot(*pose.vVelocity)
+			velocity_up = pose.vVelocity[1]
+			ov = delta[0]
+			ot = delta[1]
+			delta[0] = velocity_up
+			delta[1] = now
+			accel = (velocity_up - ov) / (now - ot)
+			tap_detected = accel > 15 and ov < 0
+			# if name=="left" and abs(accel)>4:
+			# r	print(accel)
+			raw_speed = min(max(velocity * self.SCALE, 0), 1)
+			speed = raw_speed
+			# Arm-on-touch: allow fadeout on release and fadein on acquire
+			if self.arm_on_touch and name in ('left', 'right'):
+				touched = self.arm_touch_state.get(name, False)
+				fade_seconds = float(self.petting_sound_touch_fade_seconds or 0.5)
+				if not touched:
+					# if we have an active fade timer, apply fade factor
+					fade_until = getattr(t, 'touch_fade_until', 0.0) or 0.0
+					if fade_until > now:
+						remaining = fade_until - now
+						factor = max(remaining / fade_seconds, 0.0)
+						candidate = raw_speed * factor
+						start_val = getattr(t, 'touch_fade_start_value', 0.0) or 0.0
+						# Never allow fade to increase above the start value recorded at release
+						speed = min(start_val, candidate)
+					else:
+						speed = 0.0
+				else:
+					# fade in on acquire
+					fade_in_until = getattr(t, 'touch_fade_in_until', 0.0) or 0.0
+					if fade_in_until > now:
+						remaining = fade_in_until - now
+						factor = max((fade_seconds - remaining) / fade_seconds, 0.0)
+						start_val = getattr(t, 'touch_fade_in_start_value', 0.0) or 0.0
+						speed = start_val + (raw_speed - start_val) * factor
+						if speed > raw_speed:
+							speed = raw_speed
+					else:
+						speed = raw_speed
+					if getattr(t, 'suppress_until_zero', False):
+						threshold = self.petting_sound_enable_move_threshold or 0.0
+						if raw_speed <= threshold:
+							t.suppress_until_zero = False
+						else:
+							speed = 0.0
+			# Global enable clamp
+			if not self.enabled and not self.enabled_alt:
+				speed = 0.0
+			t.set_telemetry(speed)
+			# record last sent telemetry so fades can reference the start value
+			try:
+				t.last_sent_speed = float(speed)
+			except Exception:
+				t.last_sent_speed = 0.0
+			t.last_raw_speed = raw_speed
+			# mark device as seen in a good state (connected + valid)
+			if not t.was_okay:
+				logging.info(f'Device recovered: {name}')
+				t.was_okay = True
+			if name == 'left' or name == 'right':
+				# TODO: Both direction major acceleration required: unlock_tap/last_accelerated
+				# TODO: Detect joystick being pressed and disable tap (maybe via OSC?)
+				if (
+					tap_detected
+					and not t.tapped
+					and self.tapping_enabled
+					and not self.enabled
+					and not self.enabled_alt
+					and not self.velocity_magnitude_suppress_tap
+				):
+					t.tapped = True
+					t.send_untap = now + 0.101
+					t.set_tap_telemetry(1)
+					logging.info(f'TAP! {name}')
+				elif t.tapped and not tap_detected:
+					t.tapped = False
+
+				if name == 'left':
+					audio_visualization.set_volume_l(speed)
+				elif name == 'right':
+					# print("accel %3.2f vel=%3.2f" % ((velocity_up-ov)/(now-ot),velocity_up))
+					audio_visualization.set_volume_r(speed)
+
+		for t in self.trackings:
+			if t.send_untap and now > t.send_untap:
+				t.send_untap = False
+				# print("UNTAP",t.name)
+				t.set_tap_telemetry(0)
+
+	async def run(self, controllers):
+		for t in self.trackings:
+			if t.name == 'left':
+				t.device_id = controllers[0]
+			elif t.name == 'right':
+				t.device_id = controllers[1]
+			elif t.name == 'head':
+				t.device_id = controllers[2]
+			else:
+				t.name = t.name or t.serial or '???'
+				device_id = getDeviceIDbySerial(t.serial or t.name, self.vr_system)
+				if device_id:
+					t.device_id = device_id
+
+		for conf in self.trackings:
+			print('Tracking: ', conf.__dict__)
+		for i in range(999999999):
+			if await self.loop():
+				break
+
+	async def start(
+		self,
+		client,
+		_vr_system: openvr.IVRSystem,
+		loaded_plugins: dict[str, VRPlugin],
+		senders: config_reader.Senders,
+	) -> None:
+		self.vr_system = _vr_system
+		self.oscClient = client
+		self.trackings.clear()
+
+		self.trackings.append(
+			TrackConfig(
+				name='left',
+				osc_message=senders.volume_left or '/avatar/parameters/petting_volume',
+				osc_tap_message=senders.sound_taps_left or '/avatar/parameters/sound_taps_left',
+				oscClient=self.oscClient,
+				serial=None,
+			)
+		)
+		self.trackings.append(
+			TrackConfig(
+				name='right',
+				osc_message=senders.volume_right or '/avatar/parameters/petting_volume_r',
+				osc_tap_message=senders.sound_taps_right or '/avatar/parameters/sound_taps_right',
+				oscClient=self.oscClient,
+				serial=None,
+			)
+		)
+
+		controllers = await wait_controllers(self.vr_system)
+		if not controllers:
+			return
+
+		for plugin in loaded_plugins.values():
+			await plugin.on_vr(vr=self.vr_system, controllers=controllers)
+
+		dump_devices(self.vr_system)
+
+		logging.info('Starting plugins...')
+		for plugin in loaded_plugins.values():
+			await plugin.on_start()
+
+		logging.info('Finished starting plugins, running main loop...')
+
+		await self.run(controllers)
+
+
+worker = ASMRWorker()
+
+
+def register_actions():
+	import openvr_actions
+
+	def make_touch_handler(hand: str):
+		prev_physical = [False]
+		async def handler(handle):
+			physically_touched = bool(openvr_actions.state.get(handle.path, False))
+			if worker.sticky_state.get(hand, False):
+				if prev_physical[0] and not physically_touched:
+					worker._sticky_touch_released[hand] = True
+				prev_physical[0] = physically_touched
+				if not physically_touched:
+					return
+				elif worker._sticky_touch_released.get(hand, False):
+					worker.sticky_state[hand] = False
+					worker._sticky_touch_released[hand] = False
+					logging.debug(f'Sticky {hand} cleared by physical touch')
+					await worker.set_arm_touch_state(hand, True)
+				return
+			prev_physical[0] = physically_touched
+			await worker.set_arm_touch_state(hand, physically_touched)
+		return handler
+
+	left = openvr_actions.get_handle('/actions/default/in/TouchLeft')
+	right = openvr_actions.get_handle('/actions/default/in/TouchRight')
+	sticky_left = openvr_actions.get_handle('/actions/default/in/StickyTouchLeft')
+	sticky_right = openvr_actions.get_handle('/actions/default/in/StickyTouchRight')
+
+	openvr_actions.listen(left, make_touch_handler('left'))
+	openvr_actions.listen(right, make_touch_handler('right'))
+
+	def make_sticky_handler(hand: str):
+		prev = [False]
+		async def handler(handle):
+			pressed = bool(openvr_actions.state.get(handle.path, False))
+			rising = pressed and not prev[0]
+			falling = prev[0] and not pressed
+			prev[0] = pressed
+			if rising and not worker.sticky_state.get(hand, False):
+				await worker.toggle_sticky(hand)
+			if (
+				falling
+				and worker.sticky_state.get(hand, False)
+				and getattr(worker, 'sticky_cancel_holds', False)
+			):
+				cancel_path = f'/actions/default/in/StickyCancel{hand.capitalize()}'
+				if openvr_actions.state.get(cancel_path, False):
+					await worker.cancel_sticky(hand)
+		return handler
+
+	openvr_actions.listen(sticky_left, make_sticky_handler('left'))
+	openvr_actions.listen(sticky_right, make_sticky_handler('right'))
+
+	sticky_cancel_left = openvr_actions.get_handle('/actions/default/in/StickyCancelLeft')
+	sticky_cancel_right = openvr_actions.get_handle('/actions/default/in/StickyCancelRight')
+
+	def make_sticky_cancel_handler(hand: str):
+		prev = [False]
+		async def handler(handle):
+			pressed = bool(openvr_actions.state.get(handle.path, False))
+			rising = pressed and not prev[0]
+			prev[0] = pressed
+			if rising:
+				sticky_on_path = f'/actions/default/in/StickyTouch{hand.capitalize()}'
+				on_held = bool(openvr_actions.state.get(sticky_on_path, False))
+				if not on_held:
+					await worker.cancel_sticky(hand)
+		return handler
+
+	openvr_actions.listen(sticky_cancel_left, make_sticky_cancel_handler('left'))
+	openvr_actions.listen(sticky_cancel_right, make_sticky_cancel_handler('right'))
+
+	return left, right

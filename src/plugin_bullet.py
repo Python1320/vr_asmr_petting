@@ -1,7 +1,4 @@
 import openvr
-import math
-import numpy
-import time
 
 import pluginhelper
 import asmr_worker
@@ -11,50 +8,60 @@ NAME = 'bullet'
 
 class State:
 	pos = 0
-	sink_end_time = 0
+	active = False
+	end_time = 0.0
+	cooldown_until = 0.0
+	remain_seconds = 10.0
+	reactivate_after_remain = 10.0
 
 
 state = State()
 
 
 async def on_tick(now, ft, poses):
-	if asmr_worker.attacked and now < state.sink_end_time:
-		godown(ft, True)  # sink
-	elif asmr_worker.attacked and now >= state.sink_end_time:
-		state.sink_end_time = now + 5
-		print('BULLET: Attacked! Sinking for 5 seconds')
-	elif state.sink_end_time > 0 and now < state.sink_end_time:
-		godown(ft, False)  # rise back up
-	elif state.sink_end_time > 0 and now >= state.sink_end_time:
-		state.sink_end_time = 0
+	if state.active:
+		if now >= state.end_time:
+			state.active = False
+			state.pos = 0
+			print('BULLET: Remaining time ended, rising up')
+			restore_from_ground()
+		return
+
+	if asmr_worker.worker.attacked and now >= state.cooldown_until:
+		state.active = True
+		state.pos = 1
+		state.end_time = now + state.remain_seconds
+		state.cooldown_until = state.end_time + state.reactivate_after_remain
+		print(f'BULLET: Attacked! Immediate underground for {state.remain_seconds} seconds')
+		sink_to_ground()
 
 
-def godown(ft, go_down):
-	# TODO: handle movement quantas with ft
-	prev_pos = state.pos
-	if go_down and state.pos < 30:
-		state.pos += 1
-		move_z(ft, True)
-	elif not go_down and state.pos > 0:
-		state.pos -= 1
-		move_z(ft, False)
-	if prev_pos == 0 and state.pos > 0:
-		print(f'BYEWAVE: Starting movement (pos={state.pos})')
-	elif prev_pos > 0 and state.pos == 0:
-		print('BYEWAVE: Stopping movement')
-
-
-def move_z(ft, golower=False):
-	openvr.VRChaperoneSetup().revertWorkingCopy()
-	standing_zero_to_raw_tracking_pose = openvr.VRChaperoneSetup().getWorkingStandingZeroPoseToRawTrackingPose()
+def adjust_ground_height(delta: float):
+	chaperone = openvr.VRChaperoneSetup()
+	chaperone.revertWorkingCopy()
+	standing_zero_to_raw_tracking_pose = chaperone.getWorkingStandingZeroPoseToRawTrackingPose()
 	pose = standing_zero_to_raw_tracking_pose[1]
-	MOVESZ = 0.1
-	pose[1][3] += golower and (MOVESZ) or -MOVESZ
-	openvr.VRChaperoneSetup().setWorkingStandingZeroPoseToRawTrackingPose(pose)
-	openvr.VRChaperoneSetup().commitWorkingCopy(openvr.EChaperoneConfigFile_Live)
+	pose[1][3] += delta
+	chaperone.setWorkingStandingZeroPoseToRawTrackingPose(pose)
+	chaperone.commitWorkingCopy(openvr.EChaperoneConfigFile_Live)
 
 
-async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main_loop: pluginhelper.TYPE_MAIN_LOOP):
+def sink_to_ground():
+	SINK_DEPTH = 3.0
+	adjust_ground_height(SINK_DEPTH)
+
+
+def restore_from_ground():
+	SINK_DEPTH = 3.0
+	adjust_ground_height(-SINK_DEPTH)
+
+
+async def on_load(
+	conf: pluginhelper.TYPE_CONF,
+	vrc: pluginhelper.TYPE_VRC,
+	main_loop: pluginhelper.TYPE_MAIN_LOOP,
+	task_group: pluginhelper.TYPE_TASK_GROUP = None,
+):
 	plugin_conf = conf.plugins.get(NAME)
 
 	if not plugin_conf:
@@ -62,6 +69,11 @@ async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main
 
 	if not plugin_conf.enabled:
 		return False
+
+	state.remain_seconds = getattr(plugin_conf, 'remain_seconds', state.remain_seconds)
+	state.reactivate_after_remain = getattr(plugin_conf, 'reactivate_after_remain', None) or getattr(
+		plugin_conf, 'reactivat_after_remain', state.reactivate_after_remain
+	)
 
 	pluginhelper.register_plugin_tick_callback(NAME, on_tick)
 	return True

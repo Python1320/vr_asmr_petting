@@ -1,19 +1,45 @@
+import logging
 import openvr
 import math
 import numpy
-import time
 
 import pluginhelper
+from vrappcommon.task_helper import spawn_task
 
 NAME = 'byewave'
+log = logging.getLogger('plugin_byewave')
 
 
 class State:
 	pos = 0
 	controllers: list[int] = []
+	inhibit_detectors: list[str] = []
+	detector_values: dict[str, bool] = {}
 
 
 state = State()
+
+
+def osc_value_to_bool(value):
+	if isinstance(value, bool):
+		return value
+	if isinstance(value, (int, float)):
+		return value != 0
+	if isinstance(value, str):
+		normalized = value.strip().lower()
+		return normalized not in ('', 'false', '0', 'off', 'no', 'none')
+	return bool(value)
+
+
+async def on_inhibit_detector(key: str, value: bool):
+	state.detector_values[key] = value
+	log.debug(f'BYEWAVE: osc detector "{key}" = {value}')
+
+
+def should_execute_byewave() -> bool:
+	if not state.inhibit_detectors:
+		return True
+	return not any(state.detector_values.get(key, False) for key in state.inhibit_detectors)
 
 
 # https://github.com/ValveSoftware/openvr/wiki/Matrix-Usage-Example
@@ -51,10 +77,6 @@ async def on_tick(now, ft, poses):
 	(pose_hmd, vel_hmd) = getpose(poses, openvr.k_unTrackedDeviceIndex_Hmd)
 	if not pose_lh or not pose_rh or not pose_hmd:
 		return
-	# print("z",-pose_rh[2])
-	# print("___ y",-pose_rh[0])
-	# print("___ x",-pose_rh[1])
-	# print("___ WTF ",-pose_rh[3])
 
 	d_hr = math.dist(pose_rh, pose_hmd)
 	d_hl = math.dist(pose_lh, pose_hmd)
@@ -63,12 +85,14 @@ async def on_tick(now, ft, poses):
 	if vel_lh > 0.1 or vel_rh > 0.1 or vel_hmd > 0.1:
 		return
 
-	if (
-		pose_hmd[2] > pose_rh[2] or pose_hmd[2] < pose_lh[2] or d_r < 0.3
-	):  # or math.dist(pose_rh,pose_hmd)>math.dist(pose_lh,pose_hmd):
-		godown(ft, False)
+	going_down = not (pose_hmd[2] > pose_rh[2] or pose_hmd[2] < pose_lh[2] or d_r < 0.3)
+	if going_down:
+		if should_execute_byewave():
+			godown(ft, True)
+		else:
+			log.debug('BYEWAVE: inhibited by OSC detector state; skipping downward movement')
 	else:
-		godown(ft, True)
+		godown(ft, False)
 
 
 def godown(ft, go_down):
@@ -96,7 +120,12 @@ def move_z(ft, golower=False):
 	openvr.VRChaperoneSetup().commitWorkingCopy(openvr.EChaperoneConfigFile_Live)
 
 
-async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main_loop: pluginhelper.TYPE_MAIN_LOOP):
+async def on_load(
+	conf: pluginhelper.TYPE_CONF,
+	vrc: pluginhelper.TYPE_VRC,
+	main_loop: pluginhelper.TYPE_MAIN_LOOP,
+	task_group: pluginhelper.TYPE_TASK_GROUP = None,
+):
 	plugin_conf = conf.plugins.get(NAME)
 
 	if not plugin_conf:
@@ -106,6 +135,34 @@ async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main
 		return False
 
 	pluginhelper.register_plugin_tick_callback(NAME, on_tick)
+
+	disp = pluginhelper.get_osc_dispatcher()
+	if not disp:
+		return True
+
+	osc_detectors = getattr(conf, 'osc_detectors', None) or {}
+	inhibit_detector_keys = getattr(plugin_conf, 'inhibit_detectors', None) or []
+	state.inhibit_detectors = inhibit_detector_keys
+
+	def wrap(key: str):
+		def _wrapper(path, *vals):
+			value = osc_value_to_bool(vals[0]) if vals else False
+			spawn_task(
+				on_inhibit_detector(key, value),
+				loop=task_group or main_loop,
+				name=f'{NAME}_osc_inhibit_{key}',
+			)
+
+		return _wrapper
+
+	for key in inhibit_detector_keys:
+		detector_path = osc_detectors.get(key)
+		if detector_path:
+			disp.map(detector_path, wrap(key))
+			log.info(f'BYEWAVE: registered inhibitor OSC path {detector_path} for {key}')
+		else:
+			log.warning(f'BYEWAVE: no OSC path for inhibit detector "{key}" in config.osc_detectors')
+
 	return True
 
 

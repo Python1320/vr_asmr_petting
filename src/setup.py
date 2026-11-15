@@ -2,7 +2,7 @@ import shutil
 from cx_Freeze import setup, Executable
 
 packages = ['pythonosc', 'psutil', 'zeroconf', 'json', 'threading', 'time', 'os', 'sys', 'ctypes', 'traceback']
-file_include = ['config.json', 'app.vrmanifest', '../pettingloop_bad.wav']
+file_include = ['config.json', 'bindings_generic.json', 'bindings_knuckles.json', 'actions.json', 'header.jpg', 'app.vrmanifest', 'assets/debugsoundloop_l.ogg',, 'assets/debugsoundloop_r.ogg']
 
 build_exe_options = {
 	'packages': packages,
@@ -19,7 +19,7 @@ setup(
 	options={'build_exe': build_exe_options},
 	executables=[
 		Executable('main.py', target_name='vr_asmr_petting_console.exe', base='console', icon='../icon.ico'),
-		Executable('main.py', target_name='vr_asmr_petting.exe', base='Win32GUI', icon='../icon.ico'),
+		Executable('main.py', target_name='vr_asmr_petting.exe', base='gui', icon='../icon.ico'),
 	],
 )
 

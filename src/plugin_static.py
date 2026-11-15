@@ -1,7 +1,6 @@
 import openvr
 import math
 import numpy
-import time
 
 import pluginhelper
 from pythonosc.udp_client import SimpleUDPClient
@@ -79,7 +78,12 @@ async def on_tick(now, ft, poses):
 				oscClient.send_message('/avatar/parameters/fire', True)
 
 
-async def on_load(conf: pluginhelper.TYPE_CONF, vrc: pluginhelper.TYPE_VRC, main_loop: pluginhelper.TYPE_MAIN_LOOP):
+async def on_load(
+	conf: pluginhelper.TYPE_CONF,
+	vrc: pluginhelper.TYPE_VRC,
+	main_loop: pluginhelper.TYPE_MAIN_LOOP,
+	task_group: pluginhelper.TYPE_TASK_GROUP = None,
+):
 	global oscClient
 	plugin_conf = conf.plugins.get(NAME)
 

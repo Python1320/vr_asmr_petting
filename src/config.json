@@ -1,13 +1,21 @@
 {
+	"arm_on_touch": false,
+	"autopet_on_detect": false,
+	"autopet_osc_path": "/avatar/parameters/sounds/pets/normal",
 	"autotapping_enabled": false,
 	"debug": false,
 	"debug_audio_visualization": false,
 	"install_to_steamvr": true,
 	"osc_detectors": {
+		"attacked": "/avatar/parameters/attacked",
+		"detect_headpet": "/avatar/parameters/detect_headpet",
 		"enabled": "/avatar/parameters/sounds/pets/normal",
 		"enabled_alt": "/avatar/parameters/sounds/pets/alt",
 		"tapping_enabled": "/avatar/parameters/tapping_enabled"
 	},
+	"pets_only_stop_when_movement_stops": true,
+	"petting_sound_enable_move_threshold": 0.15,
+	"petting_sound_touch_fade_seconds": 0.5,
 	"plugins": {
 		"bullet": {
 			"description": "WIP: If someone hits you with 'bullet' contact sender, sink to ground, or catch on fire if you have vr_asmr_petting",
@@ -16,6 +24,16 @@
 			"sink": true
 		},
 		"byewave": {
+			"description": "WIP: sink to ground if your hand is above your head and other one is below your head",
+			"enabled": false,
+			"inhibit_detectors": [
+				"detect_headpet",
+				"enabled"
+			]
+		},
+		"punch": {
+			"attack_back": "/avatar/parameters/attack_back",
+			"attack_front": "/avatar/parameters/attack_front",
 			"description": "WIP: sink to ground if your hand is above your head and other one is below your head",
 			"enabled": false
 		},
@@ -26,11 +44,13 @@
 	},
 	"run_count": 0,
 	"senders": {
+		"autopet_on": "/avatar/parameters/sounds/pets/normal",
 		"sound_taps_left": "/avatar/parameters/sound_taps_left",
 		"sound_taps_right": "/avatar/parameters/sound_taps_right",
 		"volume_left": "/avatar/parameters/petting_volume",
 		"volume_right": "/avatar/parameters/petting_volume_r"
 	},
+	"sticky_cancel_holds": true,
 	"vrc_osc_ip": "127.0.0.1",
 	"vrc_osc_port": 9000,
 	"zeroconf": true

@@ -10,8 +10,12 @@ on:
     workflows: [Build Release]
     types:
       - completed
+    branches:
+      - main
   release:
      types: [published, created, edited, unpublished, deleted, released]
+     branches:
+       - main
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:

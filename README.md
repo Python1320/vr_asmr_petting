@@ -143,6 +143,22 @@ See [github issues](https://github.com/Python1320/vr_asmr_petting/issues?q=is%3A
 (See also below for details on VRCFury parameter compression!)
 
 
+### Sticky Touch (arm_on_touch controller bindings) 🎮
+
+When `arm_on_touch: true` in `config.json`, petting sound fades in/out based on trigger touch. Three SteamVR actions (configured in `actions.json`) extend this with "sticky" behavior:
+
+| Action | Default Binding | Effect |
+|--------|----------------|--------|
+| `StickyTouchLeft` / `StickyTouchRight` | Left A (X) / Right A | Enables sticky mode — simulates holding the trigger down continuously. Sound stays on as long as you move your hand, even without touching the trigger. One-shot: pressing again does nothing. |
+| `StickyCancelLeft` / `StickyCancelRight` | Left B (Y) / Right B | Disables sticky mode, reverts to normal trigger behavior. |
+| `TouchLeft` / `TouchRight` | Trigger touch | While sticky is active, a full release-and-re-touch of the trigger clears sticky mode. |
+
+**Interaction between StickyTouch and StickyCancel:**
+- Holding **StickyTouch** and pressing **StickyCancel** → StickyTouch wins, no change.
+- With `sticky_cancel_holds: true` in `config.json` — holding **StickyCancel** and **releasing** StickyTouch cancels sticky mode.
+
+Bindings can be customized in SteamVR's controller binding UI for the VR ASMR Petting app.
+
 ### Troubleshooting 🎯
 
 
@@ -192,6 +208,11 @@ Ideas and known issues are [**here**](https://github.com//Python1320vr_asmr_pett
  - Similar addons: [ASMR VRChat Prefab](https://fluffyteddy.gumroad.com/l/ASMR), [Dynamic Hairbrush for VRChat avatars](https://iaminvalid.gumroad.com/l/hctbu)
  - Recommended: For added immersion add distance fading to your model hands either using [Poiyomi Proximity Color](https://www.poiyomi.com/special-fx/proximity-color) or via a [custom standard shader (experimental)](https://github.com/python1320/reroStandard)
 
+
+### Development 💻
+
+This project depends on the shared `vrappcommon` library (`../vrappcommon`), configured as an editable dependency in `pyproject.toml`.
+To switch to the GitHub version instead, uncomment the git source in `[tool.uv.sources]`.
 
 ### Helper app automatic start ℹ️
 

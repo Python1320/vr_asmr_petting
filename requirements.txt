@@ -1,5 +1,0 @@
-pygame
-python-osc
-openvr
-pkg_resources
-numpy
