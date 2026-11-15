@@ -33,6 +33,8 @@ class ASMRWorker:
 	is_petting: bool = False
 	detect_headpet: bool = False
 	velocity_magnitude_suppress_tap: bool = False
+	walk_time_accumulator: float = 0
+	velocity_magnitude_disable_reported: bool = False
 
 	attacked: bool = False
 	attack_front: bool = False
@@ -55,30 +57,36 @@ class ASMRWorker:
 		self.arm_touch_ready = {'left': False, 'right': False}
 		self.sticky_state = {'left': False, 'right': False}
 		self._sticky_touch_released = {'left': False, 'right': False}
+		self.walk_time_accumulator = 0
+		self.velocity_magnitude_disable_reported = False
 
 	async def on_enabled(self, e: bool) -> None:
 		self.enabled = e
 		logging.debug(f'ASMR = {self.enabled}')
 		if not self.enabled and not self.enabled_alt:
 			self.is_petting = False
-		# If enabling, suppress per-track sound until movement drops near zero
 		if e:
 			threshold = self.petting_sound_enable_move_threshold or 0.0
 			for t in self.trackings:
 				if getattr(t, 'last_raw_speed', 0.0) > threshold:
 					t.suppress_until_zero = True
+			if self.velocity_magnitude_suppress_tap:
+				self.velocity_magnitude_disable_reported = True
+				self.walk_time_accumulator = 0
 
 	async def on_enabled_alt(self, e: bool) -> None:
 		self.enabled_alt = e
 		logging.debug(f'ASMR (alt) = {self.enabled_alt}')
 		if not self.enabled and not self.enabled_alt:
 			self.is_petting = False
-		# If enabling alt, suppress per-track sound until movement drops near zero
 		if e:
 			threshold = self.petting_sound_enable_move_threshold or 0.0
 			for t in self.trackings:
 				if getattr(t, 'last_raw_speed', 0.0) > threshold:
 					t.suppress_until_zero = True
+			if self.velocity_magnitude_suppress_tap:
+				self.velocity_magnitude_disable_reported = True
+				self.walk_time_accumulator = 0
 
 	async def on_detect_headpet(self, e: bool) -> None:
 		if self.detect_headpet == e:
@@ -101,10 +109,48 @@ class ASMRWorker:
 		self.tapping_enabled = enabled
 		logging.debug(f'Tap = {self.tapping_enabled}')
 
-	async def set_velocity_magnitude(self, magnitude_nonzero: bool) -> None:
+	async def set_velocity_magnitude(self, velocity: float) -> None:
+		magnitude_nonzero = velocity > 1.8
 		if magnitude_nonzero != self.velocity_magnitude_suppress_tap:
 			self.velocity_magnitude_suppress_tap = magnitude_nonzero
 			logging.debug(f'Velocity magnitude suppress tap = {self.velocity_magnitude_suppress_tap}')
+
+	async def think__player_walking_disable_pets(self, now: float, dt: float) -> None:
+		WALK_DURATION_BEFORE_DISABLE = 1.2
+
+		if self.velocity_magnitude_suppress_tap:
+			self.walk_time_accumulator = min(self.walk_time_accumulator + dt, WALK_DURATION_BEFORE_DISABLE * 1.5)
+		else:
+			self.walk_time_accumulator = max(self.walk_time_accumulator - dt, 0)
+		# print(self.walk_time_accumulator)
+		if self.walk_time_accumulator < WALK_DURATION_BEFORE_DISABLE:
+			if self.walk_time_accumulator < 0.1:
+				self.velocity_magnitude_disable_reported = False
+			return
+
+		# print(
+		# 'HUUH', self.enabled, self.enabled_alt, self.velocity_magnitude_disable_reported, self.walk_time_accumulator
+		# )
+		if self.velocity_magnitude_disable_reported:
+			return
+
+		self.velocity_magnitude_disable_reported = True
+		await self.send_disable_pets()
+
+	async def send_disable_pets(self):
+		if not self.enabled and not self.enabled_alt:
+			return
+		logging.info('send:disable_pets')
+		osc_detectors = config_reader.get_config().osc_detectors or {}
+		for key in ('enabled', 'enabled_alt'):
+			path = osc_detectors.get(key)
+			if not path:
+				continue
+			self.oscClient.send_message(path, [0])
+			logging.debug(f'Disabled petting detector {key} via {path}')
+		self.enabled = False
+		self.enabled_alt = False
+		self.is_petting = False
 
 	async def set_arm_touch_state(self, hand: str, touched: bool) -> None:
 		if hand not in ('left', 'right'):
@@ -186,10 +232,12 @@ class ASMRWorker:
 
 		now = time.time()
 
+
 		ft = now - (self.prev_ts or now)
 		self.prev_ts = now
 		ft = ft > 0.9 and 0.9 or ft <= 0.0001 and 0.0001 or ft
 
+		await self.think__player_walking_disable_pets(now, ft)
 		for plugin in plugin_tick_callbacks.values():
 			await plugin(now, ft, self.poses)
 

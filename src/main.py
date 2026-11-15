@@ -8,7 +8,7 @@ import json
 import coloredlogs
 from vrappcommon.AsyncOSCDispatcher import AsyncOSCDispatcher
 import asmr_worker
-from vrappcommon import openvrutils
+from vrappcommon import openvrutils, utils
 from vrappcommon.jankyguihelpers import fatal, show_console
 import vrappcommon.jankyguihelpers as gui
 
@@ -190,14 +190,9 @@ async def init_main(task_group: asyncio.TaskGroup):
 		disp.set_default_handler(received_first_message_from, True)
 
 		def wrap_into_async_osc_bool(cb):
-			def _wrapper(key, *val):
+			async def _wrapper(key, *val):
 				# log.debug(f'{key} {val}')
-				# TODO: queue?
-				spawn_task(
-					cb(bool(val[0])),
-					loop=task_group,
-					name=f'osc_bool_{key}',
-				)
+				await cb(bool(val[0]))
 
 			return _wrapper
 
@@ -207,7 +202,6 @@ async def init_main(task_group: asyncio.TaskGroup):
 			'tapping_enabled': asmr_worker.worker.set_tapping_enabled,
 			'attacked': asmr_worker.worker.on_attacked,
 			'detect_headpet': asmr_worker.worker.on_detect_headpet,
-			'velocity_magnitude': asmr_worker.worker.set_velocity_magnitude,
 		}
 		osc_detectors = conf.osc_detectors or {}
 		for key, cb in detection_map.items():
@@ -216,6 +210,18 @@ async def init_main(task_group: asyncio.TaskGroup):
 				disp.map(detector_path, wrap_into_async_osc_bool(cb))
 			else:
 				log.warning(f'No OSC avatar parameter path for "{key}" found in config, {key} will not work')
+
+		def wrap_async_single_float(cb):
+			async def _wrapper(key, *val):
+				await cb(utils.oscfloat(val))
+
+			return _wrapper
+
+		# hardcoded internal param from VRChat
+		disp.map(
+			'/avatar/parameters/VelocityMagnitude',
+			wrap_async_single_float(asmr_worker.worker.set_velocity_magnitude),
+		)
 
 		# Some plugins may have been loaded earlier (before the dispatcher existed).
 		# Re-run their on_load now that the dispatcher is available so they can

@@ -11,8 +11,7 @@
 		"detect_headpet": "/avatar/parameters/detect_headpet",
 		"enabled": "/avatar/parameters/sounds/pets/normal",
 		"enabled_alt": "/avatar/parameters/sounds/pets/alt",
-		"tapping_enabled": "/avatar/parameters/tapping_enabled",
-		"velocity_magnitude": "/avatar/parameters/VelocityMagnitude"
+		"tapping_enabled": "/avatar/parameters/tapping_enabled"
 	},
 	"pets_only_stop_when_movement_stops": true,
 	"petting_sound_enable_move_threshold": 0.15,
@@ -26,7 +25,11 @@
 		},
 		"byewave": {
 			"description": "WIP: sink to ground if your hand is above your head and other one is below your head",
-			"enabled": false
+			"enabled": false,
+			"inhibit_detectors": [
+				"detect_headpet",
+				"enabled"
+			]
 		},
 		"punch": {
 			"attack_back": "/avatar/parameters/attack_back",
